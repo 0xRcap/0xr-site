@@ -20,7 +20,9 @@ export interface Opportunity {
   status: "open" | "produced" | "expired";
 }
 
-export async function fetchOpportunities(base = "http://localhost:8972"): Promise<Opportunity[]> {
+export const HEAT_API = process.env.HEAT_API ?? "http://localhost:8972";
+
+export async function fetchOpportunities(base = HEAT_API): Promise<Opportunity[]> {
   const res = await fetch(`${base}/api/briefs`);
   if (!res.ok) throw new Error(`heat engine responded ${res.status} — is it running on ${base}?`);
   const data = (await res.json()) as Opportunity[] | { briefs?: Opportunity[] };

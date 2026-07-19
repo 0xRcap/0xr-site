@@ -6,6 +6,7 @@
   "description": "innie — boutique creative studio. Soul Engine v0: the voice head.",
   "scripts": {
     "voice": "tsx src/cli.ts",
+    "desk": "tsx src/desk.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

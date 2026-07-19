@@ -15,6 +15,16 @@ export interface Soul {
   body: string; // the four organs, passed to the model whole
 }
 
+/**
+ * The TASTE organ alone — what the editor sees. The editor deliberately gets
+ * no canon, no memory, no opportunity context: it judges words against rules.
+ */
+export function extractTaste(soul: Soul): string {
+  const match = soul.body.match(/## TASTE\n([\s\S]*?)(?=\n## |$)/);
+  if (!match) throw new Error(`soul "${soul.name}" has no TASTE organ`);
+  return match[1].trim();
+}
+
 export function loadSoul(path: string): Soul {
   const raw = readFileSync(path, "utf8");
   const match = raw.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
