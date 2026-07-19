@@ -1,0 +1,196 @@
+<title>innie — a studio</title>
+<style>
+  :root {
+    --paper: #F6F4EE;
+    --ink: #181512;
+    --tone: #8A857B;
+    --rule: #DAD5C9;
+    --seal: #C0392B;
+    --display: "Avenir Next Condensed", "Arial Narrow", "Helvetica Neue", sans-serif;
+    --body: "Iowan Old Style", Palatino, "Palatino Linotype", Georgia, serif;
+    --mono: "SF Mono", Menlo, Consolas, monospace;
+  }
+  /* This page is a printed sheet — paper in every theme, by commitment. */
+  html, body { background: var(--paper); }
+  body { margin: 0; color: var(--ink); font-family: var(--body); line-height: 1.62; }
+
+  .sheet { max-width: 66ch; margin: 0 auto; padding: 5rem 1.5rem 6rem; }
+
+  .eyebrow {
+    font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--tone);
+  }
+
+  h1 {
+    font-family: var(--display); font-weight: 800; text-transform: uppercase;
+    font-size: clamp(3rem, 9vw, 5.2rem); line-height: 0.95; letter-spacing: 0.01em;
+    margin: 0.6rem 0 1.2rem; text-wrap: balance;
+  }
+  h2 {
+    font-family: var(--display); font-weight: 700; text-transform: uppercase;
+    font-size: 1.5rem; letter-spacing: 0.04em; margin: 0 0 1rem;
+  }
+  p { margin: 0 0 1.1rem; }
+  em { font-style: italic; }
+
+  .lede { font-size: 1.18rem; }
+
+  /* Halftone: the texture signature. Dots, never gradients. */
+  .halftone {
+    height: 10px; margin: 3.2rem 0;
+    background-image: radial-gradient(var(--ink) 1px, transparent 1.2px);
+    background-size: 7px 7px;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent);
+    opacity: 0.55;
+  }
+
+  /* Hero mark: two crossed bokken, drawn not rendered. */
+  .mark { display: block; margin: 2.2rem auto 0; }
+  .mark line { stroke: var(--ink); stroke-linecap: round; }
+
+  /* The seal — the only red on the page. */
+  .seal {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 3.4rem; height: 3.4rem; border: 3px solid var(--seal);
+    border-radius: 6px; transform: rotate(-4deg);
+    color: var(--seal); font-family: var(--display); font-weight: 800;
+    font-size: 0.95rem; text-transform: lowercase; letter-spacing: 0.02em;
+    user-select: none;
+  }
+
+  section { margin: 0; }
+
+  .organs {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 1.4rem 2rem; margin: 1.6rem 0 0.4rem;
+  }
+  .organs h3 {
+    font-family: var(--display); font-weight: 700; text-transform: uppercase;
+    font-size: 1.02rem; letter-spacing: 0.06em; margin: 0 0 0.3rem;
+  }
+  .organs p { font-size: 0.98rem; margin: 0; color: #3d3a34; }
+
+  /* Layers 0–3: the numbering is real — it is the stack order. */
+  .layers { list-style: none; margin: 1.4rem 0 0; padding: 0; }
+  .layers li {
+    display: grid; grid-template-columns: 3.2rem 1fr; gap: 1rem;
+    padding: 1rem 0; border-top: 1px solid var(--rule);
+  }
+  .layers li:last-child { border-bottom: 1px solid var(--rule); }
+  .layers .n {
+    font-family: var(--display); font-weight: 800; font-size: 1.9rem;
+    line-height: 1; color: var(--tone);
+  }
+  .layers strong {
+    font-family: var(--display); font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.05em; font-size: 1rem; display: block; margin-bottom: 0.15rem;
+  }
+  .layers p { margin: 0; font-size: 0.98rem; }
+
+  .claims { margin: 1.2rem 0 0; padding-left: 1.2rem; }
+  .claims li { margin-bottom: 0.9rem; }
+  .claims strong { font-family: var(--display); text-transform: uppercase; font-size: 0.95rem; letter-spacing: 0.04em; }
+
+  .never {
+    font-family: var(--mono); font-size: 0.85rem; color: var(--tone);
+    line-height: 2;
+  }
+
+  .signoff {
+    margin-top: 3.4rem; display: flex; align-items: center; gap: 1.4rem;
+  }
+  .signoff p { margin: 0; font-size: 0.95rem; color: var(--tone); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .mark { animation: settle 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+    @keyframes settle {
+      from { transform: rotate(-3deg) scale(0.96); opacity: 0; }
+      to { transform: none; opacity: 1; }
+    }
+  }
+</style>
+
+<div class="sheet">
+  <header>
+    <span class="eyebrow">innie — a studio</span>
+    <h1>Play,<br>taken seriously.</h1>
+    <p class="lede">Digital universes for brands, inhabited by characters with
+    souls. We make the character; the character makes the work.</p>
+
+    <svg class="mark" width="220" height="150" viewBox="0 0 220 150" aria-label="two crossed wooden swords">
+      <!-- bokken 1 -->
+      <line x1="35" y1="128" x2="180" y2="28" stroke-width="9"/>
+      <line x1="52" y1="132" x2="76" y2="115" stroke-width="14"/>
+      <!-- bokken 2 -->
+      <line x1="185" y1="128" x2="40" y2="28" stroke-width="9"/>
+      <line x1="168" y1="132" x2="144" y2="115" stroke-width="14"/>
+      <!-- motion ticks -->
+      <line x1="196" y1="18" x2="206" y2="10" stroke-width="3"/>
+      <line x1="203" y1="30" x2="214" y2="25" stroke-width="3"/>
+      <line x1="16" y1="18" x2="26" y2="10" stroke-width="3" transform="translate(2,0)"/>
+    </svg>
+  </header>
+
+  <div class="halftone" role="presentation"></div>
+
+  <section>
+    <h2>Slop is soullessness</h2>
+    <p>AI content fails in a predictable way: nothing behind it persists, risks
+    anything, or can be wrong. Better models make better-rendered slop. The cure
+    is structural — a <em>soul</em> — and it has exactly four organs:</p>
+    <div class="organs">
+      <div><h3>Canon</h3><p>Who the character is: history, world, what it wants.</p></div>
+      <div><h3>Taste</h3><p>What it would never make or say. Defined by refusal.</p></div>
+      <div><h3>Memory</h3><p>It remembers what it said last month. Append-only.</p></div>
+      <div><h3>Receipts</h3><p>A public track record, misses kept forever. Stakes.</p></div>
+    </div>
+  </section>
+
+  <div class="halftone" role="presentation"></div>
+
+  <section>
+    <h2>The engine</h2>
+    <p>An innie runs on a layered engine. The numbers are the stack.</p>
+    <ol class="layers">
+      <li><span class="n">0</span><div><strong>The soul</strong><p>Who is speaking. The character, written as law.</p></div></li>
+      <li><span class="n">1</span><div><strong>The culture</strong><p>What its world is doing right now — measured across the surfaces where attention leaves fingerprints, hours before the record prints.</p></div></li>
+      <li><span class="n">2</span><div><strong>The aesthetic</strong><p>What the universe looks like. A visual bible per brand; consistency is the craft.</p></div></li>
+      <li><span class="n">3</span><div><strong>The virality</strong><p>Why anyone passes it on — format, timing, and a scored feedback loop.</p></div></li>
+    </ol>
+  </section>
+
+  <div class="halftone" role="presentation"></div>
+
+  <section>
+    <h2>An investment, not a payment</h2>
+    <ol class="claims">
+      <li><strong>Agency work depreciates; an innie compounds.</strong> Canon,
+      memory, audience, and track record accrue to an asset the brand owns.</li>
+      <li><strong>The ledger makes content auditable.</strong> Timestamped,
+      hash-chained receipts: your character called the moment hours early — provably.</li>
+      <li><strong>The optionality stack.</strong> Content becomes a channel, the
+      channel a software seat, the seat an agent.</li>
+      <li><strong>The head start.</strong> If every brand ends up with agents,
+      character equity built now is the difference between warm and cold start.</li>
+    </ol>
+  </section>
+
+  <div class="halftone" role="presentation"></div>
+
+  <section>
+    <h2>The seal</h2>
+    <p>Every innie is openly synthetic — stamped with its own seal, carved at
+    birth. The stamp is the disclosure, worn as the most collectible mark on the
+    work. Hiding what a character is would forfeit the whole craft: people care
+    <em>although they know</em>.</p>
+    <p class="never">never: undisclosed characters · fake data · deleted misses ·
+    the machine explained</p>
+  </section>
+
+  <div class="signoff">
+    <span class="seal">innie</span>
+    <p>A boutique studio. Few clients, chosen.<br>The studio speaks rarely; the
+    innies speak often.</p>
+  </div>
+</div>
