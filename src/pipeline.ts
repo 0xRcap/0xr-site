@@ -2,7 +2,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import type { Soul } from "./soul.js";
 import { fetchOpportunities } from "./heat.js";
 import { scout } from "./agents/scout.js";
-import { voiceOpportunity } from "./voice.js";
+import { voiceOpportunity, reviseDraft } from "./voice.js";
 import { edit } from "./agents/editor.js";
 import { archive, type LedgerEntry } from "./agents/archivist.js";
 
@@ -56,14 +56,35 @@ export async function runDesk(
         });
         continue;
       }
-      const verdicts = await edit(client, soul, voiced.drafts, permittedFacts(opp));
-      for (const v of verdicts) {
+      const facts = permittedFacts(opp);
+      const verdicts = await edit(client, soul, voiced.drafts, facts);
+
+      // One revision round: killed drafts get the editor's reason and one rewrite.
+      const kills = verdicts.filter(v => v.verdict === "kill");
+      const revised = await Promise.all(
+        kills.map(async v => ({
+          original: v,
+          draft: await reviseDraft(client, soul, opp, voiced.drafts[v.index], v.rule),
+        })),
+      );
+      const reVerdicts = await edit(client, soul, revised.map(r => r.draft), facts);
+
+      for (const v of verdicts.filter(x => x.verdict === "pass")) {
         entries.push({
           t: Date.now(), soul: soul.name, soulVersion: soul.version,
           opportunityId: opp.id, headline: opp.headline,
-          outcome: v.verdict === "pass" ? "candidate" : "killed",
-          draft: voiced.drafts[v.index],
-          ...(v.verdict === "kill" ? { rule: v.rule } : {}),
+          outcome: "candidate", draft: voiced.drafts[v.index],
+        });
+      }
+      for (const [i, r] of revised.entries()) {
+        const second = reVerdicts.find(v => v.index === i);
+        const passed = second?.verdict === "pass";
+        entries.push({
+          t: Date.now(), soul: soul.name, soulVersion: soul.version,
+          opportunityId: opp.id, headline: opp.headline,
+          outcome: passed ? "candidate" : "killed",
+          draft: r.draft, revised: true,
+          ...(passed ? {} : { rule: second?.rule ?? r.original.rule }),
         });
       }
     } catch (err) {

@@ -17,6 +17,7 @@ export interface LedgerEntry {
   draft?: string; // the text (candidates and kills)
   rule?: string; // the TASTE rule violated (kills)
   reason?: string; // the voice's reason (declines)
+  revised?: boolean; // survived (or died in) the one revision round
 }
 
 export function archive(entries: LedgerEntry[], dir = "ledger"): string {

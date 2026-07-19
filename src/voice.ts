@@ -56,6 +56,42 @@ export function buildOpportunityPrompt(opp: Opportunity): string {
   ].filter(Boolean).join("\n");
 }
 
+/**
+ * One revision round — the voice sees the editor's kill reason and rewrites.
+ * A draft that can't pass the editor twice is a kill (AGENTS.md §5).
+ */
+export async function reviseDraft(
+  client: Anthropic,
+  soul: Soul,
+  opp: Opportunity,
+  draft: string,
+  killReason: string,
+): Promise<string> {
+  const response = await client.messages.create({
+    model: "claude-opus-4-8",
+    max_tokens: 1024,
+    thinking: { type: "adaptive" },
+    system: buildSystemPrompt(soul),
+    messages: [
+      { role: "user", content: buildOpportunityPrompt(opp) },
+      { role: "assistant", content: draft },
+      {
+        role: "user",
+        content: [
+          `Your editor killed this draft: "${killReason}"`,
+          `Rewrite it once, fixing exactly that — keep everything that wasn't the problem.`,
+          `Respond with only the revised post.`,
+        ].join("\n"),
+      },
+    ],
+  });
+  return response.content
+    .filter((b): b is Anthropic.TextBlock => b.type === "text")
+    .map(b => b.text)
+    .join("\n")
+    .trim();
+}
+
 export async function voiceOpportunity(
   client: Anthropic,
   soul: Soul,
