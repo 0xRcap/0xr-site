@@ -15,6 +15,20 @@ import { archive, type LedgerEntry } from "./agents/archivist.js";
  * A role that errors drops its item; the pipeline continues (AGENTS.md §5).
  */
 
+/** The measured facts a draft may carry — everything else is invented data. */
+export function permittedFacts(opp: {
+  whyNow: string; basedOn?: string[]; heat: number | null; createdAt: number;
+  subject: { symbol: string }; scene: string; current: string;
+}): string[] {
+  return [
+    `subject: ${opp.subject.symbol} (scene: ${opp.scene}, current: ${opp.current})`,
+    opp.whyNow,
+    ...(opp.basedOn ?? []),
+    ...(opp.heat !== null ? [`heat ${opp.heat}/100`] : []),
+    `flagged ${new Date(opp.createdAt).toISOString()}`,
+  ];
+}
+
 export interface DeskResult {
   ledgerPath: string;
   candidates: number;
@@ -42,7 +56,7 @@ export async function runDesk(
         });
         continue;
       }
-      const verdicts = await edit(client, soul, voiced.drafts);
+      const verdicts = await edit(client, soul, voiced.drafts, permittedFacts(opp));
       for (const v of verdicts) {
         entries.push({
           t: Date.now(), soul: soul.name, soulVersion: soul.version,

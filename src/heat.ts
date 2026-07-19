@@ -17,6 +17,7 @@ export interface Opportunity {
   heat: number | null;
   windowClosesAt: number | null;
   references: { title: string; url: string }[];
+  createdAt: number; // when the engine flagged it — the timestamp the call carries
   status: "open" | "produced" | "expired";
 }
 

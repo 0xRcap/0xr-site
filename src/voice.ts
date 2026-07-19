@@ -46,6 +46,7 @@ export function buildOpportunityPrompt(opp: Opportunity): string {
     `WHY NOW: ${opp.whyNow}`,
     opp.basedOn?.length ? `BASED ON:\n${opp.basedOn.map(b => `- ${b}`).join("\n")}` : ``,
     opp.draft ? `ENGINE SEED (rewrite, don't copy): ${opp.draft}` : ``,
+    `FLAGGED: ${new Date(opp.createdAt).toISOString()} — this is the timestamp your call carries; use no other date or time`,
     `WINDOW: ${window}`,
     ``,
     `If this conflicts with your TASTE, respond with exactly one line starting "DECLINED: ".`,

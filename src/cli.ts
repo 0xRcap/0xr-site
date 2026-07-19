@@ -44,6 +44,7 @@ if (idea) {
     heat: null,
     windowClosesAt: null,
     references: [],
+    createdAt: Date.now(),
     status: "open",
   }];
 } else {

@@ -35,7 +35,14 @@ const VERDICT_SCHEMA = {
   additionalProperties: false,
 } as const;
 
-export function buildEditorSystemPrompt(soul: Soul): string {
+/**
+ * The editor's blindness is selective: blind to the opportunity's excitement,
+ * sighted on its measured facts — so invented numbers are mechanically
+ * detectable, not just stylistically suspicious. (Learned in the 2026-07-19
+ * rehearsal: the voice invented a timestamp; a facts-blind editor could only
+ * kill on vibes.)
+ */
+export function buildEditorSystemPrompt(soul: Soul, facts: string[] = []): string {
   return [
     `You are the taste editor for a character called "${soul.name}". You are NOT the`,
     `character. You never see why a draft was written or how exciting the story is —`,
@@ -45,6 +52,13 @@ export function buildEditorSystemPrompt(soul: Soul): string {
     extractTaste(soul),
     `</taste>`,
     ``,
+    ...(facts.length > 0 ? [
+      `The only measured facts available to the writer were:`,
+      ...facts.map(f => `- ${f}`),
+      `Any other number, date, or timestamp in a draft was INVENTED and violates`,
+      `"never a claim without a number" — invented data is an automatic kill.`,
+      ``,
+    ] : []),
     `Your charter is adversarial: look for reasons to kill. A draft passes only if it`,
     `violates no Never rule and honors the Always register. When you kill, name the`,
     `specific rule violated, quoting the offending words. When in doubt, kill — a`,
@@ -60,13 +74,13 @@ export function buildEditorPrompt(drafts: string[]): string {
   ].join("\n");
 }
 
-export async function edit(client: Anthropic, soul: Soul, drafts: string[]): Promise<Verdict[]> {
+export async function edit(client: Anthropic, soul: Soul, drafts: string[], facts: string[] = []): Promise<Verdict[]> {
   if (drafts.length === 0) return [];
   const response = await client.messages.create({
     model: "claude-opus-4-8",
     max_tokens: 2048,
     thinking: { type: "adaptive" },
-    system: buildEditorSystemPrompt(soul),
+    system: buildEditorSystemPrompt(soul, facts),
     output_config: { format: { type: "json_schema", schema: VERDICT_SCHEMA } },
     messages: [{ role: "user", content: buildEditorPrompt(drafts) }],
   });
