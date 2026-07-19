@@ -50,14 +50,7 @@
   .mark line { stroke: var(--ink); stroke-linecap: round; }
 
   /* The seal — the only red on the page. */
-  .seal {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 3.4rem; height: 3.4rem; border: 3px solid var(--seal);
-    border-radius: 6px; transform: rotate(-4deg);
-    color: var(--seal); font-family: var(--display); font-weight: 800;
-    font-size: 0.95rem; text-transform: lowercase; letter-spacing: 0.02em;
-    user-select: none;
-  }
+  .seal { width: 4.6rem; height: 4.6rem; transform: rotate(-4deg); flex: none; }
 
   section { margin: 0; }
 
@@ -189,7 +182,27 @@
   </section>
 
   <div class="signoff">
-    <span class="seal">innie</span>
+    <svg class="seal" viewBox="0 0 240 240" aria-label="the innie seal">
+      <defs>
+        <filter id="bleed" x="-8%" y="-8%" width="116%" height="116%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.55" numOctaves="2" seed="7" result="n"/>
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="3.2"/>
+        </filter>
+      </defs>
+      <g filter="url(#bleed)" fill="none" stroke="var(--seal)">
+        <path d="M 38 30 Q 30 30 30 40 L 29 196 Q 29 208 41 208 L 197 210 Q 209 210 209 198 L 210 42 Q 210 31 199 31 Z"
+              stroke-width="11" stroke-linejoin="round"/>
+      </g>
+      <g filter="url(#bleed)" fill="var(--seal)"
+         font-family="'Avenir Next Condensed','Arial Narrow',sans-serif"
+         font-weight="800" text-anchor="middle">
+        <text x="120" y="112" font-size="64" letter-spacing="2">innie</text>
+        <g stroke="var(--seal)" stroke-width="9" stroke-linecap="round">
+          <line x1="88" y1="168" x2="152" y2="136"/>
+          <line x1="152" y1="168" x2="88" y2="136"/>
+        </g>
+      </g>
+    </svg>
     <p>A boutique studio. Few clients, chosen.<br>The studio speaks rarely; the
     innies speak often.</p>
   </div>

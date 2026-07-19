@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240">
+  <title>the innie seal</title>
+  <!-- The studio's seal — hanko-carved, seal red, the only color the brand owns.
+       Stamped means synthetic, and proud of it (BRAND.md §5). -->
+  <defs>
+    <!-- ink bleed: the stamp never prints perfectly -->
+    <filter id="bleed" x="-8%" y="-8%" width="116%" height="116%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.55" numOctaves="2" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3.2"/>
+    </filter>
+  </defs>
+  <g filter="url(#bleed)" fill="none" stroke="#C0392B">
+    <!-- carved border: a hand-cut square, corners eased unevenly -->
+    <path d="M 38 30
+             Q 30 30 30 40
+             L 29 196
+             Q 29 208 41 208
+             L 197 210
+             Q 209 210 209 198
+             L 210 42
+             Q 210 31 199 31
+             Z"
+          stroke-width="11" stroke-linejoin="round"/>
+  </g>
+  <g filter="url(#bleed)" fill="#C0392B"
+     font-family="'Avenir Next Condensed','Arial Narrow',sans-serif"
+     font-weight="800" text-anchor="middle">
+    <!-- the name, stacked like carved characters -->
+    <text x="120" y="112" font-size="64" letter-spacing="2">innie</text>
+    <!-- the counter-mark: the crossed bokken, reduced to two strokes -->
+    <g stroke="#C0392B" stroke-width="9" stroke-linecap="round">
+      <line x1="88" y1="168" x2="152" y2="136"/>
+      <line x1="152" y1="168" x2="88" y2="136"/>
+    </g>
+  </g>
+</svg>
