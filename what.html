@@ -127,7 +127,16 @@
   }
   .fn:hover .num { color: var(--ink); }
   .fn h2 { font-size: clamp(1.45rem, 5vw, 2.1rem); margin: 0 0 0.6rem; }
-  .fn p { margin: 0; font-size: var(--t-small); max-width: 32rem; }
+  .fn em, .fn span { transition: color 0.28s ease; }
+  .fn em {
+    display: block; font-style: normal; font-size: var(--t-small);
+    line-height: 1.5; color: var(--ink-soft); margin: 0 0 0.7rem; max-width: 26rem;
+  }
+  .fn span {
+    display: block; font-family: var(--mono); font-size: var(--t-micro);
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--tone);
+    line-height: 1.75; max-width: 30rem;
+  }
   @media (max-width: 620px) { .fn { grid-template-columns: 1fr; gap: 0.35rem; } }
 
   .fns { margin-top: clamp(3rem, 9vw, 5rem); }
@@ -247,8 +256,7 @@
             <p class="creed" data-scramble>Every company will run a media
             department.<br class="lb">
             Most will run it with one (or&nbsp;few) people.</p>
-            <p>The judgment stays human. The production goes to the agents.
-            The work covers every surface the story travels on.</p>
+            <p>The judgment stays human. The production goes to the agents.</p>
           </div>
         </li>
 
@@ -260,10 +268,8 @@
           <p class="num">01</p>
           <div>
             <h2 data-scramble="hover" data-delay="0">Positioning</h2>
-            <p>Most founders cannot say what their company is in one sentence,
-            either because they are too close to it or because it changed
-            since the deck. We find that sentence, then build the brand on
-            it.</p>
+            <em>The story everything else has to carry.</em>
+            <span>brand strategy / messaging / competitive analysis / ICP / brand identity / voice</span>
           </div>
         </div>
 
@@ -271,10 +277,8 @@
           <p class="num">02</p>
           <div>
             <h2 data-scramble="hover" data-delay="0">Production</h2>
-            <p>Then it gets made, every week, without a department of people. The
-            films, the brand system, the product surfaces and the daily feed.
-            The agents do the producing. I decide what ships, and nothing goes
-            out that I would not put my name on.</p>
+            <em>The story, made every week.</em>
+            <span>product design (UI/UX) / copywriting / content systems / AI video / character systems / web design</span>
           </div>
         </div>
       </div>
