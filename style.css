@@ -1,0 +1,212 @@
+/* ══════════════════════════════════════════════════════════════════════
+   0xR — the shared sheet. Tokens, reset, chrome and the tile system.
+   Every page links this and adds only what is unique to it.
+
+   Responsive rules of the house:
+   1. one type scale, fluid, no per-component font sizes
+   2. one padding token that shrinks with the viewport
+   3. grids are auto-fit/minmax, so columns fall out of the width
+      and almost no breakpoints are needed
+   4. anything tappable is at least 44px on a touch screen
+   ══════════════════════════════════════════════════════════════════════ */
+
+@font-face {
+  font-family: "Oliveira";
+  src: url("fonts/oliveira.otf") format("opentype");
+  font-weight: normal; font-style: normal; font-display: swap;
+}
+
+:root {
+  --paper: #FAF8F4;          /* bone, not white: warm enough to read as paper */
+  --ink: #0E0D0B;
+  --ink-soft: #3F3D38;
+  --tone: #8A8781;
+  --rule: #E9E7E2;
+  --card-bg: #0E0D0B;
+  --card-ink: #FFFFFF;
+  --card-tone: #9B988F;
+  --tile-bg: #EFEDE6;        /* holds its distance from the new paper */
+  --ascii: 14, 13, 11;
+
+  --display: "Oliveira", "Iowan Old Style", Georgia, serif;
+  --sans: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* type: one scale, every size interpolates on viewport width */
+  --t-hero:  clamp(1.9rem, 5.6vw, 4rem);
+  --t-title: clamp(2.4rem, 9vw, 4.6rem);   /* inner-page h1, one scale for all */
+  --t-huge:  clamp(2.6rem, 9vw, 6rem);
+  --t-h2:    clamp(1.7rem, 4.4vw, 2.6rem);
+  --t-body:  clamp(0.95rem, 0.9rem + 0.2vw, 1.05rem);
+  --t-small: 0.9rem;
+  --t-mono:  clamp(0.68rem, 0.62rem + 0.25vw, 0.78rem);
+  --t-micro: clamp(0.58rem, 0.54rem + 0.2vw, 0.66rem);
+
+  /* space: one gutter token, everything else is a multiple */
+  --pad: clamp(1.1rem, 4vw, 1.5rem);
+  --gap: clamp(1rem, 3vw, 1.6rem);
+  --band: clamp(2.8rem, 8vw, 5rem);
+  --shell: 72rem;
+  --tap: 44px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  background: var(--paper);
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: var(--sans);
+  font-size: var(--t-body);
+  line-height: 1.6;
+  overflow-x: hidden;              /* nothing may scroll the page sideways */
+  -webkit-font-smoothing: antialiased;
+}
+
+img, video, canvas { max-width: 100%; display: block; }
+
+.wrap { width: 100%; max-width: var(--shell); margin: 0 auto; padding: 0 var(--pad); }
+
+h1, h2 {
+  font-family: var(--display);
+  font-weight: normal;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+  margin: 0;
+}
+h1 { font-size: var(--t-hero); line-height: 1.14; }
+h2 { font-size: var(--t-h2); line-height: 1.2; margin-bottom: 1.2rem; }
+
+/* the mono eyebrow that labels every band */
+.label {
+  font-family: var(--mono); font-size: var(--t-micro);
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--tone); margin: 0 0 1.4rem;
+}
+
+/* ── navbar: floats, hides going down, returns going up ── */
+.bar {
+  position: fixed; top: 1rem; left: 50%; transform: translateX(-50%);
+  z-index: 20; width: min(var(--shell) - 3rem, calc(100% - 2rem));
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 1rem; padding: 0.2rem 0.4rem 0.2rem 1rem; border-radius: 99px;
+  background: var(--card-bg); color: var(--card-ink);
+  transition: transform 0.35s ease, opacity 0.35s ease;
+}
+.bar.hidden { transform: translateX(-50%) translateY(-160%); opacity: 0; }
+.bar .name {
+  display: flex; align-items: center; min-height: 40px;
+  font-family: var(--display); font-size: 1.25rem;
+  text-decoration: none; color: var(--card-ink); white-space: nowrap;
+}
+.bar nav { display: flex; align-items: center; }
+.bar nav a {
+  /* padding carries the 44px touch target without inflating the pill */
+  display: flex; align-items: center; min-height: 40px;
+  padding: 0 clamp(0.5rem, 2.4vw, 0.85rem);
+  font-size: clamp(0.8rem, 0.72rem + 0.35vw, 0.9rem);
+  color: var(--card-ink); text-decoration: none; opacity: 0.85;
+}
+.bar nav a:hover, .bar nav a[aria-current] { opacity: 1; }
+
+.foot {
+  padding: 1.1rem var(--pad); background: var(--ink); color: #6b6862;
+  font-family: var(--mono); font-size: var(--t-mono);
+  letter-spacing: 0.06em; text-transform: uppercase;
+  position: relative; z-index: 2;
+  display: flex; flex-wrap: wrap; align-items: center;
+  justify-content: space-between; gap: 0.4rem 1.4rem;
+}
+.foot nav { display: flex; flex-wrap: wrap; gap: 0.2rem 1.4rem; }
+.foot a {
+  display: flex; align-items: center; min-height: var(--tap);
+  color: #6b6862; text-decoration: none; transition: color 0.2s ease;
+}
+.foot a:hover, .foot a:focus-visible { color: #fff; }
+
+/* ── the tile system: every openable piece of media on the site ──
+   A shot is a 16:9 window with the media absolutely filling it and a
+   badge that says how it opens. An arrow leaves for the post, the
+   corners open it here. Both are drawn as SVG so no font has to carry
+   the glyph. */
+.shot {
+  position: relative; display: block; width: 100%; aspect-ratio: 16 / 9;
+  overflow: hidden; background: var(--ink); border-radius: 2px;
+  isolation: isolate;
+}
+.shot > img, .shot > video {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s ease, filter 0.35s ease;
+}
+.shot > video { opacity: 0; transition: opacity 0.25s, transform 0.35s ease, filter 0.35s ease; }
+.shot > video.ready { opacity: 1; }
+
+.shot::after {
+  content: ""; position: absolute; top: 0.45rem; right: 0.45rem; z-index: 3;
+  width: 1.6rem; height: 1.6rem; border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.94);
+  background-repeat: no-repeat; background-position: center;
+  background-size: 0.8rem 0.8rem;
+  opacity: 0; transform: translateY(-0.25rem) scale(0.9);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+}
+.opens-away .shot::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230E0D0B' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17 17 7'/%3E%3Cpath d='M8 7h9v9'/%3E%3C/svg%3E");
+}
+.opens-here .shot::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230E0D0B' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10 3H3v7'/%3E%3Cpath d='M14 21h7v-7'/%3E%3Cpath d='M3 3l7.5 7.5'/%3E%3Cpath d='M21 21l-7.5-7.5'/%3E%3C/svg%3E");
+}
+.opens-away { cursor: pointer; }
+.opens-here { cursor: -webkit-zoom-in; cursor: zoom-in; }
+
+/* hover is driven from .shot itself: keying it off the parent works on an
+   anchor and silently fails on a span in WebKit */
+.shot:hover::after, :hover > .shot::after, :focus-visible > .shot::after { opacity: 1; transform: none; }
+.shot:hover > img, .shot:hover > video,
+:hover > .shot > img, :hover > .shot > video { transform: scale(1.04); filter: brightness(0.8); }
+
+/* on a touch screen there is no hover, so the badge is simply always on */
+@media (hover: none) {
+  .shot::after { opacity: 1; transform: none; }
+}
+
+.tile-t {
+  display: block; font-family: var(--mono); font-size: var(--t-micro);
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--tone);
+  margin-top: 0.45rem; line-height: 1.45;
+}
+a:hover > .tile-t { color: var(--ink); }
+
+:where(a, summary, [role="button"]):focus-visible {
+  outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 2px;
+}
+
+/* the big statement: display type set between body copy, held apart by
+   space rather than rules. One size everywhere it appears. */
+.creed {
+  font-family: var(--display); color: var(--ink);
+  font-size: clamp(1.5rem, 5.4vw, 2.2rem); line-height: 1.3;
+  letter-spacing: -0.015em; text-wrap: balance;
+  margin: 2rem 0 2.4rem;
+}
+
+.page { padding: clamp(5rem, 15vw, 7.5rem) 0 var(--band); }
+.page > .wrap > h1:first-child, .page .lede {
+  font-size: var(--t-title); line-height: 1.1; letter-spacing: -0.022em;
+  margin: 0 0 clamp(1.6rem, 5vw, 2.6rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shot > img, .shot > video { transition: none; }
+  .shot:hover > img, .shot:hover > video,
+  :hover > .shot > img, :hover > .shot > video { transform: none; }
+}

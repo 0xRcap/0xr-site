@@ -1,0 +1,101 @@
+{
+  "fungi": [
+    {
+      "cat": "Product design",
+      "note": "Two products = two interfaces. The natural language one took an instruction and executed it onchain. The yield agent replaced the conversation with a single screen.",
+      "items": [
+        {
+          "src": "fungi/mushy-agent.mp4",
+          "poster": "fungi/ui-chat.jpg",
+          "label": "Natural language interface"
+        },
+        {
+          "src": "fungi/ui-walkthrough.mp4",
+          "poster": "fungi/ui-walkthrough.jpg",
+          "label": "Natural language walkthrough"
+        },
+        {
+          "poster": "fungi/ui-dashboard.png",
+          "label": "Yield agent dashboard"
+        },
+        {
+          "src": "fungi/ui-openbeta.mp4",
+          "poster": "fungi/ui-openbeta.jpg",
+          "label": "Yield agent dashboard, open beta"
+        }
+      ],
+      "links": []
+    },
+    {
+      "cat": "Brand",
+      "note": "One company + two products = two logos. The natural language interface carried a plain mushroom. When it became a yield agent that holds money, the logo got glasses: a character that does nothing but read the yield market and answer questions about it. The character was built out from there.",
+      "items": [
+        {
+          "poster": "fungi/mark-nl-flat.png",
+          "label": "Natural language logo"
+        },
+        {
+          "poster": "fungi/mark-nl-3d.png",
+          "label": "The same logo, rendered"
+        },
+        {
+          "poster": "fungi/mark-agent.png",
+          "label": "Yield agent logo"
+        },
+        {
+          "poster": "fungi/character-fungi.png",
+          "label": "Fungi, the character"
+        }
+      ],
+      "links": []
+    },
+    {
+      "cat": "Go-to-market",
+      "note": "The token launched on Solana as the go-to-market, and the build became the launch: 24 hours on stream, prototype shipped inside the window. From January 2025 the films ran weekly and were made end to end with AI, the first weekly comms strategy built that way. Partnerships started here too, co-marketing with the protocols the agent moved money into, which is the play we later expanded at Sail.",
+      "items": [
+        {
+          "poster": "fungi/token-marketcap.jpg",
+          "label": "The token, on Dexscreener",
+          "href": "https://dexscreener.com/solana/bkrvgxjsghfjw8vakhgbijpdxtr11etbo2gn7j26acbn"
+        },
+        {
+          "poster": "sail/live-24h.jpg",
+          "label": "24-hour build livestream",
+          "href": "https://x.com/i/broadcasts/1LyxBWYlPMYKN"
+        },
+        {
+          "src": "fungi/product-505004.mp4",
+          "poster": "fungi/product-505004.jpg",
+          "label": "Two weeks in: $70K AUM",
+          "href": "https://x.com/SaildotMoney/status/1919823539831505004"
+        },
+        {
+          "src": "fungi/fungi-agent-396071.mp4",
+          "poster": "fungi/fungi-agent-396071.jpg",
+          "label": "Agent update film",
+          "href": "https://x.com/SaildotMoney/status/1880331092227396071"
+        }
+      ],
+      "links": []
+    }
+  ],
+  "sail": [
+    {
+      "cat": "Brand",
+      "note": "Every brand element is on the Sail account and the site.",
+      "items": [
+        {
+          "poster": "sail/x-account.jpg",
+          "label": "@SaildotMoney on X",
+          "href": "https://x.com/SaildotMoney"
+        },
+        {
+          "poster": "sail/landing.jpg",
+          "label": "sail.money",
+          "href": "https://sail.money"
+        }
+      ],
+      "links": []
+    }
+  ]
+}

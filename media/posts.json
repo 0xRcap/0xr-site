@@ -1,0 +1,913 @@
+{
+  "asOf": "2026-08-18",
+  "note": "views are the public X view count, recorded by hand. quoteOf marks a post that quotes one of our clips: its views count toward the total and are credited on the tile, but it gets no tile of its own. Our own accounts (SaildotMoney, 0xRcap) are deliberately not counted as amplification.",
+  "posts": [
+    {
+      "id": "2074188329164181806",
+      "account": "SaildotMoney",
+      "client": "Sail",
+      "campaign": "Protocol launch",
+      "views": 1192,
+      "quoteOf": null
+    },
+    {
+      "id": "2072665797214814312",
+      "account": "SaildotMoney",
+      "client": "Sail",
+      "campaign": "Protocol launch",
+      "views": 1802,
+      "quoteOf": null
+    },
+    {
+      "id": "2065448589363380660",
+      "account": "SaildotMoney",
+      "client": "Sail",
+      "campaign": "Protocol launch",
+      "views": 733,
+      "quoteOf": null
+    },
+    {
+      "id": "2023827359078752297",
+      "account": "SaildotMoney",
+      "client": "Sail",
+      "campaign": "EURC launch",
+      "views": 1036,
+      "quoteOf": null
+    },
+    {
+      "id": "2022017914082406747",
+      "account": "SaildotMoney",
+      "client": "Sail",
+      "campaign": "EURC launch",
+      "views": 2424,
+      "quoteOf": null
+    },
+    {
+      "id": "2021648709684277545",
+      "account": "SaildotMoney",
+      "client": "Sail",
+      "campaign": "EURC launch",
+      "views": 4498,
+      "quoteOf": null
+    },
+    {
+      "id": "2003187924586975360",
+      "account": "SaildotMoney",
+      "client": "Sail",
+      "campaign": "Referral",
+      "views": 7871,
+      "quoteOf": null
+    },
+    {
+      "id": "2002845410742997271",
+      "account": "SaildotMoney",
+      "client": "Sail",
+      "campaign": "Referral",
+      "views": 4788,
+      "quoteOf": null
+    },
+    {
+      "id": "2001351193168351575",
+      "account": "SaildotMoney",
+      "client": "Sail",
+      "campaign": "Referral",
+      "views": 16342,
+      "quoteOf": null
+    },
+    {
+      "id": "2000999112465158425",
+      "account": "SaildotMoney",
+      "client": "Sail",
+      "campaign": "Referral",
+      "views": 14715,
+      "quoteOf": null
+    },
+    {
+      "id": "2015849726793375860",
+      "account": "SaildotMoney",
+      "client": "Sail",
+      "campaign": "Referral",
+      "views": 2727,
+      "quoteOf": null
+    },
+    {
+      "id": "2018759483665654253",
+      "account": "SaildotMoney",
+      "client": "Sail",
+      "campaign": "Turtle",
+      "views": 3826,
+      "quoteOf": null
+    },
+    {
+      "id": "2087572260785660094",
+      "account": "SaildotMoney",
+      "client": "Sail",
+      "campaign": "Safe",
+      "views": 5127,
+      "quoteOf": null
+    },
+    {
+      "id": "2085405207001792904",
+      "account": "SaildotMoney",
+      "client": "Sail",
+      "campaign": "Cambrian",
+      "views": 5728,
+      "quoteOf": null
+    },
+    {
+      "id": "2031790979758411947",
+      "account": "SaildotMoney",
+      "client": "Sail",
+      "campaign": "Arbitrum",
+      "views": 19532,
+      "quoteOf": null
+    },
+    {
+      "id": "2034685078219989344",
+      "account": "SaildotMoney",
+      "client": "Sail",
+      "campaign": "Arbitrum",
+      "views": 24254,
+      "quoteOf": null
+    },
+    {
+      "id": "2016207863023108463",
+      "account": "SaildotMoney",
+      "client": "Sail",
+      "campaign": "Arbitrum",
+      "views": 4628,
+      "quoteOf": null
+    },
+    {
+      "id": "1880331092227396071",
+      "account": "SaildotMoney",
+      "client": "Fungi",
+      "campaign": "Fungi agent",
+      "views": 3331,
+      "quoteOf": null
+    },
+    {
+      "id": "2074190190147506363",
+      "account": "julioboidi",
+      "client": "Sail",
+      "campaign": "Protocol launch",
+      "views": 230,
+      "quoteOf": "2074188329164181806",
+      "kind": "amplifier",
+      "url": "https://x.com/julioboidi/status/2074190190147506363"
+    },
+    {
+      "id": "2072669125592142101",
+      "account": "aadopico",
+      "client": "Sail",
+      "campaign": "Protocol launch",
+      "views": 525,
+      "quoteOf": "2072665797214814312",
+      "kind": "amplifier",
+      "url": "https://x.com/aadopico/status/2072669125592142101"
+    },
+    {
+      "id": "2072685756120977607",
+      "account": "MFL_tw",
+      "client": "Sail",
+      "campaign": "Protocol launch",
+      "views": 525,
+      "quoteOf": "2072665797214814312",
+      "kind": "amplifier",
+      "url": "https://x.com/MFL_tw/status/2072685756120977607"
+    },
+    {
+      "id": "2021656433461539246",
+      "account": "aadopico",
+      "client": "Sail",
+      "campaign": "EURC launch",
+      "views": 634,
+      "quoteOf": "2021648709684277545",
+      "kind": "amplifier",
+      "url": "https://x.com/aadopico/status/2021656433461539246"
+    },
+    {
+      "id": "2021698126751371474",
+      "account": "TheTetherman",
+      "client": "Sail",
+      "campaign": "EURC launch",
+      "views": 370,
+      "quoteOf": "2021648709684277545",
+      "kind": "amplifier",
+      "url": "https://x.com/TheTetherman/status/2021698126751371474"
+    },
+    {
+      "id": "2003226734938726503",
+      "account": "TheTetherman",
+      "client": "Sail",
+      "campaign": "Referral",
+      "views": 817,
+      "quoteOf": "2003187924586975360",
+      "kind": "amplifier",
+      "url": "https://x.com/TheTetherman/status/2003226734938726503"
+    },
+    {
+      "id": "2003231163260018920",
+      "account": "rudyhopf",
+      "client": "Sail",
+      "campaign": "Referral",
+      "views": 451,
+      "quoteOf": "2003187924586975360",
+      "kind": "amplifier",
+      "url": "https://x.com/rudyhopf/status/2003231163260018920"
+    },
+    {
+      "id": "2003494217486860628",
+      "account": "panterafii",
+      "client": "Sail",
+      "campaign": "Referral",
+      "views": 460,
+      "quoteOf": "2003187924586975360",
+      "kind": "amplifier",
+      "url": "https://x.com/panterafii/status/2003494217486860628"
+    },
+    {
+      "id": "2003226571864469693",
+      "account": "diegoxyz",
+      "client": "Sail",
+      "campaign": "Referral",
+      "views": 1410,
+      "quoteOf": "2003187924586975360",
+      "kind": "amplifier",
+      "url": "https://x.com/diegoxyz/status/2003226571864469693"
+    },
+    {
+      "id": "2001352414637756770",
+      "account": "aadopico",
+      "client": "Sail",
+      "campaign": "Referral",
+      "views": 211,
+      "quoteOf": "2001351193168351575",
+      "kind": "amplifier",
+      "url": "https://x.com/aadopico/status/2001352414637756770"
+    },
+    {
+      "id": "2001004832124232051",
+      "account": "aadopico",
+      "client": "Sail",
+      "campaign": "Referral",
+      "views": 536,
+      "quoteOf": "2000999112465158425",
+      "kind": "amplifier",
+      "url": "https://x.com/aadopico/status/2001004832124232051"
+    },
+    {
+      "id": "2015850987236323422",
+      "account": "aadopico",
+      "client": "Sail",
+      "campaign": "Referral",
+      "views": 223,
+      "quoteOf": "2015849726793375860",
+      "kind": "amplifier",
+      "url": "https://x.com/aadopico/status/2015850987236323422"
+    },
+    {
+      "id": "2016094997905301741",
+      "account": "GButterCrypto",
+      "client": "Sail",
+      "campaign": "Referral",
+      "views": 277,
+      "quoteOf": "2015849726793375860",
+      "kind": "amplifier",
+      "url": "https://x.com/GButterCrypto/status/2016094997905301741"
+    },
+    {
+      "id": "2015868252166009165",
+      "account": "diegoxyz",
+      "client": "Sail",
+      "campaign": "Referral",
+      "views": 1443,
+      "quoteOf": "2015849726793375860",
+      "kind": "amplifier",
+      "url": "https://x.com/diegoxyz/status/2015868252166009165"
+    },
+    {
+      "id": "2018767191378739380",
+      "account": "pedro_verdades",
+      "client": "Sail",
+      "campaign": "Turtle",
+      "views": 375,
+      "quoteOf": "2018759483665654253",
+      "kind": "amplifier",
+      "url": "https://x.com/pedro_verdades/status/2018767191378739380"
+    },
+    {
+      "id": "2018763881967993021",
+      "account": "aadopico",
+      "client": "Sail",
+      "campaign": "Turtle",
+      "views": 281,
+      "quoteOf": "2018759483665654253",
+      "kind": "amplifier",
+      "url": "https://x.com/aadopico/status/2018763881967993021"
+    },
+    {
+      "id": "2087585750711710108",
+      "account": "safe",
+      "client": "Sail",
+      "campaign": "Safe",
+      "views": 4316,
+      "quoteOf": "2087572260785660094",
+      "kind": "partner",
+      "url": "https://x.com/safe/status/2087585750711710108"
+    },
+    {
+      "id": "2087576602817302838",
+      "account": "aadopico",
+      "client": "Sail",
+      "campaign": "Safe",
+      "views": 260,
+      "quoteOf": "2087572260785660094",
+      "kind": "amplifier",
+      "url": "https://x.com/aadopico/status/2087576602817302838"
+    },
+    {
+      "id": "2085413183162843353",
+      "account": "aadopico",
+      "client": "Sail",
+      "campaign": "Cambrian",
+      "views": 475,
+      "quoteOf": "2085405207001792904",
+      "kind": "amplifier",
+      "url": "https://x.com/aadopico/status/2085413183162843353"
+    },
+    {
+      "id": "2085494298804449422",
+      "account": "0xsamgreen",
+      "client": "Sail",
+      "campaign": "Cambrian",
+      "views": 1261,
+      "quoteOf": "2085405207001792904",
+      "kind": "amplifier",
+      "url": "https://x.com/0xsamgreen/status/2085494298804449422"
+    },
+    {
+      "id": "2085434345498542524",
+      "account": "0xpili_",
+      "client": "Sail",
+      "campaign": "Cambrian",
+      "views": 905,
+      "quoteOf": "2085405207001792904",
+      "kind": "amplifier",
+      "url": "https://x.com/0xpili_/status/2085434345498542524"
+    },
+    {
+      "id": "2085407064004624657",
+      "account": "CambrianNetwork",
+      "client": "Sail",
+      "campaign": "Cambrian",
+      "views": 3054,
+      "quoteOf": "2085405207001792904",
+      "kind": "partner",
+      "url": "https://x.com/CambrianNetwork/status/2085407064004624657"
+    },
+    {
+      "id": "2085425675578621965",
+      "account": "AgentFiNews",
+      "client": "Sail",
+      "campaign": "Cambrian",
+      "views": 322,
+      "quoteOf": "2085405207001792904",
+      "kind": "amplifier",
+      "url": "https://x.com/AgentFiNews/status/2085425675578621965"
+    },
+    {
+      "id": "2031791317575987387",
+      "account": "aadopico",
+      "client": "Sail",
+      "campaign": "Arbitrum",
+      "views": 269,
+      "quoteOf": "2031790979758411947",
+      "kind": "amplifier",
+      "url": "https://x.com/aadopico/status/2031791317575987387"
+    },
+    {
+      "id": "2032041409637683259",
+      "account": "arbitrum_cn",
+      "client": "Sail",
+      "campaign": "Arbitrum",
+      "views": 483,
+      "quoteOf": "2031790979758411947",
+      "kind": "partner",
+      "url": "https://x.com/arbitrum_cn/status/2032041409637683259"
+    },
+    {
+      "id": "2031817761278525751",
+      "account": "arbitrum",
+      "client": "Sail",
+      "campaign": "Arbitrum",
+      "views": 12055,
+      "quoteOf": "2031790979758411947",
+      "kind": "partner",
+      "url": "https://x.com/arbitrum/status/2031817761278525751"
+    },
+    {
+      "id": "2016218623216361661",
+      "account": "jrp_gg",
+      "client": "Sail",
+      "campaign": "Arbitrum",
+      "views": 626,
+      "quoteOf": "2016207863023108463",
+      "kind": "amplifier",
+      "url": "https://x.com/jrp_gg/status/2016218623216361661"
+    },
+    {
+      "id": "2016208874458456537",
+      "account": "aadopico",
+      "client": "Sail",
+      "campaign": "Arbitrum",
+      "views": 515,
+      "quoteOf": "2016207863023108463",
+      "kind": "amplifier",
+      "url": "https://x.com/aadopico/status/2016208874458456537"
+    },
+    {
+      "id": "2016786645794902252",
+      "account": "sagar_ujjanwal",
+      "client": "Sail",
+      "campaign": "Arbitrum",
+      "views": 474,
+      "quoteOf": "2016207863023108463",
+      "kind": "amplifier",
+      "url": "https://x.com/sagar_ujjanwal/status/2016786645794902252"
+    },
+    {
+      "id": "2017651490677002592",
+      "account": "MattyTom01",
+      "client": "Sail",
+      "campaign": "Arbitrum",
+      "views": 166,
+      "quoteOf": "2016207863023108463",
+      "kind": "amplifier",
+      "url": "https://x.com/MattyTom01/status/2017651490677002592"
+    },
+    {
+      "id": "2019061492914524207",
+      "account": "Dablendo01",
+      "client": "Sail",
+      "campaign": "Arbitrum",
+      "views": 145,
+      "quoteOf": "2016207863023108463",
+      "kind": "amplifier",
+      "url": "https://x.com/Dablendo01/status/2019061492914524207"
+    },
+    {
+      "id": "2036055113497014746",
+      "account": "arbitrum_cn",
+      "client": "Sail",
+      "campaign": "Arbitrum",
+      "views": 434,
+      "quoteOf": "2034685078219989344",
+      "kind": "partner",
+      "url": "https://x.com/arbitrum_cn/status/2036055113497014746"
+    },
+    {
+      "id": "2035046274777460960",
+      "account": "arbitrum",
+      "client": "Sail",
+      "campaign": "Arbitrum",
+      "views": 22138,
+      "quoteOf": "2034685078219989344",
+      "kind": "partner",
+      "url": "https://x.com/arbitrum/status/2035046274777460960"
+    },
+    {
+      "id": "1880344971439640995",
+      "account": "0xGonzacolo",
+      "client": "Fungi",
+      "campaign": "Fungi agent",
+      "views": 602,
+      "quoteOf": "1880331092227396071",
+      "kind": "amplifier",
+      "url": "https://x.com/0xGonzacolo/status/1880344971439640995"
+    },
+    {
+      "id": "1880336112960315841",
+      "account": "julioboidi",
+      "client": "Fungi",
+      "campaign": "Fungi agent",
+      "views": 135,
+      "quoteOf": "1880331092227396071",
+      "kind": "amplifier",
+      "url": "https://x.com/julioboidi/status/1880336112960315841"
+    }
+  ],
+  "offX": [
+    {
+      "slug": "alle-mid90s",
+      "url": "https://www.instagram.com/reel/DY2R4f3M3uE/",
+      "account": "alle.studios",
+      "client": "Alle Studios",
+      "campaign": "MID 90'S",
+      "views": 83200,
+      "asset": "mid-90s.mp4",
+      "note": "video track pulled from the reel DASH stream — VP9, no H.264 rendition exists; mid-90s.jpg is the poster fallback"
+    }
+  ],
+  "verified": "every quote re-checked one by one against its own permalink on 2026-08-18; author and quoted-post confirmed via X syndication",
+  "press": {
+    "note": "three things we show: the interview extract, and the two livestreams. Every counted post and quote rolls into one of them — the episode announcement and its quotes count toward the 11AM stream it promotes, the full interview counts toward the extract cut from it.",
+    "items": [
+      {
+        "kind": "post",
+        "id": "1986450425243931076",
+        "account": "11AMdotclub",
+        "client": "11AM",
+        "label": "11AM / episode announcement",
+        "views": 18635,
+        "url": "https://x.com/11AMdotclub/status/1986450425243931076",
+        "group": "live-11am"
+      },
+      {
+        "kind": "post",
+        "id": "1986556992673165801",
+        "account": "11AMdotclub",
+        "client": "11AM",
+        "label": "11AM / full interview (13:15)",
+        "views": 1044,
+        "url": "https://x.com/11AMdotclub/status/1986556992673165801",
+        "group": "interview"
+      },
+      {
+        "kind": "post",
+        "id": "1986591238867591573",
+        "account": "11AMdotclub",
+        "client": "11AM",
+        "label": "11AM / on agent driven finance",
+        "views": 4117,
+        "url": "https://x.com/11AMdotclub/status/1986591238867591573",
+        "asset": "interview-591573.mp4",
+        "poster": "interview-591573.jpg",
+        "seconds": 41,
+        "group": "interview"
+      },
+      {
+        "kind": "broadcast",
+        "id": "1LyxBWYlPMYKN",
+        "account": "SaildotMoney",
+        "client": "Sail",
+        "label": "Watch Us Build a Money-Making DeFi Agent in 24H",
+        "views": 5144,
+        "url": "https://x.com/i/broadcasts/1LyxBWYlPMYKN",
+        "group": "live-sail"
+      },
+      {
+        "kind": "broadcast",
+        "id": "1OyKAjAeyAoGb",
+        "account": "11AMdotclub",
+        "client": "11AM",
+        "label": "11AM w/ Seed Club / AI yield with Sail",
+        "views": 3822,
+        "url": "https://x.com/i/broadcasts/1OyKAjAeyAoGb",
+        "group": "live-11am"
+      }
+    ],
+    "quotes": [
+      {
+        "id": "1986451343549358442",
+        "account": "11AMdotclub",
+        "views": 18677,
+        "quoteOf": "1986450425243931076",
+        "url": "https://x.com/11AMdotclub/status/1986451343549358442"
+      },
+      {
+        "id": "1986461764608008643",
+        "account": "thattallguy",
+        "views": 3260,
+        "quoteOf": "1986450425243931076",
+        "url": "https://x.com/thattallguy/status/1986461764608008643"
+      },
+      {
+        "id": "1986457294872175051",
+        "account": "seedclub",
+        "views": 1150,
+        "quoteOf": "1986450425243931076",
+        "url": "https://x.com/seedclub/status/1986457294872175051"
+      },
+      {
+        "id": "1986467981774496109",
+        "account": "jesusislord",
+        "views": 1563,
+        "quoteOf": "1986450425243931076",
+        "url": "https://x.com/jesusislord/status/1986467981774496109"
+      },
+      {
+        "id": "1986558345369514464",
+        "account": "aadopico",
+        "views": 306,
+        "quoteOf": "1986556992673165801",
+        "url": "https://x.com/aadopico/status/1986558345369514464"
+      },
+      {
+        "id": "1987976171578159470",
+        "account": "aadopico",
+        "views": 46,
+        "quoteOf": "1986556992673165801",
+        "url": "https://x.com/aadopico/status/1987976171578159470"
+      },
+      {
+        "id": "1986783156838560130",
+        "account": "0xRcap",
+        "views": 9430,
+        "quoteOf": "1986591238867591573",
+        "url": "https://x.com/0xRcap/status/1986783156838560130"
+      },
+      {
+        "id": "1904265952201789501",
+        "account": "thattallguy",
+        "views": 1008,
+        "quoteOf": "1LyxBWYlPMYKN",
+        "url": "https://x.com/thattallguy/status/1904265952201789501"
+      },
+      {
+        "id": "1904270422138327448",
+        "account": "aadopico",
+        "views": 367,
+        "quoteOf": "1LyxBWYlPMYKN",
+        "url": "https://x.com/aadopico/status/1904270422138327448"
+      },
+      {
+        "id": "1904267106708869372",
+        "account": "aadopico",
+        "views": 44,
+        "quoteOf": "1LyxBWYlPMYKN",
+        "url": "https://x.com/aadopico/status/1904267106708869372"
+      },
+      {
+        "id": "1904458083201355951",
+        "account": "GButterCrypto",
+        "views": 192,
+        "quoteOf": "1LyxBWYlPMYKN",
+        "url": "https://x.com/GButterCrypto/status/1904458083201355951"
+      },
+      {
+        "id": "1904338811175215165",
+        "account": "0xRcap",
+        "views": 21,
+        "quoteOf": "1LyxBWYlPMYKN",
+        "url": "https://x.com/0xRcap/status/1904338811175215165"
+      }
+    ],
+    "tiles": [
+      {
+        "group": "interview",
+        "client": "11AM",
+        "title": "On agent driven finance",
+        "href": "https://x.com/11AMdotclub/status/1986591238867591573",
+        "src": "11am/interview-591573.mp4",
+        "poster": "11am/interview-591573.jpg"
+      },
+      {
+        "group": "live-sail",
+        "client": "Sail",
+        "title": "Watch Us Build a DeFi Agent in 24H",
+        "href": "https://x.com/i/broadcasts/1LyxBWYlPMYKN",
+        "poster": "sail/live-24h.jpg"
+      },
+      {
+        "group": "live-11am",
+        "client": "11AM",
+        "title": "11AM w/ Seed Club — AI yield with Sail",
+        "href": "https://x.com/i/broadcasts/1OyKAjAeyAoGb",
+        "poster": "11am/live-seedclub.jpg"
+      }
+    ]
+  },
+  "topline": {
+    "label": "organic reach",
+    "value": "4M+",
+    "unit": "impressions",
+    "note": "since 2024 (own channels, partners and amplifications)",
+    "source": "supplied — not verified in this repo"
+  },
+  "since": "Dec 2025",
+  "brands": [
+    {
+      "label": "as cofounder and CMO of Sail/Fungi, collaborated/worked with",
+      "items": [
+        {
+          "name": "Arbitrum",
+          "href": "https://x.com/arbitrum"
+        },
+        {
+          "name": "Base",
+          "href": "https://x.com/base"
+        },
+        {
+          "name": "Safe",
+          "href": "https://x.com/safe"
+        },
+        {
+          "name": "Morpho",
+          "href": "https://x.com/Morpho"
+        },
+        {
+          "name": "Gauntlet",
+          "href": "https://x.com/gauntlet_xyz"
+        },
+        {
+          "name": "Fluid",
+          "href": "https://x.com/0xfluid"
+        },
+        {
+          "name": "Cambrian",
+          "href": "https://x.com/CambrianNetwork"
+        },
+        {
+          "name": "Turtle",
+          "href": "https://x.com/turtledotxyz"
+        },
+        {
+          "name": "Definitive",
+          "href": "https://x.com/DefinitiveFi"
+        },
+        {
+          "name": "bond.credit",
+          "href": "https://x.com/bondoncredit"
+        },
+        {
+          "name": "Umia",
+          "href": "https://x.com/umia_finance"
+        },
+        {
+          "name": "WYCF",
+          "href": "https://x.com/wycf_show"
+        }
+      ]
+    },
+    {
+      "label": "as creative director, worked/working with",
+      "items": [
+        {
+          "name": "Allé Studios",
+          "href": "https://www.instagram.com/alle.studios/"
+        }
+      ]
+    }
+  ],
+  "product": {
+    "note": "Product and interface work, shown on the work page under the position it belongs to. Separate from the films: these are the product surfaces, not campaign content.",
+    "items": [
+      {
+        "id": "2026694839899758823",
+        "position": "sail",
+        "label": "The agent, running",
+        "views": 3789,
+        "url": "https://x.com/SaildotMoney/status/2026694839899758823"
+      },
+      {
+        "id": "2036510965684965618",
+        "position": "sail",
+        "label": "Agent communication layer",
+        "views": 2681,
+        "url": "https://x.com/SaildotMoney/status/2036510965684965618"
+      },
+      {
+        "id": "2041130173165117704",
+        "position": "sail",
+        "label": "Euros, onchain",
+        "views": 2044,
+        "url": "https://x.com/SaildotMoney/status/2041130173165117704"
+      },
+      {
+        "id": "2016599082312110441",
+        "position": "sail",
+        "label": "Personalising the agent",
+        "views": 1645,
+        "url": "https://x.com/SaildotMoney/status/2016599082312110441"
+      },
+      {
+        "id": "2011049228760502352",
+        "position": "sail",
+        "label": "Liquid Glass interface",
+        "views": 1226,
+        "url": "https://x.com/SaildotMoney/status/2011049228760502352"
+      },
+      {
+        "id": "1919823539831505004",
+        "position": "fungi",
+        "label": "Two weeks in",
+        "views": 1418,
+        "url": "https://x.com/SaildotMoney/status/1919823539831505004"
+      }
+    ]
+  },
+  "cases": {
+    "note": "Case studies per position on the work page, grouped by the kind of work. Assets live in site/media/<client>/.",
+    "fungi": [
+      {
+        "cat": "Product design",
+        "note": "Two products = two interfaces. The natural language one took an instruction and executed it onchain. The yield agent replaced the conversation with a single screen.",
+        "items": [
+          {
+            "src": "fungi/mushy-agent.mp4",
+            "poster": "fungi/ui-chat.jpg",
+            "label": "Natural language interface"
+          },
+          {
+            "src": "fungi/ui-walkthrough.mp4",
+            "poster": "fungi/ui-walkthrough.jpg",
+            "label": "Natural language walkthrough"
+          },
+          {
+            "poster": "fungi/ui-dashboard.png",
+            "label": "Yield agent dashboard"
+          },
+          {
+            "src": "fungi/ui-openbeta.mp4",
+            "poster": "fungi/ui-openbeta.jpg",
+            "label": "Yield agent dashboard, open beta"
+          }
+        ]
+      },
+      {
+        "cat": "Brand",
+        "note": "One company + two products = two logos. The natural language interface carried a plain mushroom. When it became a yield agent that holds money, the logo got glasses: a character that does nothing but read the yield market and answer questions about it. The character was built out from there.",
+        "items": [
+          {
+            "poster": "fungi/mark-nl-flat.png",
+            "label": "Natural language logo"
+          },
+          {
+            "poster": "fungi/mark-nl-3d.png",
+            "label": "The same logo, rendered"
+          },
+          {
+            "poster": "fungi/mark-agent.png",
+            "label": "Yield agent logo"
+          },
+          {
+            "poster": "fungi/character-fungi.png",
+            "label": "Fungi, the character"
+          }
+        ]
+      },
+      {
+        "cat": "Go-to-market",
+        "note": "The token launched on Solana as the go-to-market, and the build became the launch: 24 hours on stream, prototype shipped inside the window. From January 2025 the films ran weekly and were made end to end with AI, the first weekly comms strategy built that way. Partnerships started here too, co-marketing with the protocols the agent moved money into, which is the play we later expanded at Sail.",
+        "items": [
+          {
+            "poster": "fungi/token-marketcap.jpg",
+            "label": "The token, on Dexscreener",
+            "href": "https://dexscreener.com/solana/bkrvgxjsghfjw8vakhgbijpdxtr11etbo2gn7j26acbn"
+          },
+          {
+            "poster": "sail/live-24h.jpg",
+            "label": "24-hour build livestream",
+            "href": "https://x.com/i/broadcasts/1LyxBWYlPMYKN"
+          },
+          {
+            "src": "fungi/product-505004.mp4",
+            "poster": "fungi/product-505004.jpg",
+            "label": "Two weeks in: $70K AUM",
+            "href": "https://x.com/SaildotMoney/status/1919823539831505004"
+          },
+          {
+            "src": "fungi/fungi-agent-396071.mp4",
+            "poster": "fungi/fungi-agent-396071.jpg",
+            "label": "Agent update film",
+            "href": "https://x.com/SaildotMoney/status/1880331092227396071"
+          }
+        ]
+      }
+    ],
+    "sail": [
+      {
+        "cat": "Brand",
+        "note": "Every brand element is on the Sail account and the site.",
+        "items": [
+          {
+            "poster": "sail/x-account.jpg",
+            "label": "@SaildotMoney on X",
+            "href": "https://x.com/SaildotMoney"
+          },
+          {
+            "poster": "sail/landing.jpg",
+            "label": "sail.money",
+            "href": "https://sail.money"
+          }
+        ]
+      }
+    ]
+  },
+  "writings": {
+    "note": "Long-form pieces. Not counted in the films total or in press and live — these are writing, not reach.",
+    "items": [
+      {
+        "kind": "article",
+        "outlet": "X",
+        "author": "0xRcap",
+        "date": "2025-05-07",
+        "title": "the agentic ui (for defi)",
+        "cover": "writing/agentic-ui.jpg",
+        "href": "https://x.com/0xRcap/status/1920178727582904606",
+        "source": "x.com/i/article/1920168820951449602 — author and date verified via the public oembed endpoint; title and cover supplied by Rodrigo"
+      }
+    ]
+  }
+}

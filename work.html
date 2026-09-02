@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>0xR — the record</title>
+<meta name="author" content="Rodrigo Rivas Yassin">
+<meta name="description" content="Four positions: 0xR, Sail, Fungi and Boveda. Every claim carries its receipt.">
+<link rel="canonical" href="https://0xr.io/work.html">
+<link rel="icon" href="favicon.png" type="image/png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="0xR">
+<meta property="og:title" content="0xR — the record">
+<meta property="og:description" content="Four positions: 0xR, Sail, Fungi and Boveda. Every claim carries its receipt.">
+<meta property="og:url" content="https://0xr.io/work.html">
+<meta property="og:image" content="https://0xr.io/media/share-card.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="0xR — the record">
+<meta name="twitter:description" content="Four positions: 0xR, Sail, Fungi and Boveda. Every claim carries its receipt.">
+<meta name="twitter:image" content="https://0xr.io/media/share-card.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .sc { font-style: normal; opacity: 0.45; }
+
+  /* ── a position is a disclosure: the name is the handle, the record
+        lives inside it. Native <details> so it works without script and
+        keyboard users get it for free. ── */
+  .entry { border-top: 1px solid var(--rule); }
+  .entry:last-of-type { border-bottom: 1px solid var(--rule); }
+  .entry > summary {
+    display: grid; grid-template-columns: 2.5rem 1fr auto; gap: 0 1.2rem;
+    align-items: baseline; padding: clamp(1.4rem, 4vw, 2.1rem) 0;
+    cursor: pointer; list-style: none; min-height: var(--tap);
+  }
+  .entry > summary::-webkit-details-marker { display: none; }
+  .entry .idx { font-family: var(--mono); font-size: var(--t-mono); color: var(--tone); }
+  .entry h2 {
+    font-size: clamp(2.1rem, 9vw, 4.2rem); line-height: 1.1;
+    letter-spacing: -0.018em; margin: 0;
+  }
+  .entry .role {
+    display: block; font-family: var(--mono); font-size: var(--t-micro);
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--tone);
+    margin-top: 0.5rem;
+  }
+  .entry .when {
+    font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--tone); white-space: nowrap;
+  }
+  /* the chevron is the only thing that moves, so the state is never in doubt */
+  .entry .when::after {
+    content: ""; display: inline-block; width: 0.5rem; height: 0.5rem;
+    margin-left: 0.7rem; vertical-align: 0.1em;
+    border-right: 1.5px solid var(--tone); border-bottom: 1.5px solid var(--tone);
+    transform: rotate(45deg); transition: transform 0.25s ease;
+  }
+  .entry[open] .when::after { transform: rotate(-135deg); }
+  .entry > summary:hover h2 { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+  @media (max-width: 620px) {
+    .entry > summary { grid-template-columns: 1fr auto; }
+    .entry .idx { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { .entry .when::after { transition: none; } }
+
+  .entry .body { padding: 0 0 2.4rem; max-width: 40rem; }
+  @media (min-width: 621px) { .entry .body { margin-left: 3.7rem; } }
+  .entry .body p { margin: 0 0 0.9rem; font-size: var(--t-small); color: var(--ink-soft); }
+  .entry .body p a {
+    color: inherit; text-decoration: underline; text-decoration-thickness: 1px;
+    text-underline-offset: 2px; text-decoration-color: var(--tone);
+  }
+  .entry .body p a:hover { text-decoration-color: var(--ink); }
+  .impact {
+    font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--ink) !important;
+    border-left: 2px solid var(--ink); padding-left: 0.8rem; line-height: 1.7;
+  }
+
+  /* ── product surfaces and case studies, one grid for both ── */
+  .surfaces, .cases { margin: 1.8rem 0 0; }
+  .surfaces .lab, .cat .cat-lab {
+    display: block; font-family: var(--mono); font-size: var(--t-micro);
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--tone);
+    margin: 0 0 0.6rem;
+  }
+  .cat .cat-lab { color: var(--ink); border-top: 1px solid var(--rule); padding-top: 0.7rem; }
+  .cat + .cat { margin-top: 2rem; }
+  .cat .cat-note { font-size: var(--t-small); margin: 0 0 0.9rem; color: var(--ink-soft); }
+  .row {
+    display: grid; gap: 0.6rem;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr));
+  }
+  .row > * { display: block; text-decoration: none; color: var(--ink); }
+
+  .cat-links { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 1rem 0 0; }
+  .cat-links a {
+    display: flex; align-items: center; gap: 0.6rem; min-height: var(--tap);
+    padding: 0.6rem 1.1rem; border: 1px solid var(--rule); border-radius: 2px;
+    text-decoration: none; color: var(--ink); background: var(--paper);
+    font-family: var(--mono); font-size: var(--t-mono); letter-spacing: 0.06em;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+  .cat-links a:hover, .cat-links a:focus-visible {
+    background: var(--card-bg); color: var(--card-ink); border-color: var(--card-bg);
+  }
+
+  /* ── media with nowhere to go opens full size in place ── */
+  .lightbox {
+    position: fixed; inset: 0; z-index: 50; display: flex;
+    align-items: center; justify-content: center;
+    background: rgba(14, 13, 11, 0.94); padding: 3vmin;
+    cursor: zoom-out; opacity: 0; transition: opacity 0.2s;
+  }
+  .lightbox.on { opacity: 1; }
+  .lightbox img, .lightbox video { max-width: 100%; max-height: 100%; object-fit: contain; }
+  .lightbox .cap {
+    position: absolute; left: 0; right: 0; bottom: 1.1rem; text-align: center;
+    font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--card-tone); padding: 0 var(--pad);
+  }
+  @media (prefers-reduced-motion: reduce) { .lightbox { transition: none; } }
+</style>
+</head>
+<body>
+
+    <div class="bar" id="bar">
+      <a class="name" href="index.html">0xR</a>
+      <nav>
+        <a href="what.html">what</a>
+        <a href="work.html" aria-current="page">work</a>
+        <a href="who.html">who</a>
+      </nav>
+    </div>
+
+    <main class="page">
+      <div class="wrap">
+      <h1 class="lede" data-scramble="mount" data-delay="60">The record.</h1>
+
+      <details class="entry" open>
+        <summary data-scramble-host>
+          <span class="idx">01</span>
+          <div><h2 data-scramble="hover" data-delay="0">0xR</h2><span class="role" data-scramble>New media, for clients</span></div>
+          <span class="when">2026 &ndash; now</span>
+        </summary>
+        <div class="body">
+          <p>A new media department of one human and many agents, for
+          companies that cannot hire a department of people. I run the story on
+          every surface it travels on: the brand, the product design, the
+          films, the comms and the community.</p>
+          <p class="impact">Clients: All&eacute; Studios, Madrid streetwear,
+          the MID 90'S capsule.</p>
+        </div>
+      </details>
+      <details class="entry">
+        <summary data-scramble-host>
+          <span class="idx">02</span>
+          <div><h2 data-scramble="hover" data-delay="0">Sail</h2><span class="role" data-scramble>Cofounder and CMO</span></div>
+          <span class="when">Oct 2025 &ndash; now</span>
+        </summary>
+        <div class="body">
+          <p>Rebranded Fungi into Sail and took the yield agent
+          institutional. It was the first agent to run swaps and bridges
+          autonomously and without custody, and it <a href="https://x.com/SaildotMoney/status/2042315862229577747"
+          target="_blank" rel="noopener">outperformed the stablecoin yield
+          market</a>.</p>
+          <p>The AI films started here, and verified followers and users
+          climbed once the films began shipping.</p>
+          <p>We shut the yield agent down over a security concern, while
+          protocols throughout the entire DeFi ecosystem were being hacked
+          repeatedly. No user lost money. Sail is now a protocol and a
+          harness: the first open source permission layer agents can transact
+          safely under, with Sailor on top of it.</p>
+          <p class="impact">$700M in autonomous volume and $1M AUM, organic,
+          across roughly 1,000 users and 56 yield sources integrated.</p>
+          <div class="surfaces" data-position="sail"></div>
+          <div class="cases" data-cases="sail"></div>
+        </div>
+      </details>
+      <details class="entry">
+        <summary data-scramble-host>
+          <span class="idx">03</span>
+          <div><h2 data-scramble="hover" data-delay="0">Fungi</h2><span class="role" data-scramble>Cofounder and CMO</span></div>
+          <span class="when">Dec 2023 &ndash; Oct 2025</span>
+        </summary>
+        <div class="body">
+          <p>Started as a natural language interface for DeFi, a ChatGPT for
+          crypto that executed onchain actions in plain English. The token
+          launched as go-to-market reached $9M market cap on Solana, with a
+          Telegram community of around 1,000.</p>
+          <p>Pivoted to the yield agent and launched it with a 24-hour
+          livestream instead of an announcement, hitting $50k AUM in the first
+          week. I ran every surface it travelled on: the product design, the
+          brand, the films, the comms, the community and the launches.</p>
+          <div class="cases" data-cases="fungi"></div>
+        </div>
+      </details>
+      <details class="entry">
+        <summary data-scramble-host>
+          <span class="idx">04</span>
+          <div><h2 data-scramble="hover" data-delay="0">Boveda</h2><span class="role" data-scramble>Cofounder</span></div>
+          <span class="when">Mar 2022 &ndash; Nov 2023</span>
+        </summary>
+        <div class="body">
+          <p>Decentralized storage on the Filecoin network. Ran both sides of
+          a B2B market: the companies with data to store, and the partners who
+          could store it. Won 1.4 petabytes from clients including
+          Interdominios.</p>
+          <p>Secured the supply to hold it: a Madrid data centre for the
+          machines, a technical support partnership with Protocol Labs, and a
+          storage partnership with PiKNiK in the United States.</p>
+          <p class="impact">1.4 PB stored across two facilities, Madrid and
+          San Diego.</p>
+        </div>
+      </details>
+      </div>
+    </main>
+
+    <footer class="foot"><span>&copy; 2026 0xR</span><nav>
+      <a href="mailto:rodrigo@0xr.io">rodrigo@0xr.io</a>
+      <a href="https://x.com/0xRcap" target="_blank" rel="noopener">x</a>
+      <a href="https://github.com/0xRcap" target="_blank" rel="noopener">github</a>
+    </nav></footer>
+<script src="nav.js" defer></script>
+<script src="player.js"></script>
+<script src="scramble.js" defer></script>
+<script>
+/* ── the surfaces — from media/product.json · npm run posts ── */
+(async () => {
+  const mounts = [...document.querySelectorAll(".surfaces[data-position]")];
+  if (!mounts.length) return;
+  let data;
+  try {
+    const r = await fetch("media/product.json", { cache: "no-store" });
+    if (!r.ok) return;
+    data = await r.json();
+  } catch (e) { return; }
+
+  /* the video engine lives in player.js, shared with index.html */
+
+  for (const mount of mounts) {
+    const items = data.items.filter(i => i.position === mount.dataset.position);
+    if (!items.length) { mount.remove(); continue; }
+    mount.innerHTML = '<span class="lab">product and interface</span><div class="row">'
+      + items.map(i => {
+        const shot = i.src
+          ? `<img src="media/${i.poster}" alt="${i.label}" loading="lazy">`
+            + `<video data-src="media/${i.src}" autoplay muted loop playsinline preload="none"></video>`
+          : `<img src="media/${i.poster}" alt="${i.label}" loading="lazy">`;
+        return `<a class="opens-away" href="${i.href}" target="_blank" rel="noopener">`
+          + `<span class="shot">${shot}</span>`
+          + `<span class="tile-t">${i.label}</span></a>`;
+      }).join("")
+      + '</div>';
+    mount.querySelectorAll("a").forEach(a => mediaWall.observe(a));
+  }
+
+  /* the case studies use the same tiles and the same decoder discipline */
+  const caseMounts = [...document.querySelectorAll(".cases[data-cases]")];
+  if (caseMounts.length) {
+    let cases;
+    try {
+      const r = await fetch("media/cases.json", { cache: "no-store" });
+      if (r.ok) cases = await r.json();
+    } catch (e) { /* file:// — the block stays empty */ }
+    if (cases) {
+      const tile = (i) => {
+        const shot = i.src
+          ? `<span class="shot"><img src="media/${i.poster}" alt="" loading="lazy">`
+            + `<video data-src="media/${i.src}" autoplay muted loop playsinline preload="none"></video></span>`
+          : `<span class="shot"><img src="media/${i.poster}" alt="${i.label}" loading="lazy"></span>`;
+        const body = shot + `<span class="tile-t">${i.label}</span>`;
+        return i.href
+          ? `<a class="opens-away" href="${i.href}" target="_blank" rel="noopener">${body}</a>`
+          : `<span class="zoom opens-here" role="button" tabindex="0" data-full="media/${i.src || i.poster}"`
+            + ` data-kind="${i.src ? "video" : "image"}" data-label="${i.label}">${body}</span>`;
+      };
+      for (const m of caseMounts) {
+        const groups = cases[m.dataset.cases];
+        if (!groups || !groups.length) { m.remove(); continue; }
+        m.innerHTML = groups.map(g =>
+          `<div class="cat"><span class="cat-lab">${g.cat}</span>`
+          + (g.note ? `<p class="cat-note">${g.note}</p>` : "")
+          + `<div class="row">${g.items.map(tile).join("")}</div>`
+          + ((g.links && g.links.length)
+              ? `<div class="cat-links">` + g.links.map(l =>
+                  `<a href="${l.href}" target="_blank" rel="noopener">`
+                  + `<span>${l.label}</span><span class="arw">&#8599;</span></a>`
+                ).join("") + `</div>`
+              : "")
+          + `</div>`
+        ).join("");
+        m.querySelectorAll(".row > *").forEach(el => mediaWall.observe(el));
+      }
+    }
+  }
+  /* open a tile that has no link at full size */
+  let box = null;
+  function close() {
+    if (!box) return;
+    box.classList.remove("on");
+    const gone = box;
+    box = null;
+    setTimeout(() => gone.remove(), 200);
+  }
+  function open(el) {
+    close();
+    const kind = el.dataset.kind, full = el.dataset.full;
+    box = document.createElement("div");
+    box.className = "lightbox";
+    box.innerHTML = (kind === "video"
+        ? `<video src="${full}" autoplay muted loop playsinline controls></video>`
+        : `<img src="${full}" alt="${el.dataset.label}">`)
+      + `<span class="cap">${el.dataset.label} / click anywhere to close</span>`;
+    document.body.appendChild(box);
+    void box.offsetWidth;
+    box.classList.add("on");
+    box.addEventListener("click", close);
+  }
+  document.addEventListener("click", e => {
+    const t = e.target.closest(".zoom");
+    if (t) open(t);
+  });
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") return close();
+    if (e.key !== "Enter" && e.key !== " ") return;
+    const t = document.activeElement && document.activeElement.closest(".zoom");
+    if (t) { e.preventDefault(); open(t); }
+  });
+  /* a closed <details> has no box, so nothing observes. Re-check on open. */
+  document.querySelectorAll("details.entry").forEach(d =>
+    d.addEventListener("toggle", () => {
+      if (!d.open) return;
+      d.querySelectorAll(".row > *, .reel .tile").forEach(el => { mediaWall.reobserve(el); });
+    }));
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "name": "0xr-site",
+  "version": "1.0.0",
+  "description": "0xR — a new media department of one human and many agents.",
+  "private": true,
+  "type": "module",
+  "author": "Rodrigo Rivas Yassin",
+  "homepage": "https://0xr.io",
+  "scripts": {
+    "posts": "node scripts/posts.mjs"
+  }
+}

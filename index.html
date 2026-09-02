@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>0xR — new media</title>
+<meta name="author" content="Rodrigo Rivas Yassin">
+<meta name="description" content="A new media department of one human and many agents. Positioning and production for companies that cannot hire a department of people.">
+<link rel="canonical" href="https://0xr.io/">
+<link rel="icon" href="favicon.png" type="image/png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="0xR">
+<meta property="og:title" content="0xR — new media">
+<meta property="og:description" content="A new media department of one human and many agents. Positioning and production for companies that cannot hire a department of people.">
+<meta property="og:url" content="https://0xr.io/">
+<meta property="og:image" content="https://0xr.io/media/share-card.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="0xR — new media">
+<meta name="twitter:description" content="A new media department of one human and many agents. Positioning and production for companies that cannot hire a department of people.">
+<meta name="twitter:image" content="https://0xr.io/media/share-card.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .sc { font-style: normal; opacity: 0.45; }
+  /* ── hero: one viewport, headline over an ascii terrain ──
+     The canvas owns the bottom band. On a short phone it takes less, so
+     the headline always has room above it. */
+  .hero {
+    position: relative; min-height: 100svh; overflow: hidden;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding-bottom: calc(var(--terrain) + clamp(1.5rem, 6vh, 4rem));
+  }
+  .hero .wrap { position: relative; z-index: 2; }
+  .hello {
+    font-family: var(--mono); font-size: var(--t-mono); color: var(--tone);
+    letter-spacing: 0.12em; margin: 0 0 1.1rem;
+  }
+  .sub {
+    font-family: var(--mono); font-size: var(--t-mono); line-height: 1.7;
+    color: var(--ink-soft); max-width: 42rem; margin: 1.6rem 0 0;
+  }
+  .sub .oneline { white-space: nowrap; }
+  #ascii {
+    position: absolute; inset: auto 0 0 0; width: 100%; height: var(--terrain);
+    z-index: 1; display: block; pointer-events: none;
+  }
+  :root { --terrain: 44vh; }
+  @media (max-height: 760px), (max-width: 700px) { :root { --terrain: 34vh; } }
+
+  /* ── the films: every clip, with the number it earned ── */
+  .films { background: var(--paper); }
+  .films .head { padding: var(--band) 0 2.4rem; }
+  .tally {
+    font-family: var(--display); font-weight: normal; font-size: var(--t-huge);
+    line-height: 1.06; letter-spacing: -0.018em; margin: 0.4rem 0 0.9rem;
+  }
+  .tally small, .scope {
+    display: block; font-family: var(--mono); font-size: var(--t-micro);
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--tone);
+    margin-top: 0.8rem;
+  }
+
+  /* the wall. auto-fill decides the columns, so there is no breakpoint. */
+  .reel {
+    display: grid; gap: 4px; padding: 4px 0 0; background: var(--ink);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+    position: relative; z-index: 2;
+  }
+  .reel .tile {
+    position: relative; margin: 0; width: 100%; aspect-ratio: 16 / 9;
+    overflow: hidden; background: var(--ink); display: block;
+  }
+  .reel .tile img, .reel .tile video {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.35s ease, filter 0.35s ease;
+  }
+  .reel .tile video { opacity: 0; }
+  .reel .tile video.ready { opacity: 1; }
+  .reel .tile a { display: block; position: absolute; inset: 0; cursor: pointer; }
+  .reel .tile figcaption {
+    position: absolute; inset: auto 0 0 0; padding: 0.75rem 0.9rem; z-index: 2;
+    font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.04em;
+    text-transform: uppercase; color: #fff; opacity: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.75));
+    transition: opacity 0.25s;
+  }
+  .reel .tile figcaption b { font-weight: normal; display: block; }
+  .reel .tile figcaption span { display: block; opacity: 0.7; margin-top: 0.15rem; }
+  .reel .tile figcaption em { font-style: normal; opacity: 0.55; }
+  .reel .tile:hover figcaption, .reel .tile:focus-within figcaption { opacity: 1; }
+  .reel .tile a:hover ~ figcaption { opacity: 1; }
+
+  /* the same badge the rest of the site uses, on a tile whose anchor
+     covers the whole frame rather than sitting inside a .shot */
+  .reel .tile a::after {
+    content: ""; position: absolute; top: 0.5rem; right: 0.5rem; z-index: 3;
+    width: 1.6rem; height: 1.6rem; border-radius: 50%;
+    background: rgba(255,255,255,0.94) no-repeat center / 0.8rem 0.8rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230E0D0B' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17 17 7'/%3E%3Cpath d='M8 7h9v9'/%3E%3C/svg%3E");
+    opacity: 0; transform: translateY(-0.25rem) scale(0.9);
+    transition: opacity 0.2s ease, transform 0.2s ease; pointer-events: none;
+  }
+  .reel .tile a:hover::after, .reel .tile a:focus-visible::after { opacity: 1; transform: none; }
+  .reel .tile a:hover ~ figcaption { opacity: 1; }
+  .reel .tile a:hover + figcaption { opacity: 1; }
+  .reel .tile:hover img, .reel .tile:hover video { transform: scale(1.04); filter: brightness(0.8); }
+  @media (hover: none) { .reel .tile a::after { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .reel .tile img, .reel .tile video { transition: none; }
+    .reel .tile:hover img, .reel .tile:hover video { transform: none; }
+  }
+  .reel .tile.more {
+    display: flex; align-items: center; justify-content: center;
+    color: #6b6862; font-family: var(--mono); font-size: var(--t-mono);
+    letter-spacing: 0.16em; text-transform: uppercase;
+  }
+  .reel .empty {
+    grid-column: 1 / -1; padding: var(--band) var(--pad); text-align: center;
+    font-family: var(--mono); font-size: var(--t-small); color: #6b6862;
+  }
+
+  /* ── press and live ── */
+  .press { background: var(--paper); padding: var(--band) 0; }
+  .press .num {
+    font-family: var(--display); font-weight: normal;
+    font-size: clamp(1.9rem, 5vw, 3.2rem); line-height: 1.12; margin: 0.4rem 0 2.2rem;
+  }
+  .pressgrid {
+    display: grid; gap: var(--gap);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  }
+  .pcard { display: block; text-decoration: none; color: var(--ink); }
+  .pcard .kind {
+    position: absolute; z-index: 3; left: 0.5rem; top: 0.5rem;
+    font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.12em;
+    text-transform: uppercase; background: var(--paper); color: var(--ink);
+    padding: 0.15rem 0.45rem; border-radius: 2px;
+  }
+  .pcard .t { display: block; font-size: var(--t-small); line-height: 1.3; margin: 0.7rem 0 0.2rem; }
+  .pcard:hover .t { text-decoration: underline; }
+  .pcard .v {
+    display: block; font-family: var(--mono); font-size: var(--t-micro);
+    letter-spacing: 0.06em; text-transform: uppercase; color: var(--tone);
+  }
+
+  /* ── writing: long-form. auto-fit so one piece fills its row. ── */
+  .writings { margin: 3.4rem 0 0; }
+  .writings .label { margin-bottom: 1.4rem; }
+  .writegrid {
+    display: grid; gap: 1px; background: var(--rule);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+    border-block: 1px solid var(--rule);
+  }
+  .wcard {
+    display: flex; flex-direction: column; gap: 0.6rem;
+    padding: 1.5rem var(--pad) 1.6rem; background: var(--paper);
+    text-decoration: none; color: var(--ink); cursor: pointer;
+    transition: background 0.25s ease;
+  }
+  .wcard:hover, .wcard:focus-visible { background: var(--tile-bg); }
+  .wcard .cover {
+    position: relative; display: block; width: 100%; aspect-ratio: 12 / 5;
+    max-height: 300px; overflow: hidden; border-radius: 2px; background: var(--ink);
+  }
+  .wcard .cover img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.35s ease; }
+  .wcard:hover .cover img { transform: scale(1.04); }
+  .wcard .meta, .wcard .go {
+    font-family: var(--mono); font-size: var(--t-micro);
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--tone);
+  }
+  .wcard .h {
+    font-family: var(--display); font-weight: normal;
+    font-size: clamp(1.2rem, 3.4vw, 1.6rem); line-height: 1.28; text-wrap: balance;
+  }
+  .wcard .go { margin-top: auto; padding-top: 0.7rem; transition: color 0.25s ease; }
+  .wcard:hover .go { color: var(--ink); }
+  @media (prefers-reduced-motion: reduce) { .wcard .cover img { transition: none; } .wcard:hover .cover img { transform: none; } }
+</style>
+</head>
+<body>
+
+
+<div class="bar" id="bar">
+      <a class="name" href="index.html">0xR</a>
+      <nav>
+        <a href="what.html">what</a>
+        <a href="work.html">work</a>
+        <a href="who.html">who</a>
+      </nav>
+    </div>
+
+    <header class="hero">
+  <div class="wrap">
+    <p class="hello" data-scramble="mount" data-delay="0">Hello world, I'm Rodrigo Rivas&nbsp;Yassin.</p>
+    <h1 data-scramble="mount" data-delay="60">A new media department of (&nbsp;one&nbsp;) human + {&nbsp;many&nbsp;}&nbsp;agents.</h1>
+    <p class="sub"><span class="oneline">Positioning and production.</span></p>
+  </div>
+  <canvas id="ascii"></canvas>
+</header>
+
+    <section class="films" id="films" aria-label="AI films">
+      <div class="wrap head">
+        <p class="label" data-scramble>AI films</p>
+        <h2 class="tally"><span id="tally-n">&mdash;</span> impressions
+          <small id="tally-sub">counting</small></h2>
+      </div>
+      <div class="reel" id="reel"></div>
+    </section>
+
+    <section class="press" id="press" aria-label="press and live">
+      <div class="wrap">
+        <p class="label" data-scramble>press &amp; live</p>
+        <p class="num"><span id="press-n">&mdash;</span> impressions <small class="scope">(own channels, partners and amplifications)</small></p>
+        <div class="pressgrid" id="press-grid"></div>
+
+        <div class="writings" id="writings" hidden>
+          <p class="label" data-scramble>writing</p>
+          <div class="writegrid" id="write-grid"></div>
+        </div>
+      </div>
+    </section>
+    <footer class="foot"><span>&copy; 2026 0xR</span><nav>
+      <a href="mailto:rodrigo@0xr.io">rodrigo@0xr.io</a>
+      <a href="https://x.com/0xRcap" target="_blank" rel="noopener">x</a>
+      <a href="https://github.com/0xRcap" target="_blank" rel="noopener">github</a>
+    </nav></footer>
+<script src="nav.js" defer></script>
+<script src="ascii.js" defer></script>
+<script src="player.js"></script>
+<script src="scramble.js" defer></script>
+<script>
+/* ── the wall — topline, films and press, from media/*.json · npm run posts ── */
+(async () => {
+  const reel = document.getElementById("reel");
+  let films = [], totals = null;
+  try {
+    const [a, b] = await Promise.all([
+      fetch("media/manifest.json", { cache: "no-store" }),
+      fetch("media/totals.json", { cache: "no-store" }),
+    ]);
+    if (a.ok) films = await a.json();
+    if (b.ok) totals = await b.json();
+  } catch (e) { /* file:// — fall through to the empty state */ }
+
+  if (!films.length) {
+    reel.innerHTML = '<div class="empty">the wall fills from site/media/ / run npm run posts</div>';
+    document.getElementById("films").querySelector(".head").style.display = "none";
+    return;
+  }
+
+  if (totals) {
+    document.getElementById("tally-n").textContent = totals.views.toLocaleString();
+    document.getElementById("tally-sub").textContent =
+      totals.since ? `since ${totals.since} (own channels, partners and amplifications)` : "";
+  }
+
+  reel.innerHTML = films.map(it => {
+    const n = it.viewsWithQuotes ? it.viewsWithQuotes.toLocaleString() + " impressions" : "";
+    const amp = it.amplifiedBy && it.amplifiedBy.length ? " <em>/ amplified</em>" : "";
+    const cap = `<figcaption><b>${it.caption}</b>${n ? `<span>${n}${amp}</span>` : ""}</figcaption>`;
+    const media = /\.(mp4|webm|mov)$/i.test(it.src)
+      ? `<img src="media/${it.poster || it.src}" alt="" loading="lazy">`
+        + `<video data-src="media/${it.src}" autoplay muted loop playsinline preload="none"></video>`
+      : `<img src="media/${it.src}" alt="${it.caption || ""}" loading="lazy">`;
+    return it.href
+      ? `<figure class="tile"><a href="${it.href}" target="_blank" rel="noopener" aria-label="${it.caption} — open the post">${media}${cap}</a></figure>`
+      : `<figure class="tile">${media}${cap}</figure>`;
+  }).join("") + '<figure class="tile more" aria-hidden="true">+ more</figure>';
+
+  /* the video engine lives in player.js, shared with work.html */
+  reel.querySelectorAll(".tile").forEach(t => mediaWall.observe(t));
+
+  /* press and live — its own number, never folded into the films total */
+  try {
+    const pr = await fetch("media/press.json", { cache: "no-store" });
+    if (pr.ok) {
+      const p = await pr.json();
+      document.getElementById("press-n").textContent = p.views.toLocaleString();
+      document.getElementById("press-grid").innerHTML = p.tiles.map(t => {
+        const shot = t.src
+          ? `<img src="media/${t.poster}" alt="" loading="lazy">`
+            + `<video data-src="media/${t.src}" autoplay muted loop playsinline preload="none"></video>`
+          : `<img src="media/${t.poster}" alt="" loading="lazy">`;
+        return `<a class="pcard" href="${t.href}" target="_blank" rel="noopener">`
+          + `<span class="shot"><span class="kind">${t.src ? "clip" : "live"}</span>${shot}</span>`
+          + `<span class="t">${t.title}</span>`
+          + `<span class="v">${t.views.toLocaleString()} impressions / ${t.client}</span></a>`;
+      }).join("");
+      document.querySelectorAll("#press-grid .pcard").forEach(c => mediaWall.observe(c));
+
+      /* writing — long-form. No thumbnail, so nothing to observe. */
+      const writes = p.writings || [];
+      if (writes.length) {
+        const band = document.getElementById("writings");
+        document.getElementById("write-grid").innerHTML = writes.map(w => {
+          const when = w.date
+            ? new Date(w.date + "T00:00:00Z").toLocaleDateString("en-GB",
+                { year: "numeric", month: "short", timeZone: "UTC" })
+            : "";
+          const meta = [w.outlet, when].filter(Boolean).join(" / ");
+          const cover = w.cover
+            ? `<span class="cover"><img src="media/${w.cover}" alt="" loading="lazy"></span>`
+            : "";
+          return `<a class="wcard" href="${w.href}" target="_blank" rel="noopener">`
+            + cover
+            + `<span class="meta">${meta}</span>`
+            + `<span class="h">${w.title}</span>`
+            + `<span class="go">read \u2197</span></a>`;
+        }).join("");
+        band.hidden = false;
+      }
+    }
+  } catch (e) { /* file:// or missing press.json — the band just stays empty */ }
+})();
+</script>
+
+</body>
+</html>

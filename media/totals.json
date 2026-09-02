@@ -1,0 +1,81 @@
+{
+  "asOf": "2026-08-18",
+  "since": "Dec 2025",
+  "posts": 54,
+  "films": 19,
+  "views": 265157,
+  "viewsOwn": 207754,
+  "viewsPartner": 57403,
+  "press": 68826,
+  "topline": {
+    "label": "organic reach",
+    "value": "4M+",
+    "unit": "impressions",
+    "note": "since 2024 (own channels, partners and amplifications)",
+    "source": "supplied — not verified in this repo"
+  },
+  "brands": [
+    {
+      "label": "as cofounder and CMO of Sail/Fungi, collaborated/worked with",
+      "items": [
+        {
+          "name": "Arbitrum",
+          "href": "https://x.com/arbitrum"
+        },
+        {
+          "name": "Base",
+          "href": "https://x.com/base"
+        },
+        {
+          "name": "Safe",
+          "href": "https://x.com/safe"
+        },
+        {
+          "name": "Morpho",
+          "href": "https://x.com/Morpho"
+        },
+        {
+          "name": "Gauntlet",
+          "href": "https://x.com/gauntlet_xyz"
+        },
+        {
+          "name": "Fluid",
+          "href": "https://x.com/0xfluid"
+        },
+        {
+          "name": "Cambrian",
+          "href": "https://x.com/CambrianNetwork"
+        },
+        {
+          "name": "Turtle",
+          "href": "https://x.com/turtledotxyz"
+        },
+        {
+          "name": "Definitive",
+          "href": "https://x.com/DefinitiveFi"
+        },
+        {
+          "name": "bond.credit",
+          "href": "https://x.com/bondoncredit"
+        },
+        {
+          "name": "Umia",
+          "href": "https://x.com/umia_finance"
+        },
+        {
+          "name": "WYCF",
+          "href": "https://x.com/wycf_show"
+        }
+      ]
+    },
+    {
+      "label": "as creative director, worked/working with",
+      "items": [
+        {
+          "name": "Allé Studios",
+          "href": "https://www.instagram.com/alle.studios/"
+        }
+      ]
+    }
+  ]
+}
