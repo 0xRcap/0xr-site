@@ -49,19 +49,27 @@
       el.style.position = "";
     };
 
+    /* These spans are injected inside the target, so any descendant selector
+       on an ancestor can capture them: a rule like `.fn span { font-size: 10px }`
+       written for a sibling list will restyle a decoding heading mid-animation.
+       Inheriting every text property inline outranks such a rule and keeps the
+       decode looking exactly like the settled text. */
+    const INHERIT = "font:inherit;color:inherit;letter-spacing:inherit;"
+      + "text-transform:inherit;line-height:inherit;text-align:inherit;";
+
     const build = () => {
       el.textContent = "";
       el.style.position = "relative";
       /* the wrapper is the positioning context, so the overlay lines up with
          the text rather than with the element's padding box */
       wrap = document.createElement("span");
-      wrap.style.cssText = "position:relative;display:block";
+      wrap.style.cssText = INHERIT + "position:relative;display:block";
       const ghost = document.createElement("span");
       ghost.textContent = text;
-      ghost.style.visibility = "hidden";
+      ghost.style.cssText = INHERIT + "visibility:hidden";
       overlay = document.createElement("span");
       overlay.setAttribute("aria-hidden", "true");
-      overlay.style.cssText = "position:absolute;inset:0;pointer-events:none";
+      overlay.style.cssText = INHERIT + "position:absolute;inset:0;pointer-events:none";
       wrap.append(ghost, overlay);
       el.append(wrap);
     };
