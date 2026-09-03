@@ -43,7 +43,7 @@
   --t-micro: clamp(0.58rem, 0.54rem + 0.2vw, 0.66rem);
 
   /* space: one gutter token, everything else is a multiple */
-  --pad: clamp(1.1rem, 4vw, 1.5rem);
+  --pad: clamp(1.25rem, 4.5vw, 1.6rem);
   --gap: clamp(1rem, 3vw, 1.6rem);
   --band: clamp(2.8rem, 8vw, 5rem);
   --shell: 72rem;
