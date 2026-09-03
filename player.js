@@ -29,15 +29,22 @@ window.mediaWall = (() => {
      everywhere else. */
   const WEBKIT = /safari/i.test(navigator.userAgent)
     && !/chrome|chromium|android|edg/i.test(navigator.userAgent);
-  const LIVE_CAP = WEBKIT ? 8 : 32;
+  /* A ceiling we are willing to try, not one the browser has agreed to.
+     Safari accepts play() on more videos than it will actually decode, so
+     the sweep below lowers this to whatever it is observed to sustain. */
+  let cap = WEBKIT ? 8 : 32;
   const live = new Set();
   const pending = new Set();
+  /* last seen currentTime per video, and how many sweeps it has sat still.
+     A frozen clock is the only honest signal that a video is not playing:
+     paused stays false on one Safari has quietly abandoned. */
+  const progress = new WeakMap();
 
   const start = (v) => { const p = v.play(); if (p) p.catch(() => {}); };
 
   function mount(v) {
     if (v.dataset.mounted || !v.dataset.src) return false;
-    if (live.size >= LIVE_CAP) { pending.add(v); return false; }
+    if (live.size >= cap) { pending.add(v); return false; }
     v.dataset.mounted = "1";
     live.add(v);
     v.muted = true;
@@ -59,12 +66,17 @@ window.mediaWall = (() => {
     v.load();
     delete v.dataset.mounted;
     live.delete(v);
+    progress.delete(v);
     drain();
   }
 
+  /* give up this clip's slot but keep it in the queue, so a waiting clip
+     can try while this one comes round again later */
+  function evict(v) { release(v); pending.add(v); }
+
   function drain() {
     for (const v of [...pending]) {
-      if (live.size >= LIVE_CAP) break;
+      if (live.size >= cap) break;
       pending.delete(v);
       mount(v);
     }
@@ -80,23 +92,64 @@ window.mediaWall = (() => {
     drain();
   }, { rootMargin: "150px" });
 
-  /* the sweep: mount anything on screen that never mounted, nudge anything
-     mounted that stalled paused, release anything far off screen once the
-     cap is reached */
   const inView = (el, pad = 150) => {
     const r = el.getBoundingClientRect();
     return r.bottom > -pad && r.top < innerHeight + pad && r.width > 0;
   };
+
+  /* ── the sweep ──
+     Mount what is on screen, release what is far off it, and judge every
+     mounted clip by whether its clock is moving. A video reporting
+     paused:false while currentTime stands still is holding a decoder slot
+     it is not using: it gets evicted so a waiting clip can take the slot.
+     When that keeps happening the browser is telling us its real limit, so
+     the cap settles just above what it is actually sustaining. */
+  const STALL_SWEEPS = 3;    /* frozen clock, with data in hand */
+  const LOAD_SWEEPS  = 12;   /* never got data at all */
   setInterval(() => {
     if (document.hidden) return;
+    let zombies = 0;
+
     for (const v of document.querySelectorAll("video[data-src]")) {
-      const seen = inView(v);
-      if (seen && !v.dataset.mounted) mount(v);
-      else if (!seen && v.dataset.mounted && live.size >= LIVE_CAP) release(v);
-      else if (seen && v.dataset.mounted && v.paused) start(v);
+      if (!inView(v)) {
+        if (v.dataset.mounted && live.size >= cap) release(v);
+        continue;
+      }
+      if (!v.dataset.mounted) { mount(v); continue; }
+      if (v.paused) { start(v); continue; }
+
+      const p = progress.get(v) || { t: -1, stalls: 0, waits: 0 };
+
+      /* Only WebKit oversells its decoders, so only WebKit is policed. On
+         a browser that plays the whole wall, nothing below can run and
+         nothing below can break it. */
+      if (!WEBKIT) continue;
+
+      /* Still fetching. A clip legitimately sits at readyState 0 and time
+         zero for a second or more after mounting, so it is not judged on
+         the clock yet, only on a much longer fuse for never arriving. */
+      if (v.readyState < 3) {
+        if (++p.waits >= LOAD_SWEEPS) { zombies++; evict(v); continue; }
+        progress.set(v, p);
+        continue;
+      }
+      p.waits = 0;
+
+      /* Has data and claims to be playing. If the clock is not moving it is
+         holding a decoder slot it is not using: Safari's real failure. */
+      if (v.currentTime > p.t + 0.01) p.stalls = 0;
+      else if (++p.stalls >= STALL_SWEEPS) { zombies++; evict(v); continue; }
+
+      p.t = v.currentTime;
+      progress.set(v, p);
     }
+
+    /* Each eviction is the browser declining one more stream than it can
+       serve. Step down by one and let it settle, rather than snapping to a
+       reading taken mid-load. */
+    if (zombies) cap = Math.max(3, cap - 1);
     drain();
-  }, 1200);
+  }, 1000);
 
   /* if Safari refused the first play, the first gesture of any kind lifts the
      restriction. Retry everything live, once, then stop listening. */
