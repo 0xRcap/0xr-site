@@ -52,7 +52,10 @@
 
   /* ── the films: every clip, with the number it earned ── */
   .films { background: var(--paper); }
-  .films .head { padding: var(--band) 0 2.4rem; }
+  /* padding-block only: the shorthand zeroed the horizontal padding that
+     .wrap sets, and `.films .head` outranks `.wrap` on specificity, so the
+     whole band sat flush to the screen edge on a phone */
+  .films .head { padding-block: var(--band) 2.4rem; }
   .tally {
     font-family: var(--display); font-weight: normal; font-size: var(--t-huge);
     line-height: 1.06; letter-spacing: -0.018em; margin: 0.4rem 0 0.9rem;

@@ -1,6 +1,6 @@
 {
   "asOf": "2026-08-18",
-  "note": "views are the public X view count, recorded by hand. quoteOf marks a post that quotes one of our clips: its views count toward the total and are credited on the tile, but it gets no tile of its own. Our own accounts (SaildotMoney, 0xRcap) are deliberately not counted as amplification.",
+  "note": "views are the public X view count, recorded by hand. quoteOf marks a post that quotes one of our clips: its views count toward the total and are credited on the tile, but it gets no tile of its own. Our own accounts (SaildotMoney, 0xRcap) are deliberately not counted as amplification. The Base launch trio (Sep 2026) carries X's rounded public display figures (2.1K / 5.3K / 1.2K); every other count here is exact.",
   "posts": [
     {
       "id": "2074188329164181806",
@@ -495,6 +495,34 @@
       "quoteOf": "1880331092227396071",
       "kind": "amplifier",
       "url": "https://x.com/julioboidi/status/1880336112960315841"
+    },
+    {
+      "id": "2095208415551262936",
+      "account": "SaildotMoney",
+      "client": "Sail",
+      "campaign": "Base launch",
+      "views": 2100,
+      "quoteOf": null
+    },
+    {
+      "id": "2095211003646542155",
+      "account": "baseposting",
+      "client": "Sail",
+      "campaign": "Base launch",
+      "views": 5300,
+      "quoteOf": "2095208415551262936",
+      "kind": "amplifier",
+      "url": "https://x.com/baseposting/status/2095211003646542155"
+    },
+    {
+      "id": "2095211005496172710",
+      "account": "baseposting",
+      "client": "Sail",
+      "campaign": "Base launch",
+      "views": 1200,
+      "quoteOf": "2095208415551262936",
+      "kind": "amplifier",
+      "url": "https://x.com/baseposting/status/2095211005496172710"
     }
   ],
   "offX": [
