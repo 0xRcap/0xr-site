@@ -40,7 +40,14 @@ window.mediaWall = (() => {
      paused stays false on one Safari has quietly abandoned. */
   const progress = new WeakMap();
 
-  const start = (v) => { const p = v.play(); if (p) p.catch(() => {}); };
+  /* why a play() was refused is the one fact this file used to throw away,
+     and it is the fact that identifies an autoplay-policy block versus a
+     decoder limit. Kept per video for the ?debug readout. */
+  const refusals = new WeakMap();
+  const start = (v) => {
+    const p = v.play();
+    if (p) p.catch((e) => refusals.set(v, e && e.name || "rejected"));
+  };
 
   function mount(v) {
     if (v.dataset.mounted || !v.dataset.src) return false;
@@ -172,5 +179,8 @@ window.mediaWall = (() => {
   return {
     observe: (el) => io.observe(el),
     reobserve: (el) => { io.unobserve(el); io.observe(el); },
+    /* read-only, for ?debug */
+    stats: () => ({ WEBKIT, cap, live: live.size, pending: pending.size }),
+    refusalFor: (v) => refusals.get(v) || "",
   };
 })();
