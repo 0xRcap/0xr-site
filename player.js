@@ -24,15 +24,24 @@
            mediaWall.reobserve(tileElement)   // after it becomes visible again
    The video inside carries its source on data-src, never on src. */
 window.mediaWall = (() => {
-  /* Only WebKit runs out of decoders; Chromium and Firefox handle far more
-     than any wall here will hold. Cap tightly there, stay out of the way
-     everywhere else. */
   const WEBKIT = /safari/i.test(navigator.userAgent)
     && !/chrome|chromium|android|edg/i.test(navigator.userAgent);
-  /* A ceiling we are willing to try, not one the browser has agreed to.
-     Safari accepts play() on more videos than it will actually decode, so
-     the sweep below lowers this to whatever it is observed to sustain. */
-  let cap = WEBKIT ? 8 : 32;
+
+  /* It is the phone that runs out of decoders, not Safari. Measured on
+     desktop Safari: eight clips mounted and all eight played at readyState
+     4, while twelve more sat unmounted waiting for a slot that never freed,
+     because nothing scrolls off a wall that fits on one screen. The old cap
+     of 8 was the whole bug, and it was ours, not the browser's.
+
+     iPadOS reports itself as a Mac, so touch points are what separate a
+     tablet from a desktop. */
+  const APPLE_MOBILE = /iPhone|iPad|iPod/.test(navigator.userAgent)
+    || (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
+
+  /* A ceiling we are willing to try, not one the browser has agreed to: if
+     a browser cannot sustain it, the sweep below steps it down until it
+     settles at what it can. */
+  let cap = APPLE_MOBILE ? 6 : 32;
   const live = new Set();
   const pending = new Set();
   /* last seen currentTime per video, and how many sweeps it has sat still.
