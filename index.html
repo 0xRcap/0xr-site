@@ -323,56 +323,5 @@
 })();
 </script>
 
-<script>
-/* ── ?debug — a readout of what the video engine is actually doing ──
-   Off unless the URL asks for it. Exists because Safari's failure cannot be
-   reproduced from a headless browser, so the device has to report for itself.
-   Delete this block once the Safari question is settled. */
-(() => {
-  if (!/[?&]debug/.test(location.search)) return;
-  const box = document.createElement("pre");
-  box.id = "debugPanel";
-  box.style.cssText = "position:fixed;left:0;right:0;bottom:0;z-index:99;max-height:52vh;"
-    + "overflow:auto;margin:0;padding:10px 12px;background:#0E0D0B;color:#9BE8A0;"
-    + "font:11px/1.45 ui-monospace,Menlo,monospace;white-space:pre;";
-  document.body.appendChild(box);
-
-  const seen = new WeakMap();
-  setInterval(() => {
-    const w = window.mediaWall;
-    const s = w && w.stats ? w.stats() : {};
-    const vids = [...document.querySelectorAll(".reel video")];
-    const inView = (v) => {
-      const r = v.getBoundingClientRect();
-      return r.bottom > -150 && r.top < innerHeight + 150;
-    };
-    let rows = "", playing = 0, onscreen = 0;
-    vids.forEach((v, i) => {
-      const vis = inView(v);
-      if (vis) onscreen++;
-      const prev = seen.get(v);
-      const moving = prev !== undefined && v.currentTime > prev + 0.01;
-      seen.set(v, v.currentTime);
-      if (vis && moving) playing++;
-      if (!vis) return;
-      rows += String(i).padStart(2) + " "
-        + (v.dataset.mounted ? "M" : "-")
-        + (v.paused ? "P" : "p")
-        + " rs" + v.readyState
-        + " ns" + v.networkState
-        + " t" + v.currentTime.toFixed(1).padStart(5)
-        + (moving ? " MOVING" : " frozen")
-        + (v.error ? " err" + v.error.code : "")
-        + " " + (w.refusalFor ? w.refusalFor(v) : "") + "\n";
-    });
-    box.textContent =
-      "UA " + navigator.userAgent.slice(0, 72) + "\n"
-      + "WEBKIT=" + s.WEBKIT + "  cap=" + s.cap + "  live=" + s.live
-      + "  pending=" + s.pending + "\n"
-      + "onscreen=" + onscreen + "  moving=" + playing + "  of " + vids.length + "\n"
-      + "hidden=" + document.hidden + "\n\n" + rows;
-  }, 1000);
-})();
-</script>
 </body>
 </html>

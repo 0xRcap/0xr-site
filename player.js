@@ -188,8 +188,5 @@ window.mediaWall = (() => {
   return {
     observe: (el) => io.observe(el),
     reobserve: (el) => { io.unobserve(el); io.observe(el); },
-    /* read-only, for ?debug */
-    stats: () => ({ WEBKIT, cap, live: live.size, pending: pending.size }),
-    refusalFor: (v) => refusals.get(v) || "",
   };
 })();
