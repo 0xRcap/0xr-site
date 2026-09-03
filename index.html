@@ -39,13 +39,10 @@
     font-family: var(--mono); font-size: var(--t-mono); color: var(--tone);
     letter-spacing: 0.12em; margin: 0 0 1.1rem;
   }
-  .lb { display: none; }
-  @media (min-width: 621px) { .lb { display: inline; } }
   .sub {
     font-family: var(--mono); font-size: var(--t-mono); line-height: 1.7;
     color: var(--ink-soft); max-width: 42rem; margin: 1.6rem 0 0;
   }
-  .sub .oneline { white-space: nowrap; }
   #ascii {
     position: absolute; inset: auto 0 0 0; width: 100%; height: var(--terrain);
     z-index: 1; display: block; pointer-events: none;
@@ -200,8 +197,7 @@
   <div class="wrap">
     <p class="hello" data-scramble="mount" data-delay="0">Hello world, I'm Rodrigo Rivas&nbsp;Yassin.</p>
     <h1 data-scramble="mount" data-delay="60">A new media department of (&nbsp;one&nbsp;) human + {&nbsp;many&nbsp;}&nbsp;agents.</h1>
-    <p class="sub">Positioning + production<br class="lb">
-      <span class="oneline">for tech and culture&nbsp;brands.</span></p>
+    <p class="sub">Positioning + production for tech and culture&nbsp;brands.</p>
   </div>
   <canvas id="ascii"></canvas>
 </header>
