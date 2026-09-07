@@ -1,6 +1,6 @@
 # 0xR
 
-A new media department of ( one ) human + { many } agents.
+A new media team of ( one ) human + { many } agents.
 Positioning and production. Live at **[0xr.io](https://0xr.io)**.
 
 Four static pages, no framework and no build step for the site itself.
