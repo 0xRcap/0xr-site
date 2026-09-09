@@ -13,7 +13,9 @@ const CLIENTS = { Sail: "sail", Fungi: "fungi", "Alle Studios": "alle" };
 const folder = (client) => CLIENTS[client] ?? slug(client);
 
 const data = JSON.parse(readFileSync(join(DIR, "posts.json"), "utf8"));
-const tiles = data.posts.filter((p) => !p.quoteOf);
+/* wall:false keeps a post in the record and in the impressions total but off
+   the reel, for a clip that earned its reach and still should not be shown. */
+const tiles = data.posts.filter((p) => !p.quoteOf && p.wall !== false);
 // a partner quoting one of our clips is reach we earned — credit it on the tile
 const quotes = {};
 for (const p of data.posts.filter((q) => q.quoteOf)) {

@@ -30,7 +30,9 @@
 
   --display: "Oliveira", "Iowan Old Style", Georgia, serif;
   --sans: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
-  --mono: ui-monospace, "SF Mono", Menlo, monospace;
+  /* named, not left to the reader's OS: the eyebrows, the labels and the
+     agent names are half the brand's face. */
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
   /* type: one scale, every size interpolates on viewport width */
   --t-hero:  clamp(1.9rem, 5.6vw, 4rem);
