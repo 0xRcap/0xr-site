@@ -26,7 +26,7 @@
   --card-ink: #FFFFFF;
   --card-tone: #9B988F;
   --tile-bg: #EFEDE6;        /* holds its distance from the new paper */
-  --ascii: 14, 13, 11;
+  --ascii: 138, 133, 124;   /* the terrain lives on the ink footer now, not on paper */
 
   --display: "Oliveira", "Iowan Old Style", Georgia, serif;
   --sans: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
