@@ -62,22 +62,6 @@
     .stage [data-crew="quent"]  { left: 72.8%; }
     .stage [data-crew="kim"]    { left: 88%; }
 
-    /* ── the terrain, now the ground the whole site stands on ── */
-    .foot { position: relative; overflow: hidden; min-height: clamp(190px, 26vh, 300px);
-           padding-block: 3.5rem 1.1rem; align-content: end; }
-    .foot #ascii {
-      position: absolute; inset: 0; width: 100%; height: 100%;
-      z-index: 0; display: block; pointer-events: none; opacity: 0.9;
-      /* the terrain is the ground, the row sits on it: fade the glyphs out
-         across the bottom third so the links are read, not decoded */
-      -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 52%, transparent 88%);
-      mask-image: linear-gradient(to bottom, #000 0%, #000 52%, transparent 88%);
-    }
-    .foot-row {
-      position: relative; z-index: 1;
-      display: flex; flex-wrap: wrap; align-items: center;
-      justify-content: space-between; gap: 0.4rem 1.4rem;
-    }
   :root { --terrain: 44vh; }
   @media (max-height: 760px), (max-width: 700px) { :root { --terrain: 34vh; } }
 

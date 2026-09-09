@@ -3,21 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>0xR / what new media is</title>
+<title>0xR / what's new media</title>
 <meta name="author" content="Rodrigo Rivas Yassin">
 <meta name="description" content="Media is everything that carries your story to a person. The definition, the history of new media, and what I believe comes next.">
 <link rel="canonical" href="https://0xr.io/what.html">
 <link rel="icon" href="favicon.png" type="image/png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="0xR">
-<meta property="og:title" content="0xR / what new media is">
+<meta property="og:title" content="0xR / what's new media">
 <meta property="og:description" content="Media is everything that carries your story to a person. The definition, the history of new media, and what I believe comes next.">
 <meta property="og:url" content="https://0xr.io/what.html">
 <meta property="og:image" content="https://0xr.io/media/card-what.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="0xR / what new media is">
+<meta name="twitter:title" content="0xR / what's new media">
 <meta name="twitter:description" content="Media is everything that carries your story to a person. The definition, the history of new media, and what I believe comes next.">
 <meta name="twitter:image" content="https://0xr.io/media/card-what.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -220,7 +220,7 @@
 
     <main class="page">
       <div class="wrap">
-      <h1 data-scramble="mount" data-delay="60">What new media is.</h1>
+      <h1 data-scramble="mount" data-delay="60">What's new media.</h1>
       <p class="intro" data-reveal>Medium is Latin for the middle: the thing
       that carries a message from whoever made it to whoever receives it.
       Media is the plural.</p>
@@ -348,11 +348,13 @@
       </div>
     </main>
 
-    <footer class="foot"><span>&copy; 2026 0xR</span><nav>
+    <footer class="foot">
+      <canvas id="ascii" aria-hidden="true"></canvas>
+      <div class="foot-row"><span>&copy; 2026 0xR</span><nav>
       <a href="mailto:rodrigo@0xr.io">rodrigo@0xr.io</a>
       <a href="https://x.com/0xRcap" target="_blank" rel="noopener">x</a>
       <a href="https://github.com/0xRcap" target="_blank" rel="noopener">github</a>
-    </nav></footer>
+    </nav></div></footer>
 <script src="scramble.js"></script>
 
 <script src="crew/models.js" defer></script>
@@ -370,5 +372,6 @@ addEventListener("DOMContentLoaded", () => {
 });
 </script>
 <script src="nav.js" defer></script>
+<script src="ascii.js" defer></script>
 </body>
 </html>
