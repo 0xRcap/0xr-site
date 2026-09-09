@@ -3,22 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>0xR — new media</title>
+<title>0xR / new media</title>
 <meta name="author" content="Rodrigo Rivas Yassin">
-<meta name="description" content="A new media team of one human and many agents. Positioning + production for tech and culture brands.">
+<meta name="description" content="A new media crew of one human and many agents. Direction + production for brands in tech and internet culture.">
 <link rel="canonical" href="https://0xr.io/">
 <link rel="icon" href="favicon.png" type="image/png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="0xR">
-<meta property="og:title" content="0xR — new media">
-<meta property="og:description" content="A new media team of one human and many agents. Positioning + production for tech and culture brands.">
+<meta property="og:title" content="0xR / new media">
+<meta property="og:description" content="A new media crew of one human and many agents. Direction + production for brands in tech and internet culture.">
 <meta property="og:url" content="https://0xr.io/">
 <meta property="og:image" content="https://0xr.io/media/card-index.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="0xR — new media">
-<meta name="twitter:description" content="A new media team of one human and many agents. Positioning + production for tech and culture brands.">
+<meta name="twitter:title" content="0xR / new media">
+<meta name="twitter:description" content="A new media crew of one human and many agents. Direction + production for brands in tech and internet culture.">
 <meta name="twitter:image" content="https://0xr.io/media/card-index.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -43,10 +43,41 @@
     font-family: var(--mono); font-size: var(--t-mono); line-height: 1.7;
     color: var(--ink-soft); max-width: 42rem; margin: 1.6rem 0 0;
   }
-  #ascii {
-    position: absolute; inset: auto 0 0 0; width: 100%; height: var(--terrain);
-    z-index: 1; display: block; pointer-events: none;
-  }
+    /* ── the crew's ground: the band the terrain used to hold ──
+       Each figure is placed by a percentage at deliberately uneven gaps:
+       people standing around, not a line-up. They may overlap at narrow
+       widths, which reads as depth rather than as a collision. */
+    .stage {
+      position: absolute; inset: auto 0 0 0; height: var(--terrain);
+      z-index: 1; pointer-events: none;
+    }
+    .stage canvas {
+      position: absolute; bottom: 0; display: block;
+      image-rendering: pixelated; transform: translateX(-50%);
+    }
+    .stage [data-crew="ye"]     { left: 12%; }
+    .stage [data-crew="steve"]  { left: 27.2%; }
+    .stage [data-crew="jean"]   { left: 42.4%; }
+    .stage [data-crew="frank"]  { left: 57.6%; }
+    .stage [data-crew="quent"]  { left: 72.8%; }
+    .stage [data-crew="kim"]    { left: 88%; }
+
+    /* ── the terrain, now the ground the whole site stands on ── */
+    .foot { position: relative; overflow: hidden; min-height: clamp(190px, 26vh, 300px);
+           padding-block: 3.5rem 1.1rem; align-content: end; }
+    .foot #ascii {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      z-index: 0; display: block; pointer-events: none; opacity: 0.9;
+      /* the terrain is the ground, the row sits on it: fade the glyphs out
+         across the bottom third so the links are read, not decoded */
+      -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 52%, transparent 88%);
+      mask-image: linear-gradient(to bottom, #000 0%, #000 52%, transparent 88%);
+    }
+    .foot-row {
+      position: relative; z-index: 1;
+      display: flex; flex-wrap: wrap; align-items: center;
+      justify-content: space-between; gap: 0.4rem 1.4rem;
+    }
   :root { --terrain: 44vh; }
   @media (max-height: 760px), (max-width: 700px) { :root { --terrain: 34vh; } }
 
@@ -199,10 +230,17 @@
     <header class="hero">
   <div class="wrap">
     <p class="hello" data-scramble="mount" data-delay="0">Hello world, I'm Rodrigo Rivas&nbsp;Yassin.</p>
-    <h1 data-scramble="mount" data-delay="60">A new media team of (&nbsp;one&nbsp;) human + {&nbsp;many&nbsp;}&nbsp;agents.</h1>
-    <p class="sub">Positioning + production for tech and culture&nbsp;brands.</p>
+    <h1 data-scramble="mount" data-delay="60">I have a new media crew of (&nbsp;one&nbsp;) human + {&nbsp;many&nbsp;}&nbsp;agents.</h1>
+    <p class="sub">We do direction + production for brands in tech and internet&nbsp;culture.</p>
   </div>
-  <canvas id="ascii"></canvas>
+    <div class="stage" id="stage" aria-hidden="true">
+      <canvas data-crew="ye"></canvas>
+      <canvas data-crew="steve"></canvas>
+      <canvas data-crew="jean"></canvas>
+      <canvas data-crew="frank"></canvas>
+      <canvas data-crew="quent"></canvas>
+      <canvas data-crew="kim"></canvas>
+    </div>
 </header>
 
     <section class="films" id="films" aria-label="AI films">
@@ -228,12 +266,41 @@
     </section>
     </main>
 
-    <footer class="foot"><span>&copy; 2026 0xR</span><nav>
+    <footer class="foot">
+      <canvas id="ascii" aria-hidden="true"></canvas>
+      <div class="foot-row"><span>&copy; 2026 0xR</span><nav>
       <a href="mailto:rodrigo@0xr.io">rodrigo@0xr.io</a>
       <a href="https://x.com/0xRcap" target="_blank" rel="noopener">x</a>
       <a href="https://github.com/0xRcap" target="_blank" rel="noopener">github</a>
-    </nav></footer>
-<script src="nav.js" defer></script>
+    </nav></div></footer>
+<script src="crew/ye.model.js" defer></script>
+  <script src="crew/steve.model.js" defer></script>
+  <script src="crew/jean.model.js" defer></script>
+  <script src="crew/frank.model.js" defer></script>
+  <script src="crew/quent.model.js" defer></script>
+  <script src="crew/kim.model.js" defer></script>
+  <script src="crew3d.js" defer></script>
+  <script defer>
+  /* ── the crew live in the hero ──
+     Scale falls out of the width: six figures 32 voxels wide need room and a
+     phone cannot hold them at 6. The pointer is already wired inside crew3d. */
+  addEventListener("DOMContentLoaded", () => {
+    if (!window.crew3d || !window.crewModels) return;
+    const stage = document.getElementById("stage");
+    const cells = [...stage.querySelectorAll("[data-crew]")];
+    let handles = [];
+    const build = () => {
+      for (const h of handles) h.stop();
+      const scale = Math.max(2, Math.min(6, Math.floor(stage.clientWidth / 230)));
+      handles = cells.map((c) => crew3d.register(c, window.crewModels[c.dataset.crew], { scale }));
+      crew3d.neighbours(handles);
+    };
+    build();
+    let t = 0;
+    addEventListener("resize", () => { clearTimeout(t); t = setTimeout(build, 200); });
+  });
+  </script>
+  <script src="nav.js" defer></script>
 <script src="ascii.js" defer></script>
 <script src="player.js"></script>
 <script src="scramble.js" defer></script>
@@ -272,7 +339,7 @@
         + `<video data-src="media/${it.src}" autoplay muted loop playsinline preload="none"></video>`
       : `<img src="media/${it.src}" alt="${it.caption || ""}" loading="lazy">`;
     return it.href
-      ? `<figure class="tile"><a href="${it.href}" target="_blank" rel="noopener" aria-label="${it.caption} — open the post">${media}${cap}</a></figure>`
+      ? `<figure class="tile"><a href="${it.href}" target="_blank" rel="noopener" aria-label="${it.caption} / open the post">${media}${cap}</a></figure>`
       : `<figure class="tile">${media}${cap}</figure>`;
   }).join("") + '<figure class="tile more" aria-hidden="true">+ more</figure>';
 

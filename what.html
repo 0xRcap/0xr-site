@@ -3,21 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>0xR — what new media is</title>
+<title>0xR / what new media is</title>
 <meta name="author" content="Rodrigo Rivas Yassin">
 <meta name="description" content="Media is everything that carries your story to a person. The definition, the history of new media, and what I believe comes next.">
 <link rel="canonical" href="https://0xr.io/what.html">
 <link rel="icon" href="favicon.png" type="image/png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="0xR">
-<meta property="og:title" content="0xR — what new media is">
+<meta property="og:title" content="0xR / what new media is">
 <meta property="og:description" content="Media is everything that carries your story to a person. The definition, the history of new media, and what I believe comes next.">
 <meta property="og:url" content="https://0xr.io/what.html">
 <meta property="og:image" content="https://0xr.io/media/card-what.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="0xR — what new media is">
+<meta name="twitter:title" content="0xR / what new media is">
 <meta name="twitter:description" content="Media is everything that carries your story to a person. The definition, the history of new media, and what I believe comes next.">
 <meta name="twitter:image" content="https://0xr.io/media/card-what.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -118,9 +118,11 @@
   .fn + .fn { border-top: 1px solid var(--rule); }
   .fn {
     display: grid; grid-template-columns: 4.5rem 1fr; gap: 0.3rem 1.4rem;
+    min-width: 0;
     padding: clamp(1.4rem,3.5vw,2rem) 0; align-items: start;
     transition: background 0.3s ease;
   }
+  .fn > div { min-width: 0; }   /* grid items default to min-width:auto; the crew grid inside would size off content and overflow a phone */
   .fn .num {
     font-family: var(--display); font-size: clamp(1.8rem, 6vw, 2.8rem);
     line-height: 1; color: var(--rule); margin: 0; transition: color 0.35s ease;
@@ -138,6 +140,37 @@
     line-height: 1.75; max-width: 30rem;
   }
   @media (max-width: 620px) { .fn { grid-template-columns: 1fr; gap: 0.35rem; } }
+
+  /* ── the crew: the agents sit inside Production, so ( one ) and { many }
+     from the hero line up with functions 01 and 02 on the page. Nothing here
+     is a link and nothing is a logo: state is fill and weight only. ── */
+  .crew {
+    margin-top: 1.6rem; display: grid; gap: 1.2rem clamp(1.4rem, 4vw, 2.4rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+    max-width: 46rem;
+  }
+  .fig { display: block; margin: 0 0 0.5rem; image-rendering: pixelated; }
+  .mate b {
+    display: block; font-family: var(--mono); font-weight: normal;
+    font-size: var(--t-mono); letter-spacing: 0.1em; color: var(--ink);
+    margin-bottom: 0.3rem;
+  }
+  .mate em {
+    display: block; font-style: normal; font-family: var(--display);
+    font-size: clamp(1.05rem, 3.2vw, 1.25rem); line-height: 1.2;
+    color: var(--ink); margin: 0 0 0.25rem; max-width: none;
+  }
+  .mate span {
+    display: block; font-family: var(--sans); font-size: var(--t-small);
+    letter-spacing: 0; text-transform: none; line-height: 1.45;
+    color: var(--ink-soft); max-width: 18rem;
+  }
+  /* not yet sold: the ghost the system already uses for a thing that is coming */
+  [data-state="soon"] b, [data-state="soon"] em { color: var(--tone); }
+  [data-state="soon"] span { color: var(--tone); }
+  .fn[data-state="soon"] .num, .fn[data-state="soon"] h2 { color: var(--rule); }
+  .fn[data-state="soon"]:hover .num { color: var(--tone); }
+  .fn span a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 
   .fns { margin-top: clamp(3rem, 9vw, 5rem); }
   .fns-q {
@@ -166,9 +199,9 @@
     <main class="page">
       <div class="wrap">
       <h1 data-scramble="mount" data-delay="60">What new media is.</h1>
-      <p class="intro" data-reveal>Medium is Latin for the middle. A medium is
-      the thing in between, and its job is to carry a message from whoever made
-      it to whoever receives it.</p>
+      <p class="intro" data-reveal>Medium is Latin for the middle: the thing
+      that carries a message from whoever made it to whoever receives it.
+      Media is the plural.</p>
 
       <ol class="steps">
 
@@ -177,15 +210,6 @@
           <div>
             <h2 data-scramble>So what is media?</h2>
             <p class="creed" data-scramble>Media is everything<br class="lb">
-            that carries your story to a person.</p>
-          </div>
-        </li>
-
-        <li class="step" data-reveal>
-          <p class="step-n">02</p>
-          <div>
-            <h2 data-scramble>Where does media live?</h2>
-            <p class="creed" data-scramble>Media lives on every surface<br class="lb">
             that carries your story to a person.</p>
             <div class="map">
               <div class="surface">
@@ -213,7 +237,7 @@
         </li>
 
         <li class="step" data-reveal>
-          <p class="step-n">03</p>
+          <p class="step-n">02</p>
           <div>
             <h2 data-scramble>Where new media came from</h2>
 
@@ -247,7 +271,7 @@
         </li>
 
         <li class="step" data-reveal>
-          <p class="step-n">04</p>
+          <p class="step-n">03</p>
           <div>
             <h2 data-scramble>What I believe</h2>
             <p>AI collapsed the production half of that department. It left the
@@ -263,13 +287,14 @@
       </ol>
 
       <div class="fns">
-        <h2 class="fns-q" data-scramble>So what do we do?</h2>
+        <h2 class="fns-q" data-scramble>(&nbsp;one&nbsp;) human directs. {&nbsp;many&nbsp;} agents produce.</h2>
+
         <div class="fn" data-scramble-host data-reveal>
           <p class="num">01</p>
           <div>
-            <h2 data-scramble="hover" data-delay="0">Positioning</h2>
-            <em>The story everything else has to carry.</em>
-            <span>brand strategy / messaging / competitive analysis / ICP / brand identity / voice</span>
+            <h2 data-scramble="hover" data-delay="0">Direction</h2>
+            <em>What the story is, and what is worth making.</em>
+            <span>positioning / brand identity / voice / messaging / competitive analysis / who it is for</span>
           </div>
         </div>
 
@@ -278,7 +303,55 @@
           <div>
             <h2 data-scramble="hover" data-delay="0">Production</h2>
             <em>The story, made every week.</em>
-            <span>product design (UI/UX) / copywriting / content systems / AI video / character systems / web design</span>
+            <span>art direction / AI video / character systems / copywriting / content systems / product design (UI/UX) / web design</span>
+
+            <div class="crew">
+              <div class="mate">
+                <canvas class="fig" data-crew="ye" aria-hidden="true"></canvas>
+                <b data-scramble="hover" data-delay="0">{&nbsp;YE&nbsp;}</b>
+                <em>brand</em>
+                <span>the identity, and the rules that hold it</span>
+              </div>
+              <div class="mate">
+                <canvas class="fig" data-crew="quent" aria-hidden="true"></canvas>
+                <b data-scramble="hover" data-delay="0">{&nbsp;QUENT&nbsp;}</b>
+                <em>film</em>
+                <span>script, shot list, pacing, cut</span>
+              </div>
+              <div class="mate">
+                <canvas class="fig" data-crew="jean" aria-hidden="true"></canvas>
+                <b data-scramble="hover" data-delay="0">{&nbsp;JEAN&nbsp;}</b>
+                <em>look</em>
+                <span>the style bible, and frame forty still matching frame one</span>
+              </div>
+              <div class="mate">
+                <canvas class="fig" data-crew="frank" aria-hidden="true"></canvas>
+                <b data-scramble="hover" data-delay="0">{&nbsp;FRANK&nbsp;}</b>
+                <em>words</em>
+                <span>copy, scripts, threads</span>
+              </div>
+              <div class="mate">
+                <canvas class="fig" data-crew="steve" aria-hidden="true"></canvas>
+                <b data-scramble="hover" data-delay="0">{&nbsp;STEVE&nbsp;}</b>
+                <em>design</em>
+                <span>the surface they touch: flows, screens, pages</span>
+              </div>
+              <div class="mate" data-state="soon">
+                <canvas class="fig" data-crew="kim" aria-hidden="true"></canvas>
+                <b>{&nbsp;KIM&nbsp;}</b>
+                <em>distribution</em>
+                <span>coming soon</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fn" data-scramble-host data-reveal data-state="soon">
+          <p class="num">03</p>
+          <div>
+            <h2>Distribution</h2>
+            <em>The story, moved. Coming when the channel under it is ours.</em>
+            <span>coming soon / what has shipped so far is on the <a href="work.html">work page</a></span>
           </div>
         </div>
       </div>
@@ -293,6 +366,20 @@
     </nav></footer>
 <script src="scramble.js"></script>
 
+<script src="crew/models.js" defer></script>
+<script src="crew3d.js" defer></script>
+<script defer>
+/* ── the crew figures ──
+   Small on purpose: at 4px per voxel the glyph texture has nowhere to live, so
+   the ASCII is the arrival and the settled state is a clean pixel figure. */
+addEventListener("DOMContentLoaded", () => {
+  if (!window.crew3d || !window.crewModels) return;
+  for (const c of document.querySelectorAll("[data-crew]")) {
+    const m = window.crewModels[c.dataset.crew];
+    if (m) crew3d.register(c, m, { scale: 4 });
+  }
+});
+</script>
 <script src="nav.js" defer></script>
 </body>
 </html>
