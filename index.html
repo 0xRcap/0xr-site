@@ -55,12 +55,32 @@
       position: absolute; bottom: 0; display: block;
       image-rendering: pixelated; transform: translateX(-50%);
     }
-    .stage [data-crew="ye"]     { left: 12%; }
-    .stage [data-crew="steve"]  { left: 27.2%; }
-    .stage [data-crew="jean"]   { left: 42.4%; }
-    .stage [data-crew="frank"]  { left: 57.6%; }
-    .stage [data-crew="quent"]  { left: 72.8%; }
-    .stage [data-crew="kim"]    { left: 88%; }
+    /* He stands alone on the left; the six stand together on the right, with
+       real air between. The group's band (28% to 92%, so 12.8% of the stage
+       between centres) is what sets the scale: six figures 36 voxels wide stop
+       overlapping when 0.128 * stage width >= 36 * scale, which is the /282
+       divisor in the script below. */
+    .stage [data-crew="rodrigo"] { left: 8%; }
+    .stage [data-crew="ye"]      { left: 28%; }
+    .stage [data-crew="steve"]   { left: 40.8%; }
+    .stage [data-crew="jean"]    { left: 53.6%; }
+    .stage [data-crew="frank"]   { left: 66.4%; }
+    .stage [data-crew="quent"]   { left: 79.2%; }
+    .stage [data-crew="kim"]     { left: 92%; }
+
+    /* Under 600px there is no room for a seventh. At the phone scale of 2 the
+       six need 36*2/0.128 = 562px of stage just to stand apart inside that
+       band, and he would take a fifth of the width to say what the who page
+       already says. He drops out and the six take the full width back. */
+    @media (max-width: 599px) {
+      .stage [data-crew="rodrigo"] { display: none; }
+      .stage [data-crew="ye"]      { left: 12%; }
+      .stage [data-crew="steve"]   { left: 27.2%; }
+      .stage [data-crew="jean"]    { left: 42.4%; }
+      .stage [data-crew="frank"]   { left: 57.6%; }
+      .stage [data-crew="quent"]   { left: 72.8%; }
+      .stage [data-crew="kim"]     { left: 88%; }
+    }
 
   :root { --terrain: 44vh; }
   @media (max-height: 760px), (max-width: 700px) { :root { --terrain: 34vh; } }
@@ -224,6 +244,7 @@
     <p class="sub">We do direction + production for&nbsp;brands.</p>
   </div>
     <div class="stage" id="stage" aria-hidden="true">
+      <canvas data-crew="rodrigo"></canvas>
       <canvas data-crew="ye"></canvas>
       <canvas data-crew="steve"></canvas>
       <canvas data-crew="jean"></canvas>
@@ -263,7 +284,8 @@
       <a href="https://x.com/0xRcap" target="_blank" rel="noopener">x</a>
       <a href="https://github.com/0xRcap" target="_blank" rel="noopener">github</a>
     </nav></div></footer>
-<script src="crew/ye.model.js" defer></script>
+<script src="crew/rodrigo.model.js" defer></script>
+  <script src="crew/ye.model.js" defer></script>
   <script src="crew/steve.model.js" defer></script>
   <script src="crew/jean.model.js" defer></script>
   <script src="crew/frank.model.js" defer></script>
@@ -272,16 +294,21 @@
   <script src="crew3d.js" defer></script>
   <script defer>
   /* ── the crew live in the hero ──
-     Scale falls out of the width: six figures 32 voxels wide need room and a
-     phone cannot hold them at 6. The pointer is already wired inside crew3d. */
+     Scale falls out of the width: the six stand in a 12.8%-of-stage rhythm, so
+     36 * scale must fit inside it. That caps the scale at 5, one step under the
+     old 6, and it is why the crew reads smaller now. The pointer is already
+     wired inside crew3d. */
   addEventListener("DOMContentLoaded", () => {
     if (!window.crew3d || !window.crewModels) return;
     const stage = document.getElementById("stage");
-    const cells = [...stage.querySelectorAll("[data-crew]")];
     let handles = [];
     const build = () => {
       for (const h of handles) h.stop();
-      const scale = Math.max(2, Math.min(6, Math.floor(stage.clientWidth / 230)));
+      /* display:none under 600px, so he is read out of the list rather than
+         registered and hidden: no loop runs for a figure nobody can see. */
+      const cells = [...stage.querySelectorAll("[data-crew]")]
+        .filter((c) => c.offsetParent !== null);
+      const scale = Math.max(2, Math.min(5, Math.floor(stage.clientWidth / 282)));
       handles = cells.map((c) => crew3d.register(c, window.crewModels[c.dataset.crew], { scale }));
       crew3d.neighbours(handles);
     };
