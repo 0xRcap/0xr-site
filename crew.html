@@ -226,9 +226,20 @@
     const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
     let speaking = null, timer = 0, current = null;
 
+    /* each figure is centred in a 32 cell canvas but is only 13 to 21 cells
+       wide, so the canvas carries up to nine cells of paper on its left and
+       the ink starts well to the right of the label beneath it. Pull the
+       canvas left by that margin, read off the model, so the ink edge sits on
+       the label's edge like everything else on the site. */
+    const inkLeft = (m) => Math.min(...m.value.split("\n")
+      .map((r) => r.search(/[-+#]/)).filter((i) => i >= 0));
+    const SCALE = 4;
     const handles = [...document.querySelectorAll("[data-crew]")].map((btn) => {
       const m = window.crewModels[btn.dataset.crew];
-      return m ? crew3d.register(btn.querySelector("canvas"), m, { scale: 4 }) : null;
+      if (!m) return null;
+      const c = btn.querySelector("canvas");
+      c.style.marginLeft = -(inkLeft(m) * SCALE) + "px";
+      return crew3d.register(c, m, { scale: SCALE });
     }).filter(Boolean);
     crew3d.neighbours(handles);
 
