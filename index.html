@@ -230,7 +230,7 @@
     <header class="hero">
   <div class="wrap">
     <p class="hello" data-scramble="mount" data-delay="0">Hello world, I'm Rodrigo Rivas&nbsp;Yassin.</p>
-    <h1 data-scramble="mount" data-delay="60">I have a new media crew of (&nbsp;one&nbsp;) human + {&nbsp;many&nbsp;}&nbsp;agents.</h1>
+    <h1 data-scramble="mount" data-delay="60">I run a new media crew of (&nbsp;one&nbsp;) human + {&nbsp;many&nbsp;}&nbsp;agents.</h1>
     <p class="sub">We do direction + production for brands in tech and internet&nbsp;culture.</p>
   </div>
     <div class="stage" id="stage" aria-hidden="true">
@@ -296,8 +296,15 @@
       crew3d.neighbours(handles);
     };
     build();
-    let t = 0;
-    addEventListener("resize", () => { clearTimeout(t); t = setTimeout(build, 200); });
+    let t = 0, lastW = innerWidth;
+    addEventListener("resize", () => {
+      /* a phone fires resize on every scroll: its URL bar slides away and the
+         viewport gets shorter. Only a width change can alter the scale, and
+         rebuilding on height replayed the arrival on every scroll. */
+      if (innerWidth === lastW) return;
+      lastW = innerWidth;
+      clearTimeout(t); t = setTimeout(build, 200);
+    });
   });
   </script>
   <script src="nav.js" defer></script>
