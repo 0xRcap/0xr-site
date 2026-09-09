@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>0xR / the crew</title>
+<meta name="author" content="Rodrigo Rivas Yassin">
+<meta name="description" content="The specialists that do the production on a 0xR project: brand, film, look, words, product design, distribution. Each one names its own job.">
+<link rel="canonical" href="https://0xr.io/crew.html">
+<link rel="icon" href="favicon.png" type="image/png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="0xR">
+<meta property="og:title" content="0xR / the crew">
+<meta property="og:description" content="The specialists that do the production on a 0xR project: brand, film, look, words, product design, distribution. Each one names its own job.">
+<meta property="og:url" content="https://0xr.io/crew.html">
+<meta property="og:image" content="https://0xr.io/media/card-crew.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="0xR / the crew">
+<meta name="twitter:description" content="The specialists that do the production on a 0xR project: brand, film, look, words, product design, distribution. Each one names its own job.">
+<meta name="twitter:image" content="https://0xr.io/media/card-crew.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .sc { font-style: normal; opacity: 0.45; }
+  .page p:not(.creed) { max-width: 34rem; margin: 0 0 1.1rem; color: var(--ink-soft); }
+  .intro {
+    font-size: clamp(1.05rem, 3.4vw, 1.25rem); line-height: 1.55;
+    max-width: 34rem; margin: 0 0 clamp(2.6rem, 8vw, 4rem); color: var(--ink-soft);
+  }
+
+  /* ── the six, as a grid of doors ── */
+  .roster {
+    display: grid; gap: clamp(1.6rem, 5vw, 2.8rem) clamp(1.4rem, 4vw, 2.4rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
+  }
+  .mate {
+    display: block; text-align: left; min-width: 0; cursor: pointer;
+    background: none; border: 0; padding: 0; font: inherit; color: inherit;
+  }
+  .mate .fig { display: block; margin: 0 0 0.6rem; image-rendering: pixelated; }
+  .mate b {
+    display: block; font-family: var(--mono); font-weight: normal;
+    font-size: var(--t-mono); letter-spacing: 0.1em; color: var(--ink); margin-bottom: 0.3rem;
+  }
+  .mate em {
+    display: block; font-style: normal; font-family: var(--display);
+    font-size: clamp(1.05rem, 3.2vw, 1.3rem); line-height: 1.2; color: var(--ink);
+  }
+  .mate span {
+    display: block; font-family: var(--mono); font-size: var(--t-micro);
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--tone); margin-top: 0.3rem;
+  }
+  .mate:hover span, .mate:focus-visible span { color: var(--ink); }
+  /* clicking one should not draw a box around it; a keyboard still gets a ring */
+  .mate:focus { outline: none; }
+  .mate:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 2px; }
+  [data-state="soon"] b, [data-state="soon"] em, [data-state="soon"] span { color: var(--tone); }
+
+  /* ── the dialogue bubble: the figure speaks, the page does not go dark ──
+     Anchored above whoever was clicked, with a tail pointing back down at
+     them, and the line typed out rather than pasted in. */
+  .stage { position: relative; }
+  .bubble {
+    position: absolute; z-index: 30; width: min(23rem, calc(100vw - 2 * var(--pad)));
+    background: var(--ink); color: var(--card-ink);
+    border-radius: 10px; padding: 0.85rem 1rem 0.95rem;
+    transform-origin: 50% 100%; transform: translate(-50%, 0) scale(0.94);
+    opacity: 0; transition: opacity 0.16s ease, transform 0.16s cubic-bezier(.22,1.2,.4,1);
+    pointer-events: none;
+  }
+  .bubble.on { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  /* the tail, drawn as a square rotated into a diamond so its two lower
+     edges read as a point aimed at the figure */
+  .bubble::after {
+    content: ""; position: absolute; bottom: -5px; left: var(--tail, 50%);
+    width: 12px; height: 12px; margin-left: -6px;
+    background: var(--ink); transform: rotate(45deg); border-radius: 2px;
+  }
+  .page .bubble .who {
+    margin: 0 0 0.3rem; font-family: var(--mono); font-size: var(--t-micro);
+    letter-spacing: 0.14em; color: var(--card-tone); max-width: none;
+  }
+  .page .bubble .say {
+    margin: 0; font-size: var(--t-small); line-height: 1.5;
+    color: var(--card-ink); max-width: none; min-height: 1.5em;
+  }
+  .bubble .say::after {
+    content: "\25AE"; margin-left: 0.15em; opacity: 0.65;
+    animation: blink 1s steps(1) infinite;
+  }
+  .bubble.done .say::after { content: none; }
+  @keyframes blink { 50% { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) {
+    .bubble { transition: none; }
+    .bubble .say::after { animation: none; }
+  }
+
+</style>
+</head>
+<body>
+
+    <div class="bar" id="bar">
+      <a class="name" href="index.html">0xR</a>
+      <nav>
+        <a href="what.html">what</a>
+        <a href="crew.html" aria-current="page">crew</a>
+        <a href="work.html">work</a>
+        <a href="who.html">who</a>
+      </nav>
+    </div>
+
+    <main class="page">
+      <div class="wrap">
+      <h1 data-scramble="mount" data-delay="60">The crew.</h1>
+      <p class="intro" data-reveal>If we work together, these go to work on your project. Each holds one job and none of them does another's. They produce. I&nbsp;direct.</p>
+
+      <div class="stage">
+      <div class="roster">
+      <button class="mate" data-crew="ye" aria-haspopup="dialog">
+        <canvas class="fig" aria-hidden="true"></canvas>
+        <b>{&nbsp;YE&nbsp;}</b>
+        <em>brand</em>
+        <span>read the brief</span>
+      </button>
+      <button class="mate" data-crew="quent" aria-haspopup="dialog">
+        <canvas class="fig" aria-hidden="true"></canvas>
+        <b>{&nbsp;QUENT&nbsp;}</b>
+        <em>film</em>
+        <span>read the brief</span>
+      </button>
+      <button class="mate" data-crew="jean" aria-haspopup="dialog">
+        <canvas class="fig" aria-hidden="true"></canvas>
+        <b>{&nbsp;JEAN&nbsp;}</b>
+        <em>look</em>
+        <span>read the brief</span>
+      </button>
+      <button class="mate" data-crew="frank" aria-haspopup="dialog">
+        <canvas class="fig" aria-hidden="true"></canvas>
+        <b>{&nbsp;FRANK&nbsp;}</b>
+        <em>words</em>
+        <span>read the brief</span>
+      </button>
+      <button class="mate" data-crew="steve" aria-haspopup="dialog">
+        <canvas class="fig" aria-hidden="true"></canvas>
+        <b>{&nbsp;STEVE&nbsp;}</b>
+        <em>design</em>
+        <span>read the brief</span>
+      </button>
+      <button class="mate" data-crew="kim" aria-haspopup="dialog" data-state="soon">
+        <canvas class="fig" aria-hidden="true"></canvas>
+        <b>{&nbsp;KIM&nbsp;}</b>
+        <em>distribution</em>
+        <span>coming soon</span>
+      </button>
+      </div>
+
+      <div class="bubble" id="bubble" role="status" aria-live="polite" hidden>
+        <p class="who"></p>
+        <p class="say"></p>
+      </div>
+      </div>
+      </div>
+    </main>
+
+
+    <footer class="foot"><span>&copy; 2026 0xR</span><nav>
+      <a href="mailto:rodrigo@0xr.io">rodrigo@0xr.io</a>
+      <a href="https://x.com/0xRcap" target="_blank" rel="noopener">x</a>
+      <a href="https://github.com/0xRcap" target="_blank" rel="noopener">github</a>
+    </nav></footer>
+
+  <script src="crew/ye.model.js" defer></script>
+  <script src="crew/quent.model.js" defer></script>
+  <script src="crew/jean.model.js" defer></script>
+  <script src="crew/frank.model.js" defer></script>
+  <script src="crew/steve.model.js" defer></script>
+  <script src="crew/kim.model.js" defer></script>
+  <script src="crew3d.js" defer></script>
+  <script src="nav.js" defer></script>
+  <script src="scramble.js" defer></script>
+  <script defer>
+  /* ── the roster, and the bubble each figure speaks from ──
+     No modal and no scrim: a game puts the words next to whoever said them.
+     The bubble is one element, moved and refilled, so only one can be open. */
+  addEventListener("DOMContentLoaded", () => {
+    if (!window.crew3d || !window.crewModels) return;
+    const SAY = {
+        "ye": "I do brand identity. I find the name, draw the mark, set the type and the colour, and write the guidelines other people build inside. I own what is allowed to change and what never does.",
+        "quent": "I do film. I write the script, build the shot list, shoot it and cut it, whether the piece is a launch film, an ad or a month of vertical cuts. I decide what the camera is on, how long you sit in a shot, and what never makes it in.",
+        "jean": "I do art direction. I write the look down before anything is made, in hex values, lens millimetres and a named film stock, and the same document governs the film, the photographs, the site and the clothes. Then I judge what comes back and throw out what drifted.",
+        "frank": "I do copywriting. I write the names and the taglines, the film scripts, the posts, the site pages, and the proposal with the price at the bottom. I choose what it says first, what it never says, and how long it is allowed to run.",
+        "steve": "I do product design. I lay out what the product does and in what order: the flows, the screens, the checkout, and the first run before anybody has any data. I decide what goes on the first screen and what waits.",
+        "kim": "I do distribution. I build the calendar, choose the channels, shape the launch as an event, and put the partners and the paid behind it. I set what goes out on which day, what gets held back, and what the numbers change next week."
+    };
+    const stage  = document.querySelector(".stage");
+    const bubble = document.getElementById("bubble");
+    const who    = bubble.querySelector(".who");
+    const say    = bubble.querySelector(".say");
+    const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let speaking = null, timer = 0, current = null;
+
+    const handles = [...document.querySelectorAll(".roster [data-crew]")].map((btn) => {
+      const m = window.crewModels[btn.dataset.crew];
+      return m ? crew3d.register(btn.querySelector("canvas"), m, { scale: 4 }) : null;
+    }).filter(Boolean);
+    crew3d.neighbours(handles);
+
+    const hush = () => {
+      clearTimeout(timer);
+      bubble.classList.remove("on", "done");
+      current = null;
+      setTimeout(() => { if (!current) bubble.hidden = true; }, 180);
+    };
+
+    /* typed, not pasted: the line arrives at reading speed, and a second
+       click on the same figure finishes it rather than restarting */
+    const type = (text) => {
+      if (REDUCED) { say.textContent = text; bubble.classList.add("done"); return; }
+      let i = 0;
+      say.textContent = "";
+      const step = () => {
+        say.textContent = text.slice(0, ++i);
+        if (i < text.length) timer = setTimeout(step, text[i - 1] === "." ? 90 : 16);
+        else bubble.classList.add("done");
+      };
+      step();
+    };
+
+    const speak = (btn) => {
+      const k = btn.dataset.crew;
+      if (current === k) {                      /* second click: finish or close */
+        if (!bubble.classList.contains("done")) {
+          clearTimeout(timer); say.textContent = SAY[k]; bubble.classList.add("done");
+        } else hush();
+        return;
+      }
+      current = k;
+      who.innerHTML = "{&nbsp;" + k.toUpperCase() + "&nbsp;}";
+      bubble.hidden = false;
+      bubble.classList.remove("done");
+
+      /* place it above the figure, tail on the figure's centre, and keep the
+         box inside the stage even when the speaker is at either edge.
+         Measured off rects, not offsetLeft: the canvas is positioned against
+         the stage, not against its button, so the two would double count. */
+      const sr  = stage.getBoundingClientRect();
+      const fr  = btn.querySelector("canvas").getBoundingClientRect();
+      const cx  = fr.left - sr.left + fr.width / 2;
+      bubble.style.left = "0px";
+      bubble.style.bottom = (sr.bottom - fr.top + 14) + "px";
+      const half = bubble.offsetWidth / 2;
+      const x = Math.max(half, Math.min(cx, sr.width - half));
+      bubble.style.left = x + "px";
+      bubble.style.setProperty("--tail", (cx - x + half) + "px");
+
+      void bubble.offsetHeight;
+      bubble.classList.add("on");
+      type(SAY[k]);
+    };
+
+    for (const btn of document.querySelectorAll(".roster [data-crew]")) {
+      btn.addEventListener("click", (e) => { e.stopPropagation(); speak(btn); });
+    }
+    document.addEventListener("click", hush);
+    addEventListener("keydown", (e) => { if (e.key === "Escape") hush(); });
+    addEventListener("resize", hush);
+  });
+  </script>
+
+</body>
+</html>
