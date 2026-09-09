@@ -126,8 +126,12 @@
   const TEMPER = {
     ye:    { blink: 5.0, act: 9.0,  idle: 0.6,  radius: 220, back: 0.3, ease: 0.06, follow: 0.4,  holdx: 1.6,
              mix: { glanceL: 2, glanceR: 2, lookUp: 1, nod: 1, weight: 3 } },
-    quent: { blink: 3.0, act: 3.5,  idle: 1.0,  radius: 260, back: 0.8, ease: 0.22, follow: 0.5,  holdx: 0.6,
-             mix: { glanceL: 4, glanceR: 4, lookUp: 1, nod: 2, weight: 1, tilt: 1, shrug: 2, step: 1 } },
+    /* he stays near front on. His eyes are scattered single cells rather than
+       a mass, so the side darkening on a turn swallows them and the chin
+       flattens into the jaw: past a few degrees he stops being a face. The
+       fidget moves into the body instead, which is where it survives. */
+    quent: { blink: 3.0, act: 3.5,  idle: 0.25, radius: 260, back: 0.8, ease: 0.22, follow: 0.18, holdx: 0.6,
+             mix: { nod: 3, weight: 4, shrug: 2, step: 1, lookUp: 1, glanceL: 1, glanceR: 1 } },
     frank: { blink: 6.0, act: 14.0, idle: 0.35, radius: 180, back: 0.2, ease: 0.05, follow: 0.6,  holdx: 1.4,
              mix: { nod: 3, glanceL: 1, glanceR: 1, lookUp: 1 } },
     jean:  { blink: 4.0, act: 5.0,  idle: 0.9,  radius: 240, back: 0.5, ease: 0.12, follow: 0.5,  holdx: 1.0,
