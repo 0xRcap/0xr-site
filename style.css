@@ -118,11 +118,24 @@ h2 { font-size: var(--t-h2); line-height: 1.2; margin-bottom: 1.2rem; }
 }
 .bar nav a:hover, .bar nav a[aria-current] { opacity: 1; }
 
+/* ── the footer: the terrain is the ground the whole site stands on ──
+   The glyphs fade out across the bottom third so the links are read rather
+   than decoded. Every page carries it, not just the hero. */
 .foot {
-  padding: 1.1rem var(--pad); background: var(--ink); color: #6b6862;
+  padding: 3.5rem var(--pad) 1.1rem; background: var(--ink); color: #6b6862;
   font-family: var(--mono); font-size: var(--t-mono);
   letter-spacing: 0.06em; text-transform: uppercase;
-  position: relative; z-index: 2;
+  position: relative; z-index: 2; overflow: hidden;
+  min-height: clamp(190px, 26vh, 300px); align-content: end;
+}
+.foot #ascii {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  z-index: 0; display: block; pointer-events: none; opacity: 0.9;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 52%, transparent 88%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 52%, transparent 88%);
+}
+.foot-row {
+  position: relative; z-index: 1;
   display: flex; flex-wrap: wrap; align-items: center;
   justify-content: space-between; gap: 0.4rem 1.4rem;
 }
