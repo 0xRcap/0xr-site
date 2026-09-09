@@ -76,6 +76,10 @@ img, video, canvas { max-width: 100%; display: block; }
 
 .wrap { width: 100%; max-width: var(--shell); margin: 0 auto; padding: 0 var(--pad); }
 
+/* ── the crew figures: a voxel canvas is drawn at 1:1 and blown up, so it
+   must never be smoothed. Shared by every page that stands one up. ── */
+.fig { display: block; flex: none; image-rendering: pixelated; }
+
 h1, h2 {
   font-family: var(--display);
   font-weight: normal;

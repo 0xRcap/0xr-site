@@ -29,6 +29,18 @@
   .page p:not(.creed) { max-width: 34rem; margin: 0 0 1.2rem; color: var(--ink-soft); }
   .page .creed { max-width: 24rem; }
 
+  /* ── the portrait: the measure is 34rem inside a 72rem shell, so the right
+     half of this page is empty down its whole length. He stands in it,
+     flush to the same right edge the receipts grid and the brands row use.
+     His name keeps the left edge and stays the first thing on the page.
+     Under 900px there is no room beside a 34rem column, so he drops into
+     the flow under the name at a smaller scale and the page is one column. ── */
+  .intro { position: relative; }
+  .intro .fig { margin: 0 0 1.8rem; }
+  @media (min-width: 900px) {
+    .intro .fig { position: absolute; right: 0; top: 0; margin: 0; }
+  }
+
   /* ── the receipts: one number per surface the story travels on ── */
   .mine {
     display: grid; gap: clamp(1.6rem, 5vw, 2.4rem);
@@ -78,7 +90,9 @@
 
     <main class="page">
       <div class="wrap">
-      <h1 class="lede" data-scramble="mount" data-delay="60">I'm Rodrigo Rivas&nbsp;Yassin.</h1>
+      <div class="intro">
+        <h1 class="lede" data-scramble="mount" data-delay="60">I'm Rodrigo Rivas&nbsp;Yassin.</h1>
+        <canvas class="fig" data-crew="rodrigo" aria-hidden="true"></canvas>
 
       <p>I run a new media crew of (&nbsp;one&nbsp;) human and {&nbsp;many&nbsp;} agents.</p>
 
@@ -98,6 +112,7 @@
       human, later with many agents.</p>
 
       <p>Now helping new projects.</p>
+      </div>
 
       <div class="mine">
         <div>
@@ -137,6 +152,16 @@
       <a href="https://x.com/0xRcap" target="_blank" rel="noopener">x</a>
       <a href="https://github.com/0xRcap" target="_blank" rel="noopener">github</a>
     </nav></div></footer>
+<script src="crew/rodrigo.model.js" defer></script>
+<script src="crew3d.js" defer></script>
+<script defer>
+addEventListener("DOMContentLoaded", () => {
+  const c = document.querySelector(".intro [data-crew]");
+  if (window.crew3d && window.crewModels && c)
+    crew3d.register(c, window.crewModels.rodrigo,
+      { scale: innerWidth < 900 ? 4 : 5 });
+});
+</script>
 <script src="nav.js" defer></script>
 <script src="ascii.js" defer></script>
 <script src="scramble.js" defer></script>

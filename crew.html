@@ -32,6 +32,15 @@
     max-width: 34rem; margin: 0 0 clamp(2.6rem, 8vw, 4rem); color: var(--ink-soft);
   }
 
+  /* ── one human, then the crew ──
+     He is bracketed ( ) and they are bracketed { }, which is the whole
+     argument set in type: the rule between them is the sentence's full stop. */
+  .director { margin-bottom: clamp(2rem, 6vw, 3.2rem); }
+  .director .mate { max-width: 14rem; }
+  .roster {
+    padding-top: clamp(2rem, 6vw, 3.2rem); border-top: 1px solid var(--rule);
+  }
+
   /* ── the six, as a grid of doors ── */
   .roster {
     display: grid; gap: clamp(1.6rem, 5vw, 2.8rem) clamp(1.4rem, 4vw, 2.4rem);
@@ -119,6 +128,15 @@
       <p class="intro" data-reveal>If we work together, these go to work on your project. Each holds one job and none of them does another's. They produce. I&nbsp;direct.</p>
 
       <div class="stage">
+      <div class="director">
+        <button class="mate" data-crew="rodrigo" aria-haspopup="dialog">
+          <canvas class="fig" aria-hidden="true"></canvas>
+          <b>(&nbsp;RODRIGO&nbsp;)</b>
+          <em>direction</em>
+          <span>read the brief</span>
+        </button>
+      </div>
+
       <div class="roster">
       <button class="mate" data-crew="ye" aria-haspopup="dialog">
         <canvas class="fig" aria-hidden="true"></canvas>
@@ -175,6 +193,7 @@
       <a href="https://github.com/0xRcap" target="_blank" rel="noopener">github</a>
     </nav></div></footer>
 
+  <script src="crew/rodrigo.model.js" defer></script>
   <script src="crew/ye.model.js" defer></script>
   <script src="crew/quent.model.js" defer></script>
   <script src="crew/jean.model.js" defer></script>
@@ -192,6 +211,7 @@
   addEventListener("DOMContentLoaded", () => {
     if (!window.crew3d || !window.crewModels) return;
     const SAY = {
+        "rodrigo": "I direct the work my agents produce. I am back and forth with each one all day, editing what comes back and making them better at it. You get what entire departments used to make, at a fraction of the cost and the time, because the six of them work from one shared creative vision.",
         "ye": "I do brand identity. I find the name, draw the mark, set the type and the colour, and write the guidelines other people build inside. I own what is allowed to change and what never does.",
         "quent": "I do film. I write the script, build the shot list, shoot it and cut it, whether the piece is a launch film, an ad or a month of vertical cuts. I decide what the camera is on, how long you sit in a shot, and what never makes it in.",
         "jean": "I do art direction. I write the look down before anything is made, in hex values, lens millimetres and a named film stock, and the same document governs the film, the photographs, the site and the clothes. Then I judge what comes back and throw out what drifted.",
@@ -206,7 +226,7 @@
     const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
     let speaking = null, timer = 0, current = null;
 
-    const handles = [...document.querySelectorAll(".roster [data-crew]")].map((btn) => {
+    const handles = [...document.querySelectorAll("[data-crew]")].map((btn) => {
       const m = window.crewModels[btn.dataset.crew];
       return m ? crew3d.register(btn.querySelector("canvas"), m, { scale: 4 }) : null;
     }).filter(Boolean);
@@ -265,7 +285,7 @@
       type(SAY[k]);
     };
 
-    for (const btn of document.querySelectorAll(".roster [data-crew]")) {
+    for (const btn of document.querySelectorAll("[data-crew]")) {
       btn.addEventListener("click", (e) => { e.stopPropagation(); speak(btn); });
     }
     document.addEventListener("click", hush);
