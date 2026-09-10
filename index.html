@@ -165,6 +165,40 @@
     font-family: var(--mono); font-size: var(--t-small); color: #6b6862;
   }
 
+  /* ── the range: the other three disciplines, one proof each, routing
+     into the case studies. Content on a plain scroll, no control: the
+     crew's ruling on the switcher, 2026-09-10. ── */
+  .range { padding: var(--band) 0; }
+  .range .label { margin-bottom: 1.4rem; }
+  .rangegrid { display: grid; gap: clamp(1rem, 3vw, 1.6rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); }
+  .rtile { display: block; text-decoration: none; color: inherit; }
+  .rtile .shot { display: block; aspect-ratio: 16 / 9; overflow: hidden;
+    background: var(--ink); position: relative; }
+  /* the shared .shot badge means opens-away or opens-here. These go to
+     another page of this site, so the badge would be an empty disc. */
+  .rtile .shot::after { content: none; }
+  .rtile .shot img { position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; transition: transform 0.35s ease; }
+  /* a mark is not a still: it sits on the ink, whole, never cropped */
+  .rtile[data-fit="contain"] .shot img { object-fit: contain; padding: 11%; }
+  .rtile:hover .shot img, .rtile:focus-visible .shot img { transform: scale(1.04); }
+  .rtile[data-fit="contain"]:hover .shot img { transform: none; }
+  .rtile b { display: block; font-family: var(--mono); font-weight: normal;
+    font-size: var(--t-micro); letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--ink); margin: 0.7rem 0 0.15rem; }
+  .rtile .t { display: block; font-family: var(--mono); font-size: var(--t-micro);
+    letter-spacing: 0.06em; color: var(--tone); }
+
+  /* ── one receipts line above the door: three sourced numbers, each one
+     click from its story. Distribution's ruling, same day. ── */
+  .receipts { display: flex; flex-wrap: wrap; gap: 0.5rem 1.8rem;
+    margin: 0 0 2.2rem; font-family: var(--mono); font-size: var(--t-micro);
+    letter-spacing: 0.08em; }
+  .receipts a { color: var(--ink-soft); text-decoration: none;
+    border-bottom: 1px solid var(--rule); padding-bottom: 2px; }
+  .receipts a:hover, .receipts a:focus-visible { color: var(--ink); border-bottom-color: var(--ink); }
+
   /* ── press and live ── */
   .press { background: var(--paper); padding: var(--band) 0; }
   .press .num {
@@ -263,6 +297,29 @@
       <div class="reel" id="reel"></div>
     </section>
 
+    <section class="range" aria-label="the rest of the work">
+      <div class="wrap" data-reveal>
+        <p class="label" data-scramble>The studio also builds</p>
+        <div class="rangegrid">
+          <a class="rtile" href="studio.html#sail">
+            <span class="shot"><img src="media/sail/product-758823.jpg" alt="The Sail agent interface" loading="lazy"></span>
+            <b>product</b>
+            <span class="t">The Sail agent, running</span>
+          </a>
+          <a class="rtile" data-fit="contain" href="studio.html#fungi">
+            <span class="shot"><img src="media/fungi/mark-agent.png" alt="The Fungi yield agent mark" loading="lazy"></span>
+            <b>brand</b>
+            <span class="t">The yield agent mark, Fungi</span>
+          </a>
+          <a class="rtile" href="studio.html#fungi">
+            <span class="shot"><img src="media/fungi/token-marketcap.jpg" alt="The Fungi token on Dexscreener" loading="lazy"></span>
+            <b>go-to-market</b>
+            <span class="t">The token, on Dexscreener</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
     <section class="press" id="press" aria-label="press and live">
       <div class="wrap">
         <p class="label" data-scramble>press &amp; live</p>
@@ -278,6 +335,11 @@
     <div class="wrap">
 
       <div class="next" data-reveal>
+        <p class="receipts">
+          <a href="studio.html#sail">$700M moved autonomously</a>
+          <a href="studio.html#fungi">a token to $9M market cap</a>
+          <a href="studio.html#fungi">$50k AUM in the first week</a>
+        </p>
         <p class="label" data-scramble>Start here</p>
         <p class="addr"><a href="mailto:rodrigo@0xr.io?subject=A%20project">rodrigo@0xr.io</a></p>
         <p class="what">Tell me what you are making and I&rsquo;ll get my crew on&nbsp;it.</p>
