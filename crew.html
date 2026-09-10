@@ -29,7 +29,7 @@
   .page p:not(.creed) { max-width: 34rem; margin: 0 0 1.1rem; color: var(--ink-soft); }
   .intro {
     font-size: clamp(1.05rem, 3.4vw, 1.25rem); line-height: 1.55;
-    max-width: 34rem; margin: 0 0 clamp(2.6rem, 8vw, 4rem); color: var(--ink-soft);
+    max-width: 34rem; margin: 0 0 var(--band); color: var(--ink-soft);
   }
 
   /* ── one human, then the crew ──
@@ -39,33 +39,36 @@
      rail as every other line on the page, and he stands at the right rail
      beside it. Both edges of the page are used, so nothing reads cut off. */
   .him {
-    display: grid; grid-template-columns: minmax(0, 1fr) auto;
-    gap: clamp(2rem, 5vw, 3.5rem); align-items: start;
-    /* the trimmed paper hangs past the rail on both sides. It is transparent,
-       but it still counts as page width, so it is clipped rather than left to
-       put a horizontal scrollbar on narrow screens. */
-    overflow-x: clip;
+    display: grid; grid-template-columns: minmax(0, 34rem) auto;
+    justify-content: start; gap: clamp(2rem, 5vw, 3.5rem); align-items: start;
   }
   /* his paper is trimmed on both sides so the ink, not the canvas, meets the
      rail; the shared img/video/canvas cap would squeeze the bitmap instead. */
-  .director { justify-self: end; }
+  .director { justify-self: start; }
   .director .mate { cursor: pointer; }
+  /* load-bearing: his canvas is 252px inside a button as narrow as 133px, and
+     the shared img/video/canvas cap would scale the bitmap to a fractional
+     ratio, which is what makes a pixelated figure go ragged. Do not tidy. */
   .director .fig { max-width: none; }
-  @media (max-width: 820px) {
+  /* 680, not 820: 34rem of text plus the gap plus his ink is 733px, which
+     still fits an 820 viewport. Below the breakpoint he follows his story
+     rather than standing in front of it. */
+  @media (max-width: 680px) {
     .him { grid-template-columns: 1fr; gap: clamp(1.4rem, 5vw, 2rem); }
-    .director { justify-self: start; order: -1; }
   }
   /* ── the six open under their own rule, with the line that introduces
-     them sitting on it rather than at the top of the page ── */
+     them sitting on it rather than at the top of the page. The gaps are the
+     shared band, not a formula of this page's own. ── */
   .six {
-    padding-top: clamp(2rem, 6vw, 3.2rem); border-top: 1px solid var(--rule);
-    margin-bottom: clamp(1.6rem, 5vw, 2.4rem);
+    margin-top: var(--band); padding-top: var(--band);
+    border-top: 1px solid var(--rule); margin-bottom: calc(var(--band) / 2);
   }
   .six .lab { font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.18em;
               text-transform: uppercase; color: var(--tone); margin: 0 0 1.2rem; }
   .six .lead { max-width: 34rem; margin: 0; color: var(--ink-soft); }
 
   /* ── the six, as a grid of doors ── */
+  [data-state="soon"] .fig { opacity: 0.55; }
   .roster {
     display: grid; gap: clamp(1.6rem, 5vw, 2.8rem) clamp(1.4rem, 4vw, 2.4rem);
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
@@ -75,6 +78,8 @@
     background: none; border: 0; padding: 0; font: inherit; color: inherit;
   }
   .mate .fig { display: block; margin: 0 0 0.6rem; image-rendering: pixelated; }
+  @media (hover: none) { .mate span { color: var(--ink); text-decoration: underline;
+                                      text-decoration-color: var(--rule); } }
   .mate b {
     display: block; font-family: var(--mono); font-weight: normal;
     font-size: var(--t-mono); letter-spacing: 0.1em; color: var(--ink); margin-bottom: 0.3rem;
@@ -98,21 +103,14 @@
   .story p:last-child { margin-bottom: 0; }
   .story .lab { font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.18em;
              text-transform: uppercase; color: var(--tone); margin-bottom: 1.2rem; }
-  .mine { display: grid; gap: clamp(1.6rem, 5vw, 2.4rem);
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
-    margin: clamp(2.2rem, 6vw, 3.2rem) 0 clamp(2.6rem, 7vw, 4rem); }
-  .mine .n { font-family: var(--display); font-weight: normal; line-height: 1.06;
-             font-size: clamp(2rem, 6.5vw, 3.2rem); letter-spacing: -0.02em; margin: 0 0 0.4rem;
-             color: var(--ink); max-width: none; }
-  .mine .n a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--rule); }
-  .mine .n a:hover { border-bottom-color: var(--ink); }
-  .mine .k { font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.14em;
-             text-transform: uppercase; color: var(--tone); margin: 0; line-height: 1.6; max-width: none; }
+  .story p a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px;
+               text-underline-offset: 2px; text-decoration-color: var(--tone); }
+  .story p a:hover { text-decoration-color: var(--ink); }
 
   /* ── the dialogue bubble: the figure speaks, the page does not go dark ──
      Anchored above whoever was clicked, with a tail pointing back down at
      them, and the line typed out rather than pasted in. */
-  .stage { position: relative; }
+  .cast { position: relative; }
   .bubble {
     position: absolute; z-index: 30; width: min(23rem, calc(100vw - 2 * var(--pad)));
     background: var(--ink); color: var(--card-ink);
@@ -122,6 +120,8 @@
     pointer-events: none;
   }
   .bubble.on { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  .bubble.below { transform-origin: 50% 0; }
+  .bubble.below::after { bottom: auto; top: -5px; }
   /* the tail, drawn as a square rotated into a diamond so its two lower
      edges read as a point aimed at the figure */
   .bubble::after {
@@ -142,6 +142,10 @@
     animation: blink 1s steps(1) infinite;
   }
   .bubble.done .say::after { content: none; }
+  /* the typed node mutates once per character. A screen reader reads the
+     finished sentence from here instead, once. */
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden;
+        clip-path: inset(50%); white-space: nowrap; }
   @keyframes blink { 50% { opacity: 0; } }
   @media (prefers-reduced-motion: reduce) {
     .bubble { transition: none; }
@@ -166,21 +170,39 @@
       <h1 data-scramble="mount" data-delay="60">The crew.</h1>
       <p class="intro" data-reveal>One human and six agents. They produce. I&nbsp;direct.</p>
 
-      <div class="stage">
+      <div class="cast">
       <div class="him" data-reveal>
       <div class="story">
         <p class="lab" data-scramble>The record</p>
-        <p>I cofounded Sail and Fungi and ran every surface the story travelled
-        on for both: brand, film, comms and product. Before that I cofounded
-        Boveda, where we stored 1.4 petabytes of client data on the Filecoin
-        network.</p>
-        <p>We never paid a PR agency, a design studio or an influencer. The
-        brand, the film, the comms and the product came out of a crew of one
-        human, later with many agents. That is the argument, and running it on
-        my own companies first is the only reason I can sell it.</p>
+        <p>I cofounded Boveda in 2022. We sold decentralized storage on the
+        Filecoin network and won 1.4 petabytes of client data, Interdominios
+        among them, which then had to physically live somewhere: machines in a
+        Madrid data centre, a technical partnership with Protocol Labs, a
+        storage partner in San Diego.</p>
+        <p>Next was Fungi, a ChatGPT for crypto that executed onchain actions
+        in plain English. The go-to-market was a token, and it reached <a
+        href="https://dexscreener.com/solana/bkrvgxjsghfjw8vakhgbijpdxtr11etbo2gn7j26acbn"
+        target="_blank" rel="noopener">$9M market cap on Solana</a> with around
+        a thousand people in the Telegram. When we pivoted to a yield agent I
+        launched it on a 24 hour livestream instead of an announcement,
+        building it while people watched. It had $50k under management in the
+        first week.</p>
+        <p>Fungi became Sail. It was the first agent to run swaps and bridges
+        autonomously and without custody, it moved $700M across 56 yield
+        sources for around a thousand users, and it <a
+        href="https://x.com/SaildotMoney/status/2042315862229577747"
+        target="_blank" rel="noopener">beat the stablecoin yield market</a>. Sail is
+        open source now, a permission layer other agents can transact
+        under.</p>
+        <p>We never paid a PR agency, a design studio or an influencer. I
+        raised more than $1M as a cofounder and ran every surface the story
+        travelled on, brand, film, comms and product, alone at first and then
+        with agents. Four million impressions since 2024 came out of that crew.
+        Running it on my own companies first is the only reason I can sell it
+        to&nbsp;yours.</p>
       </div>
       <div class="director">
-        <button class="mate" data-crew="rodrigo" aria-haspopup="dialog">
+        <button class="mate" data-crew="rodrigo" aria-expanded="false">
           <canvas class="fig" aria-hidden="true"></canvas>
           <b>(&nbsp;RODRIGO&nbsp;)</b>
           <em>direction</em>
@@ -189,32 +211,6 @@
       </div>
       </div>
 
-      <div class="mine">
-        <div>
-          <p class="n" id="mine-impressions">&mdash;</p>
-          <p class="k">impressions since 2024<br>across all channels</p>
-        </div>
-        <div>
-          <p class="n">$1.1M+</p>
-          <p class="k">AUM on products cofounded<br>Sail and Fungi</p>
-        </div>
-        <div>
-          <p class="n">1,000+</p>
-          <p class="k">Telegram and Discord members<br>at Sail and Fungi</p>
-        </div>
-        <div>
-          <p class="n">$1M+</p>
-          <p class="k">raised as cofounder</p>
-        </div>
-        <div>
-          <p class="n">2,000+</p>
-          <p class="k">unique users<br>across Sail and Fungi</p>
-        </div>
-        <div>
-          <p class="n"><a href="https://dexscreener.com/solana/bkrvgxjsghfjw8vakhgbijpdxtr11etbo2gn7j26acbn" target="_blank" rel="noopener">$9M MC</a></p>
-          <p class="k">token launched on Solana as go-to-market for Fungi</p>
-        </div>
-      </div>
 
       <div class="six" data-reveal>
         <p class="lab" data-scramble>The agents</p>
@@ -223,37 +219,37 @@
       </div>
 
       <div class="roster">
-      <button class="mate" data-crew="ye" aria-haspopup="dialog">
+      <button class="mate" data-crew="ye" aria-expanded="false">
         <canvas class="fig" aria-hidden="true"></canvas>
         <b>{&nbsp;YE&nbsp;}</b>
         <em>brand</em>
         <span>read the brief</span>
       </button>
-      <button class="mate" data-crew="quent" aria-haspopup="dialog">
+      <button class="mate" data-crew="quent" aria-expanded="false">
         <canvas class="fig" aria-hidden="true"></canvas>
         <b>{&nbsp;QUENT&nbsp;}</b>
         <em>film</em>
         <span>read the brief</span>
       </button>
-      <button class="mate" data-crew="jean" aria-haspopup="dialog">
+      <button class="mate" data-crew="jean" aria-expanded="false">
         <canvas class="fig" aria-hidden="true"></canvas>
         <b>{&nbsp;JEAN&nbsp;}</b>
         <em>look</em>
         <span>read the brief</span>
       </button>
-      <button class="mate" data-crew="frank" aria-haspopup="dialog">
+      <button class="mate" data-crew="frank" aria-expanded="false">
         <canvas class="fig" aria-hidden="true"></canvas>
         <b>{&nbsp;FRANK&nbsp;}</b>
         <em>words</em>
         <span>read the brief</span>
       </button>
-      <button class="mate" data-crew="steve" aria-haspopup="dialog">
+      <button class="mate" data-crew="steve" aria-expanded="false">
         <canvas class="fig" aria-hidden="true"></canvas>
         <b>{&nbsp;STEVE&nbsp;}</b>
         <em>design</em>
         <span>read the brief</span>
       </button>
-      <button class="mate" data-crew="kim" aria-haspopup="dialog" data-state="soon">
+      <button class="mate" data-crew="kim" aria-expanded="false" data-state="soon">
         <canvas class="fig" aria-hidden="true"></canvas>
         <b>{&nbsp;KIM&nbsp;}</b>
         <em>distribution</em>
@@ -263,7 +259,8 @@
 
       <div class="bubble" id="bubble" role="status" aria-live="polite" hidden>
         <p class="who"></p>
-        <p class="say"></p>
+        <p class="say" aria-hidden="true"></p>
+        <p class="sr"></p>
       </div>
       </div>
 
@@ -311,10 +308,12 @@
         "steve": "I do product design. I lay out what the product does and in what order: the flows, the screens, the checkout, and the first run before anybody has any data. I decide what goes on the first screen and what waits.",
         "kim": "I do distribution. I build the calendar, choose the channels, shape the launch as an event, and put the partners and the paid behind it. I set what goes out on which day, what gets held back, and what the numbers change next week."
     };
-    const stage  = document.querySelector(".stage");
+    const cast   = document.querySelector(".cast");
+    const mates  = [...document.querySelectorAll("[data-crew]")];
     const bubble = document.getElementById("bubble");
     const who    = bubble.querySelector(".who");
     const say    = bubble.querySelector(".say");
+    const sr     = bubble.querySelector(".sr");
     const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
     let speaking = null, timer = 0, current = null;
 
@@ -331,7 +330,8 @@
     /* he is the one human on the page and stands half again as tall as the
        six. He also sits on the right rail, so his paper is trimmed on both
        sides and the ink, not the canvas, is what the page aligns to. */
-    const SCALE = 4, HIS = 7;
+    const SCALE = 4;
+    const HIS = matchMedia("(max-width: 680px)").matches ? 5 : 7;
     const handles = [...document.querySelectorAll("[data-crew]")].map((btn) => {
       const m = window.crewModels[btn.dataset.crew];
       if (!m) return null;
@@ -346,7 +346,8 @@
 
     const hush = () => {
       clearTimeout(timer);
-      bubble.classList.remove("on", "done");
+      bubble.classList.remove("on", "done", "below");
+      for (const b of mates) b.setAttribute("aria-expanded", "false");
       current = null;
       setTimeout(() => { if (!current) bubble.hidden = true; }, 180);
     };
@@ -354,13 +355,13 @@
     /* typed, not pasted: the line arrives at reading speed, and a second
        click on the same figure finishes it rather than restarting */
     const type = (text) => {
-      if (REDUCED) { say.textContent = text; bubble.classList.add("done"); return; }
+      if (REDUCED) { say.textContent = sr.textContent = text; bubble.classList.add("done"); return; }
       let i = 0;
       say.textContent = "";
       const step = () => {
         say.textContent = text.slice(0, ++i);
-        if (i < text.length) timer = setTimeout(step, text[i - 1] === "." ? 90 : 16);
-        else bubble.classList.add("done");
+        if (i < text.length) timer = setTimeout(step, text[i - 1] === "." ? 50 : 8);
+        else { bubble.classList.add("done"); sr.textContent = text; }
       };
       step();
     };
@@ -369,28 +370,42 @@
       const k = btn.dataset.crew;
       if (current === k) {                      /* second click: finish or close */
         if (!bubble.classList.contains("done")) {
-          clearTimeout(timer); say.textContent = SAY[k]; bubble.classList.add("done");
+          clearTimeout(timer); say.textContent = sr.textContent = SAY[k];
+          bubble.classList.add("done");
         } else hush();
         return;
       }
       current = k;
+      for (const b of mates) b.setAttribute("aria-expanded", String(b === btn));
       who.innerHTML = "{&nbsp;" + k.toUpperCase() + "&nbsp;}";
       bubble.hidden = false;
       bubble.classList.remove("done");
 
       /* place it above the figure, tail on the figure's centre, and keep the
-         box inside the stage even when the speaker is at either edge.
+         box inside the cast even when the speaker is at either edge.
          Measured off rects, not offsetLeft: the canvas is positioned against
-         the stage, not against its button, so the two would double count. */
-      const sr  = stage.getBoundingClientRect();
+         the cast, not against its button, so the two would double count. */
+      const cr  = cast.getBoundingClientRect();
       const fr  = btn.querySelector("canvas").getBoundingClientRect();
-      const cx  = fr.left - sr.left + fr.width / 2;
+      const cx  = fr.left - cr.left + fr.width / 2;
       bubble.style.left = "0px";
-      bubble.style.bottom = (sr.bottom - fr.top + 14) + "px";
+      bubble.style.bottom = (cr.bottom - fr.top + 14) + "px";
       const half = bubble.offsetWidth / 2;
-      const x = Math.max(half, Math.min(cx, sr.width - half));
+      const x = Math.max(half, Math.min(cx, cr.width - half));
       bubble.style.left = x + "px";
       bubble.style.setProperty("--tail", (cx - x + half) + "px");
+
+      /* the box grows upward as it types, so its height has to be known
+         before a character exists. Render the finished line, measure, clear.
+         A figure standing at the top of the cast cannot fit a bubble above
+         it, so that one hangs under its feet instead. */
+      say.textContent = SAY[k];
+      const h = bubble.offsetHeight;
+      say.textContent = "";
+      bubble.classList.toggle("below", fr.top - 14 - h < 72);
+      if (bubble.classList.contains("below")) {
+        bubble.style.bottom = (cr.bottom - fr.bottom - 14 - h) + "px";
+      }
 
       void bubble.offsetHeight;
       bubble.classList.add("on");
@@ -402,22 +417,12 @@
     }
     document.addEventListener("click", hush);
     addEventListener("keydown", (e) => { if (e.key === "Escape") hush(); });
-    addEventListener("resize", hush);
+    let vw = innerWidth;   /* iOS fires resize on scroll, when its URL bar
+                              collapses. Only a real width change closes it. */
+    addEventListener("resize", () => { if (innerWidth !== vw) { vw = innerWidth; hush(); } });
   });
   </script>
 
-<script>
-/* ── his impressions figure — from media/totals.json · npm run posts ── */
-(async () => {
-  try {
-    const r = await fetch("media/totals.json", { cache: "no-store" });
-    if (!r.ok) return;
-    const totals = await r.json();
-    const imp = document.getElementById("mine-impressions");
-    if (imp && totals.topline) imp.textContent = totals.topline.value;
-  } catch (e) { /* file:// — the figure just stays a dash */ }
-})();
-</script>
 
 </body>
 </html>
