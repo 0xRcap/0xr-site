@@ -47,6 +47,7 @@
     transition: color 0.25s ease, border-color 0.25s ease;
   }
   .loadmore:hover, .loadmore:focus-visible { color: var(--ink); border-bottom-color: var(--ink); }
+  .loadmore[hidden] { display: none; }   /* display: block above outranks the UA rule */
 
   /* ── one line under the wall: films are not the whole studio ── */
   .also {
@@ -128,6 +129,9 @@
     position: relative; margin: 0; width: 100%; aspect-ratio: 16 / 9;
     overflow: hidden; background: var(--ink); display: block;
   }
+  /* display: block above outranks the user agent's [hidden] { display: none },
+     so a hidden tile stayed on screen. Say it here or the attribute is inert. */
+  .reel .tile[hidden] { display: none; }
   .reel .tile img, .reel .tile video {
     position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
     transition: transform 0.35s ease, filter 0.35s ease;
@@ -326,12 +330,16 @@
       : `<figure class="tile">${media}${cap}</figure>`;
   }).join("");
 
-  /* ── the wall opens at one batch ──
-     Twenty tiles is a long scroll before anything else on the page, and it
-     grows every week. It also fights the phone: WebKit's decoder cap is six
-     on iOS, so a wall that mounts twenty leaves most of them stills. Six
-     shown, six more per press. */
+  /* ── on a phone the wall opens at one batch ──
+     One column means nineteen tiles is a very long scroll before anything
+     else on the page, and it grows every week. It also fights the phone:
+     WebKit's decoder cap is six on iOS, so a wall that mounts nineteen
+     leaves most of them stills. Six shown, six more per press.
+
+     Desktop shows the whole wall. Five columns is four rows, the decoder
+     cap is 32, and there is nothing to solve. */
   const BATCH = 6;
+  const narrow = matchMedia("(max-width: 680px)");
   const tiles = [...reel.querySelectorAll(".tile")];
   const more = document.getElementById("more-films");
   let shown = 0;
@@ -345,15 +353,24 @@
     else more.textContent = `load ${Math.min(BATCH, left)} more`;
   };
 
-  if (tiles.length <= BATCH) {
-    for (const t of tiles) mediaWall.observe(t);
+  const showAll = () => {
+    for (const t of tiles) { t.hidden = false; mediaWall.observe(t); }
+    shown = tiles.length;
     more.hidden = true;
+  };
+
+  if (!narrow.matches || tiles.length <= BATCH) {
+    showAll();
   } else {
     for (const t of tiles) t.hidden = true;
     showNext();
     more.hidden = false;
     more.addEventListener("click", showNext);
   }
+
+  /* a phone turned sideways, or a window dragged wider, should not leave
+     tiles hidden behind a control the layout no longer needs */
+  narrow.addEventListener("change", (e) => { if (!e.matches) showAll(); });
 
 })();
 </script>
