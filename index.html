@@ -39,6 +39,15 @@
     font-family: var(--mono); font-size: var(--t-mono); color: var(--tone);
     letter-spacing: 0.12em; margin: 0 0 1.1rem;
   }
+  .loadmore {
+    display: block; margin: clamp(1.4rem, 4vw, 2rem) 0 0; padding: 0.7rem 0;
+    background: none; border: 0; border-bottom: 1px solid var(--rule);
+    font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--tone); cursor: pointer;
+    transition: color 0.25s ease, border-color 0.25s ease;
+  }
+  .loadmore:hover, .loadmore:focus-visible { color: var(--ink); border-bottom-color: var(--ink); }
+
   /* ── one line under the wall: films are not the whole studio ── */
   .also {
     padding-block: clamp(2.6rem, 7vw, 4rem) 0; max-width: 34rem;
@@ -163,11 +172,6 @@
     .reel .tile img, .reel .tile video { transition: none; }
     .reel .tile:hover img, .reel .tile:hover video { transform: none; }
   }
-  .reel .tile.more {
-    display: flex; align-items: center; justify-content: center;
-    color: #6b6862; font-family: var(--mono); font-size: var(--t-mono);
-    letter-spacing: 0.16em; text-transform: uppercase;
-  }
   .reel .empty {
     grid-column: 1 / -1; padding: var(--band) var(--pad); text-align: center;
     font-family: var(--mono); font-size: var(--t-small); color: #6b6862;
@@ -214,6 +218,9 @@
           <small id="tally-sub">counting</small></h2>
       </div>
       <div class="reel" id="reel"></div>
+      <div class="wrap">
+        <button class="loadmore" id="more-films" hidden>load more</button>
+      </div>
     </section>
 
     <div class="wrap">
@@ -317,10 +324,36 @@
     return it.href
       ? `<figure class="tile"><a href="${it.href}" target="_blank" rel="noopener" aria-label="${it.caption} / open the post">${media}${cap}</a></figure>`
       : `<figure class="tile">${media}${cap}</figure>`;
-  }).join("") + '<figure class="tile more" aria-hidden="true">+ more</figure>';
+  }).join("");
 
-  /* the video engine lives in player.js, shared with studio.html */
-  reel.querySelectorAll(".tile").forEach(t => mediaWall.observe(t));
+  /* ── the wall opens at one batch ──
+     Twenty tiles is a long scroll before anything else on the page, and it
+     grows every week. It also fights the phone: WebKit's decoder cap is six
+     on iOS, so a wall that mounts twenty leaves most of them stills. Six
+     shown, six more per press. */
+  const BATCH = 6;
+  const tiles = [...reel.querySelectorAll(".tile")];
+  const more = document.getElementById("more-films");
+  let shown = 0;
+
+  const showNext = () => {
+    const next = tiles.slice(shown, shown + BATCH);
+    for (const t of next) { t.hidden = false; mediaWall.observe(t); }
+    shown += next.length;
+    const left = tiles.length - shown;
+    if (left <= 0) more.hidden = true;
+    else more.textContent = `load ${Math.min(BATCH, left)} more`;
+  };
+
+  if (tiles.length <= BATCH) {
+    for (const t of tiles) mediaWall.observe(t);
+    more.hidden = true;
+  } else {
+    for (const t of tiles) t.hidden = true;
+    showNext();
+    more.hidden = false;
+    more.addEventListener("click", showNext);
+  }
 
 })();
 </script>
