@@ -35,15 +35,26 @@
   /* ── one human, then the crew ──
      He is bracketed ( ) and they are bracketed { }, which is the whole
      argument set in type: the rule between them is the sentence's full stop. */
-  /* his figure and his record are one thing: one grid row, the figure in
-     the left column and his story beside it, so the text cannot wrap under
-     him and no line escapes below. Receipts run beneath both, full width. */
+  /* his figure and his record are one thing: his story holds the same left
+     rail as every other line on the page, and he stands at the right rail
+     beside it. Both edges of the page are used, so nothing reads cut off. */
   .him {
-    display: grid; grid-template-columns: auto 1fr;
-    gap: 0.5rem clamp(1.8rem, 5vw, 3rem); align-items: center;
+    display: grid; grid-template-columns: minmax(0, 1fr) auto;
+    gap: clamp(2rem, 5vw, 3.5rem); align-items: start;
+    /* the trimmed paper hangs past the rail on both sides. It is transparent,
+       but it still counts as page width, so it is clipped rather than left to
+       put a horizontal scrollbar on narrow screens. */
+    overflow-x: clip;
   }
-  .director .mate { max-width: 14rem; cursor: pointer; }
-  @media (max-width: 560px) { .him { grid-template-columns: 1fr; } }
+  /* his paper is trimmed on both sides so the ink, not the canvas, meets the
+     rail; the shared img/video/canvas cap would squeeze the bitmap instead. */
+  .director { justify-self: end; }
+  .director .mate { cursor: pointer; }
+  .director .fig { max-width: none; }
+  @media (max-width: 820px) {
+    .him { grid-template-columns: 1fr; gap: clamp(1.4rem, 5vw, 2rem); }
+    .director { justify-self: start; order: -1; }
+  }
   .roster {
     padding-top: clamp(2rem, 6vw, 3.2rem); border-top: 1px solid var(--rule);
   }
@@ -158,14 +169,6 @@
 
       <div class="stage">
       <div class="him" data-reveal>
-      <div class="director">
-        <button class="mate" data-crew="rodrigo" aria-haspopup="dialog">
-          <canvas class="fig" aria-hidden="true"></canvas>
-          <b>(&nbsp;RODRIGO&nbsp;)</b>
-          <em>direction</em>
-          <span>read the brief</span>
-        </button>
-      </div>
       <div class="story">
         <p class="lab" data-scramble>The record</p>
         <p>I cofounded Sail and Fungi and ran every surface the story travelled
@@ -176,6 +179,14 @@
         brand, the film, the comms and the product came out of a crew of one
         human, later with many agents. That is the argument, and running it on
         my own companies first is the only reason I can sell it.</p>
+      </div>
+      <div class="director">
+        <button class="mate" data-crew="rodrigo" aria-haspopup="dialog">
+          <canvas class="fig" aria-hidden="true"></canvas>
+          <b>(&nbsp;RODRIGO&nbsp;)</b>
+          <em>direction</em>
+          <span>read the brief</span>
+        </button>
       </div>
       </div>
 
@@ -311,13 +322,22 @@
        the label's edge like everything else on the site. */
     const inkLeft = (m) => Math.min(...m.value.split("\n")
       .map((r) => r.search(/[-+#]/)).filter((i) => i >= 0));
-    const SCALE = 4;
+    const inkRight = (m) => Math.max(...m.value.split("\n")
+      .map((r) => r.replace(/[^-+#]+$/, "").length));
+    const cols = (m) => Math.max(...m.value.split("\n").map((r) => r.length));
+    /* he is the one human on the page and stands half again as tall as the
+       six. He also sits on the right rail, so his paper is trimmed on both
+       sides and the ink, not the canvas, is what the page aligns to. */
+    const SCALE = 4, HIS = 7;
     const handles = [...document.querySelectorAll("[data-crew]")].map((btn) => {
       const m = window.crewModels[btn.dataset.crew];
       if (!m) return null;
+      const mine = btn.dataset.crew === "rodrigo";
+      const px = mine ? HIS : SCALE;
       const c = btn.querySelector("canvas");
-      c.style.marginLeft = -(inkLeft(m) * SCALE) + "px";
-      return crew3d.register(c, m, { scale: SCALE });
+      c.style.marginLeft = -(inkLeft(m) * px) + "px";
+      if (mine) c.style.marginRight = -((cols(m) - inkRight(m)) * px) + "px";
+      return crew3d.register(c, m, { scale: px });
     }).filter(Boolean);
     crew3d.neighbours(handles);
 
