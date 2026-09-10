@@ -55,9 +55,15 @@
     .him { grid-template-columns: 1fr; gap: clamp(1.4rem, 5vw, 2rem); }
     .director { justify-self: start; order: -1; }
   }
-  .roster {
+  /* ── the six open under their own rule, with the line that introduces
+     them sitting on it rather than at the top of the page ── */
+  .six {
     padding-top: clamp(2rem, 6vw, 3.2rem); border-top: 1px solid var(--rule);
+    margin-bottom: clamp(1.6rem, 5vw, 2.4rem);
   }
+  .six .lab { font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.18em;
+              text-transform: uppercase; color: var(--tone); margin: 0 0 1.2rem; }
+  .six .lead { max-width: 34rem; margin: 0; color: var(--ink-soft); }
 
   /* ── the six, as a grid of doors ── */
   .roster {
@@ -102,13 +108,6 @@
   .mine .n a:hover { border-bottom-color: var(--ink); }
   .mine .k { font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.14em;
              text-transform: uppercase; color: var(--tone); margin: 0; line-height: 1.6; max-width: none; }
-  .brands { margin-top: 3rem; }
-  .brands .grp + .grp { margin-top: 1.6rem; }
-  .brands .lab { display: block; margin: 0 0 0.55rem; }
-  .brands .row { display: flex; flex-wrap: wrap; gap: 0.3rem 1.8rem; align-items: baseline; }
-  .brands a { display: inline-block; padding: 0.35rem 0; font-family: var(--display); font-weight: normal;
-              line-height: 1.26; font-size: clamp(1.2rem, 4vw, 1.8rem); color: var(--ink); text-decoration: none; }
-  .brands a:hover { text-decoration: underline; }
 
   /* ── the dialogue bubble: the figure speaks, the page does not go dark ──
      Anchored above whoever was clicked, with a tail pointing back down at
@@ -165,7 +164,7 @@
     <main class="page">
       <div class="wrap">
       <h1 data-scramble="mount" data-delay="60">The crew.</h1>
-      <p class="intro" data-reveal>If we work together, these go to work on your project. Each holds one job and none of them does another's. They produce. I&nbsp;direct.</p>
+      <p class="intro" data-reveal>One human and six agents. They produce. I&nbsp;direct.</p>
 
       <div class="stage">
       <div class="him" data-reveal>
@@ -217,6 +216,12 @@
         </div>
       </div>
 
+      <div class="six" data-reveal>
+        <p class="lab" data-scramble>The agents</p>
+        <p class="lead">If we work together, these go to work on your project.
+        Each holds one job and none of them does another's.</p>
+      </div>
+
       <div class="roster">
       <button class="mate" data-crew="ye" aria-haspopup="dialog">
         <canvas class="fig" aria-hidden="true"></canvas>
@@ -260,8 +265,6 @@
         <p class="who"></p>
         <p class="say"></p>
       </div>
-
-      <div class="brands" id="brands"></div>
       </div>
 
       <div class="next" data-reveal>
@@ -404,7 +407,7 @@
   </script>
 
 <script>
-/* ── the brands row — from media/totals.json · npm run posts ── */
+/* ── his impressions figure — from media/totals.json · npm run posts ── */
 (async () => {
   try {
     const r = await fetch("media/totals.json", { cache: "no-store" });
@@ -412,13 +415,7 @@
     const totals = await r.json();
     const imp = document.getElementById("mine-impressions");
     if (imp && totals.topline) imp.textContent = totals.topline.value;
-    if (!totals.brands || !totals.brands.length) return;
-    document.getElementById("brands").innerHTML = totals.brands.map(g =>
-      `<div class="grp"><span class="lab">${g.label}</span><div class="row">`
-      + g.items.map(i => `<a href="${i.href}" target="_blank" rel="noopener">${i.name}</a>`).join("")
-      + `</div></div>`
-    ).join("");
-  } catch (e) { /* file:// — the row just stays empty */ }
+  } catch (e) { /* file:// — the figure just stays a dash */ }
 })();
 </script>
 

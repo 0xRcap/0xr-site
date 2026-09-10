@@ -83,6 +83,19 @@
     border-left: 2px solid var(--ink); padding-left: 0.8rem; line-height: 1.7;
   }
 
+  /* ── who the work travelled with: the ecosystem the launches were run
+     with, and the labels the studio works for ── */
+  .reach { margin-top: clamp(3.2rem, 8vw, 4.5rem);
+           padding-top: clamp(1.8rem, 5vw, 2.6rem); border-top: 1px solid var(--rule); }
+  .reach .label { margin-bottom: 1.4rem; }
+  .brands .grp + .grp { margin-top: 1.8rem; }
+  .brands .lab { display: block; font-family: var(--mono); font-size: var(--t-micro);
+                 letter-spacing: 0.08em; color: var(--tone); margin: 0 0 0.6rem; }
+  .brands .row { display: flex; flex-wrap: wrap; gap: 0.3rem 1.8rem; align-items: baseline; }
+  .brands a { display: inline-block; padding: 0.35rem 0; font-family: var(--display); font-weight: normal;
+              line-height: 1.26; font-size: clamp(1.2rem, 4vw, 1.8rem); color: var(--ink); text-decoration: none; }
+  .brands a:hover { text-decoration: underline; }
+
   /* ── product surfaces and case studies, one grid for both ── */
   .surfaces, .cases { margin: 1.8rem 0 0; }
   .surfaces .lab, .cat .cat-lab {
@@ -149,15 +162,23 @@
       <details class="entry" open>
         <summary data-scramble-host>
           <span class="idx">01</span>
-          <div><h2 data-scramble="hover" data-delay="0">0xR</h2></div>
-          <span class="when">2026 &ndash; now</span>
+          <div><h2 data-scramble="hover" data-delay="0">All&eacute; Studios</h2></div>
+          <span class="when">Sep 2026 &ndash; now</span>
         </summary>
         <div class="body">
-          <p class="role-line">Creative studio, for clients.</p>
-          <p>A creative studio of one human and many agents. I run the story on every surface it travels
-          on: brand, film, comms and product.</p>
-          <p class="impact">Clients: All&eacute; Studios, Madrid streetwear,
-          the MID 90'S capsule.</p>
+          <p class="role-line">The studio, for the label. Running now.</p>
+          <p>A Madrid streetwear label built on four pillars, music, art,
+          cinema and sport, one era per collection, with the founder at the
+          centre and never the face. The positioning was written first and
+          audited against eleven competing labels at their listed prices.
+          Everything else takes its brief from that document.</p>
+          <p>Running every month: four collection character films, six UGC
+          videos on two AI faces run against each other, twenty photographs
+          with their captions and posting order, and a signature film with
+          its cutdowns at the drop. Plus the marketing plan, the channels,
+          one activation and the product page.</p>
+          <p class="impact">The MID 90'S reel, made before the engagement,
+          ran on the label's own account: 83,200 views and 367&nbsp;likes.</p>
         </div>
       </details>
       <details class="entry">
@@ -224,6 +245,11 @@
           San Diego.</p>
         </div>
       </details>
+      <div class="reach" data-reveal>
+        <p class="label" data-scramble>Who we work with</p>
+        <div class="brands" id="brands"></div>
+      </div>
+
       <div class="next" data-reveal>
         <p class="label" data-scramble>Start here</p>
         <p class="addr"><a href="mailto:rodrigo@0xr.io?subject=A%20project">rodrigo@0xr.io</a></p>
@@ -353,6 +379,23 @@
       if (!d.open) return;
       d.querySelectorAll(".row > *, .reel .tile").forEach(el => { mediaWall.reobserve(el); });
     }));
+})();
+</script>
+
+<script>
+/* ── the ecosystem and client lists — from media/totals.json · npm run posts ── */
+(async () => {
+  try {
+    const r = await fetch("media/totals.json", { cache: "no-store" });
+    if (!r.ok) return;
+    const totals = await r.json();
+    if (!totals.brands || !totals.brands.length) return;
+    document.getElementById("brands").innerHTML = totals.brands.map(g =>
+      `<div class="grp"><span class="lab">${g.label}</span><div class="row">`
+      + g.items.map(i => `<a href="${i.href}" target="_blank" rel="noopener">${i.name}</a>`).join("")
+      + `</div></div>`
+    ).join("");
+  } catch (e) { /* file:// — the lists just stay empty */ }
 })();
 </script>
 
