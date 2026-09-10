@@ -157,7 +157,7 @@
       <p class="intro" data-reveal>Brand, film, product and distribution, shown
       per company.</p>
 
-      <details class="entry" open>
+      <details class="entry" id="alle" open>
         <summary data-scramble-host>
           <span class="idx">01</span>
           <div><h2 data-scramble="hover" data-delay="0">All&eacute; Studios</h2></div>
@@ -188,7 +188,7 @@
           ran on the label's own account: 83,200 views and 367&nbsp;likes.</p>
         </div>
       </details>
-      <details class="entry">
+      <details class="entry" id="sail">
         <summary data-scramble-host>
           <span class="idx">02</span>
           <div><h2 data-scramble="hover" data-delay="0">Sail</h2></div>
@@ -213,7 +213,7 @@
           <div class="brands" id="brands"></div>
         </div>
       </details>
-      <details class="entry">
+      <details class="entry" id="fungi">
         <summary data-scramble-host>
           <span class="idx">03</span>
           <div><h2 data-scramble="hover" data-delay="0">Fungi</h2></div>
@@ -378,6 +378,20 @@
       + `</div></div>`
     ).join("");
   } catch (e) { /* file:// — the lists just stay empty */ }
+})();
+</script>
+
+<script>
+/* a link from the home page may target a closed case study: open the
+   entry before the jump lands, and again if the hash changes in place */
+(() => {
+  const openHash = () => {
+    const el = document.getElementById(location.hash.slice(1));
+    const d = el && el.closest("details");
+    if (d) { d.open = true; el.scrollIntoView(); }
+  };
+  addEventListener("hashchange", openHash);
+  if (location.hash) openHash();
 })();
 </script>
 
