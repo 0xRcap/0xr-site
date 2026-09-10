@@ -5,20 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>0xR / the thesis</title>
 <meta name="author" content="Rodrigo Rivas Yassin">
-<meta name="description" content="AI collapsed the production half of the media department and left the half that decides what is worth making. One human directs, six agents produce. Direction + production for brands.">
+<meta name="description" content="Everything you sell is becoming a commodity. The story is the only part you still own, and it travels on four surfaces: brand, film, words, product. One human directs, six agents produce.">
 <link rel="canonical" href="https://0xr.io/thesis.html">
 <link rel="icon" href="favicon.png" type="image/png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="0xR">
 <meta property="og:title" content="0xR / the thesis">
-<meta property="og:description" content="AI collapsed the production half of the media department and left the half that decides what is worth making. One human directs, six agents produce. Direction + production for brands.">
+<meta property="og:description" content="Everything you sell is becoming a commodity. The story is the only part you still own, and it travels on four surfaces: brand, film, words, product. One human directs, six agents produce.">
 <meta property="og:url" content="https://0xr.io/thesis.html">
 <meta property="og:image" content="https://0xr.io/media/card-thesis.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="0xR / the thesis">
-<meta name="twitter:description" content="AI collapsed the production half of the media department and left the half that decides what is worth making. One human directs, six agents produce. Direction + production for brands.">
+<meta name="twitter:description" content="Everything you sell is becoming a commodity. The story is the only part you still own, and it travels on four surfaces: brand, film, words, product. One human directs, six agents produce.">
 <meta name="twitter:image" content="https://0xr.io/media/card-thesis.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -35,7 +35,6 @@
     transition-delay: calc(var(--i, 0) * 60ms);
   }
 
-  .page p.intro { max-width: 32rem; }   /* the essay wants a narrower measure */
 
   /* ── the argument runs as three steps on a spine ── */
   .steps { list-style: none; margin: 0; padding: 0; }
@@ -64,30 +63,6 @@
   @media (min-width: 621px) { .lb { display: inline; } }
   /* wide enough for the longest authored half; the <br> sets each line */
   .page .creed { max-width: 40rem; }
-
-  /* where it lives: one cell per surface, hairline grid */
-  .map {
-    margin-top: 1.6rem; display: grid;
-    gap: clamp(1.6rem, 4.5vw, 2.6rem) clamp(1.6rem, 5vw, 3rem);
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
-  }
-  .surface b, .surface em, .surface span { transition: color 0.28s ease; }
-  .surface em {
-    display: block; font-style: normal; font-size: var(--t-small);
-    line-height: 1.5; color: var(--ink-soft); margin: 0.1rem 0 0.7rem;
-    max-width: 22rem;
-  }
-  .surface:hover em { color: var(--ink); }
-  .surface b {
-    display: block; font-family: var(--display); font-weight: normal;
-    font-size: clamp(1.15rem, 3.6vw, 1.5rem); line-height: 1.22;
-    letter-spacing: -0.01em; margin-bottom: 0.5rem;
-  }
-  .surface span {
-    display: block; font-family: var(--mono); font-size: var(--t-micro);
-    letter-spacing: 0.08em; text-transform: uppercase; color: var(--tone);
-    line-height: 1.75;
-  }
 
   /* the three eras, inside step 02 */
   .era {
@@ -119,11 +94,16 @@
     transition: background 0.3s ease;
   }
   .fn > div { min-width: 0; }   /* grid items default to min-width:auto; the crew grid inside would size off content and overflow a phone */
-  .fn .num {
-    font-family: var(--display); font-size: clamp(1.8rem, 6vw, 2.8rem);
-    line-height: 1; color: var(--rule); margin: 0; transition: color 0.35s ease;
+  /* the slot the numbers vacated. Two numbered spines on one page read as
+     one broken list, so the functions say when instead of how many, in the
+     same mono the era years use. "next" keeps full contrast: a dead cell
+     beside two live ones reads as broken. */
+  .fn .when {
+    font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--tone); margin: 0.35rem 0 0;
+    transition: color 0.3s ease;
   }
-  .fn:hover .num { color: var(--ink); }
+  .fn:hover .when { color: var(--ink); }
   .fn h2 { font-size: clamp(1.45rem, 5vw, 2.1rem); margin: 0 0 0.6rem; }
   .fn em, .fn span { transition: color 0.28s ease; }
   .fn em {
@@ -137,36 +117,7 @@
   }
   @media (max-width: 620px) { .fn { grid-template-columns: 1fr; gap: 0.35rem; } }
 
-  /* ── the crew: the agents sit inside Production, so ( one ) and { many }
-     from the hero line up with functions 01 and 02 on the page. Nothing here
-     is a link and nothing is a logo: state is fill and weight only. ── */
-  .crew {
-    margin-top: 1.6rem; display: grid; gap: 1.2rem clamp(1.4rem, 4vw, 2.4rem);
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
-    max-width: 46rem;
-  }
-  .fig { display: block; margin: 0 0 0.5rem; image-rendering: pixelated; }
-  .mate b {
-    display: block; font-family: var(--mono); font-weight: normal;
-    font-size: var(--t-mono); letter-spacing: 0.1em; color: var(--ink);
-    margin-bottom: 0.3rem;
-  }
-  .mate em {
-    display: block; font-style: normal; font-family: var(--display);
-    font-size: clamp(1.05rem, 3.2vw, 1.25rem); line-height: 1.2;
-    color: var(--ink); margin: 0 0 0.25rem; max-width: none;
-  }
-  .mate span {
-    display: block; font-family: var(--sans); font-size: var(--t-small);
-    letter-spacing: 0; text-transform: none; line-height: 1.45;
-    color: var(--ink-soft); max-width: 18rem;
-  }
-  /* not yet sold: the ghost the system already uses for a thing that is coming */
   .fn span a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
-
-  /* the offer ended on a closed list and the only way to reach him was a grey
-     line in the footer. The address is the action; it needs no sentence. */
-
   .hand {
     margin: 0.9rem 0 0; font-size: var(--t-small); color: var(--ink-soft);
   }
@@ -175,12 +126,16 @@
 
   .fns { margin-top: clamp(3rem, 9vw, 5rem); }
   .fns-q {
-    font-size: clamp(1.25rem, 4.2vw, 1.7rem); letter-spacing: -0.015em;
-    color: var(--ink-soft); margin: 0 0 2rem;
+    font-size: clamp(1.45rem, 5vw, 2.1rem); line-height: 1.22;
+    letter-spacing: -0.018em; color: var(--ink); margin: 0 0 0.7rem;
+  }
+  .fns-sub {
+    font-family: var(--mono); font-size: var(--t-mono); letter-spacing: 0.06em;
+    color: var(--tone); margin: 0 0 2rem;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    [data-reveal], .era, .fn, .fn .num, .step-n, .surface { transition: none; }
+    [data-reveal], .era, .fn, .fn .when, .step-n { transition: none; }
   }
 </style>
 </head>
@@ -200,7 +155,7 @@
 
     <main class="page">
       <div class="wrap">
-      <h1 data-scramble="mount" data-delay="60">What's new media.</h1>
+      <h1 data-scramble="mount" data-delay="60">What media is now.</h1>
       <p class="intro" data-reveal>Medium is Latin for the middle: the thing
       that carries a message from whoever made it to whoever receives it.
       Media is the plural.</p>
@@ -221,7 +176,7 @@
         <li class="step" data-reveal>
           <p class="step-n">02</p>
           <div>
-            <h2 data-scramble>Where new media came from</h2>
+            <h2 data-scramble>Where the idea came from</h2>
 
             <div class="era" data-scramble-host>
               <p class="yr">until 2005</p>
@@ -240,64 +195,64 @@
                 and started publishing on channels they owned.</p>
               </div>
             </div>
-
-            <div class="era" data-scramble-host>
-              <p class="yr">2025</p>
-              <div>
-                <h3 data-scramble="hover" data-delay="0">New media, as a department</h3>
-                <p>a16z made it a department and proved it works. It took a
-                room full of people, so only the funded few ever got one.</p>
-              </div>
-            </div>
           </div>
         </li>
 
         <li class="step" data-reveal>
           <p class="step-n">03</p>
           <div>
-            <h2 data-scramble>What I believe</h2>
-            <p>AI collapsed the production half of that department. It left the
-            half where someone decides what is worth making, which is the half
-            you are paying for.</p>
-            <p class="creed" data-scramble>Every company will run a media
-            department.<br class="lb">
-            Most will run it with one (or&nbsp;few) people.</p>
-            <p>The judgment stays human. The production goes to the agents.</p>
+            <h2 data-scramble>Why every company, and why now</h2>
+            <p>Whatever you make, somebody else can make it too. The tools are
+            rented by the month, the factory takes anyone&rsquo;s order, and your
+            competitor is calling the same model you are. It happened to
+            technology first, then to products, and now it is happening to
+            food.</p>
+            <p class="creed" data-scramble>Everything you sell is becoming a commodity.<br class="lb">
+            The story is the only part you still own.</p>
+            <p>And a story does not live on one page of a website. It arrives
+            through the brand, the films, the words and the product in
+            someone&rsquo;s hands. That is the new part: all four surfaces, run as
+            one operation. Feeding them used to take a room full of people,
+            which is why only the funded few ever did it.</p>
           </div>
         </li>
 
       </ol>
 
       <div class="fns">
-        <h2 class="fns-q" data-scramble>(&nbsp;one&nbsp;) human directs. {&nbsp;many&nbsp;} agents produce.</h2>
+        <h2 class="fns-q" data-scramble>Every company will run a media department.<br class="lb">
+        Most will run it with one (or&nbsp;few) people.</h2>
+        <p class="fns-sub">(&nbsp;one&nbsp;) human directs. {&nbsp;many&nbsp;} agents produce.</p>
 
         <div class="fn" data-scramble-host data-reveal>
-          <p class="num">01</p>
+          <p class="when">now</p>
           <div>
             <h2 data-scramble="hover" data-delay="0">Direction</h2>
             <em>What the story is, and what is worth making.</em>
-            <span>positioning / brand identity / voice / messaging / competitive analysis / who it is for</span>
+            <span>what the company is / who it is for / what it is up against / what gets made this month / what gets killed</span>
+            <p class="hand">This part is me.</p>
           </div>
         </div>
 
         <div class="fn" data-scramble-host data-reveal>
-          <p class="num">02</p>
+          <p class="when">now</p>
           <div>
             <h2 data-scramble="hover" data-delay="0">Production</h2>
             <em>The story, made every week.</em>
-            <span>brand identity / film / art direction / copy and content / product design / go-to-market strategy</span>
-            <p class="hand">Six agents produce it. <a href="crew.html">Meet the crew</a></p>
+            <span>brand identity / film / art direction / copy and content / product design / the go-to-market plan</span>
+            <p class="hand">Six agents produce it, one per craft. <a href="crew.html">Meet the crew</a></p>
           </div>
         </div>
 
         <div class="fn" data-scramble-host data-reveal>
-          <p class="num">03</p>
+          <p class="when">next</p>
           <div>
             <h2 data-scramble="hover" data-delay="0">Distribution</h2>
             <em>The story, sent out every day.</em>
-            <p class="hand">KIM writes the plan. Putting it out is still me, by hand.
-            Agents that do that part are the next thing I want, and none of them exist&nbsp;yet.
-            <a href="studio.html#sail">See it on Sail</a></p>
+            <p class="hand">The plan for it is made today, under production.
+            Putting it out is still me, by hand. The agents that would do that
+            do not exist yet, and when they do, the studio that makes the story
+            also moves&nbsp;it.</p>
           </div>
         </div>
       </div>
@@ -320,20 +275,6 @@
     </nav></div></footer>
 <script src="scramble.js"></script>
 
-<script src="crew/models.js" defer></script>
-<script src="crew3d.js" defer></script>
-<script defer>
-/* ── the crew figures ──
-   Small on purpose: at 4px per voxel the glyph texture has nowhere to live, so
-   the ASCII is the arrival and the settled state is a clean pixel figure. */
-addEventListener("DOMContentLoaded", () => {
-  if (!window.crew3d || !window.crewModels) return;
-  for (const c of document.querySelectorAll("[data-crew]")) {
-    const m = window.crewModels[c.dataset.crew];
-    if (m) crew3d.register(c, m, { scale: 4 });
-  }
-});
-</script>
 <script src="nav.js" defer></script>
 <script src="ascii.js" defer></script>
 </body>
