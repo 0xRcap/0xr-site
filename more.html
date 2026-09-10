@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>0xR / more</title>
+<meta name="author" content="Rodrigo Rivas Yassin">
+<meta name="description" content="Press, live appearances and long-form writing from Rodrigo Rivas Yassin and 0xR.">
+<link rel="canonical" href="https://0xr.io/more.html">
+<link rel="icon" href="favicon.png" type="image/png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="0xR">
+<meta property="og:title" content="0xR / more">
+<meta property="og:description" content="Press, live appearances and long-form writing from Rodrigo Rivas Yassin and 0xR.">
+<meta property="og:url" content="https://0xr.io/more.html">
+<meta property="og:image" content="https://0xr.io/media/card-index.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="0xR / more">
+<meta name="twitter:description" content="Press, live appearances and long-form writing from Rodrigo Rivas Yassin and 0xR.">
+<meta name="twitter:image" content="https://0xr.io/media/card-index.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .intro {
+    font-size: clamp(1.05rem, 3.4vw, 1.25rem); line-height: 1.55;
+    max-width: 34rem; margin: 0 0 var(--band); color: var(--ink-soft);
+  }
+  /* off the door there is room for the breakdown, and the breakdown is what
+     makes the total believable */
+  .band + .band { margin-top: var(--band); padding-top: var(--band);
+                  border-top: 1px solid var(--rule); }
+  .band .label { margin-bottom: 0.4rem; }
+  .split { font-family: var(--mono); font-size: var(--t-micro);
+           letter-spacing: 0.08em; color: var(--tone); margin: 0 0 2rem; }
+
+  /* ── press and live ── */
+  .press { background: var(--paper); padding: var(--band) 0; }
+  .press .num {
+    font-family: var(--display); font-weight: normal;
+    font-size: clamp(1.9rem, 5vw, 3.2rem); line-height: 1.12; margin: 0.4rem 0 2.2rem;
+  }
+  .pressgrid {
+    display: grid; gap: var(--gap);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  }
+  .pcard { display: block; text-decoration: none; color: var(--ink); }
+  .pcard .kind {
+    position: absolute; z-index: 3; left: 0.5rem; top: 0.5rem;
+    font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.12em;
+    text-transform: uppercase; background: var(--paper); color: var(--ink);
+    padding: 0.15rem 0.45rem; border-radius: 2px;
+  }
+  .pcard .t { display: block; font-size: var(--t-small); line-height: 1.3; margin: 0.7rem 0 0.2rem; }
+  .pcard:hover .t { text-decoration: underline; }
+  .pcard .v {
+    display: block; font-family: var(--mono); font-size: var(--t-micro);
+    letter-spacing: 0.06em; text-transform: uppercase; color: var(--tone);
+  }
+
+  /* ── writing: long-form. auto-fit so one piece fills its row. ── */
+  .writings { margin: 3.4rem 0 0; }
+  .writings .label { margin-bottom: 1.4rem; }
+  .writegrid {
+    display: grid; gap: 1px; background: var(--rule);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+    border-block: 1px solid var(--rule);
+  }
+  .wcard {
+    display: flex; flex-direction: column; gap: 0.6rem;
+    padding: 1.5rem var(--pad) 1.6rem; background: var(--paper);
+    text-decoration: none; color: var(--ink); cursor: pointer;
+    transition: background 0.25s ease;
+  }
+  .wcard:hover, .wcard:focus-visible { background: var(--tile-bg); }
+  .wcard .cover {
+    position: relative; display: block; width: 100%; aspect-ratio: 12 / 5;
+    max-height: 300px; overflow: hidden; border-radius: 2px; background: var(--ink);
+  }
+  .wcard .cover img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.35s ease; }
+  .wcard:hover .cover img { transform: scale(1.04); }
+  .wcard .meta, .wcard .go {
+    font-family: var(--mono); font-size: var(--t-micro);
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--tone);
+  }
+  .wcard .h {
+    font-family: var(--display); font-weight: normal;
+    font-size: clamp(1.2rem, 3.4vw, 1.6rem); line-height: 1.28; text-wrap: balance;
+  }
+  .wcard .go { margin-top: auto; padding-top: 0.7rem; transition: color 0.25s ease; }
+  .wcard:hover .go { color: var(--ink); }
+  @media (prefers-reduced-motion: reduce) { .wcard .cover img { transition: none; } .wcard:hover .cover img { transform: none; } }
+  /* on this page the bands are already inside .wrap */
+  .press { background: none; padding: 0; }
+  .writings { margin: 0; }
+</style>
+</head>
+<body>
+
+    <div class="bar" id="bar">
+      <a class="name" href="index.html"><i>0</i>xR</a>
+      <nav>
+        <a href="studio.html">studio</a>
+        <a href="crew.html">crew</a>
+        <a href="thesis.html">thesis</a>
+        <a href="more.html" aria-current="page">more</a>
+      </nav>
+    </div>
+
+    <main class="page">
+      <div class="wrap">
+      <h1 data-scramble="mount" data-delay="60">More.</h1>
+      <p class="intro" data-reveal>Where the work shows up when it is not on a
+      client's account: other people's stages, and the long pieces.</p>
+
+      <section class="band writings-band" aria-label="writing">
+        <p class="label" data-scramble>writing</p>
+        <p class="split">long-form, published on my own channels</p>
+        <div class="writings" id="writings" hidden>
+          <div class="writegrid" id="write-grid"></div>
+        </div>
+        <p class="split" id="write-empty" hidden>Nothing published yet.</p>
+      </section>
+
+      <section class="band press" id="press" aria-label="press and live">
+        <p class="label" data-scramble>press &amp; live</p>
+        <p class="num"><span id="press-n">&mdash;</span> impressions</p>
+        <p class="split" id="press-split"></p>
+        <div class="pressgrid" id="press-grid"></div>
+      </section>
+
+      <div class="next" data-reveal>
+        <p class="label" data-scramble>Start here</p>
+        <p class="addr"><a href="mailto:rodrigo@0xr.io?subject=A%20project">rodrigo@0xr.io</a></p>
+        <p class="what">Tell me what you are making and I&rsquo;ll get my crew on&nbsp;it.</p>
+      </div>
+
+      </div>
+    </main>
+
+    <footer class="foot">
+      <canvas id="ascii" aria-hidden="true"></canvas>
+      <div class="foot-row"><span>&copy; 2026 0xR</span><nav>
+      <a href="mailto:rodrigo@0xr.io">rodrigo@0xr.io</a>
+      <a href="https://x.com/0xRcap" target="_blank" rel="noopener">x</a>
+      <a href="https://github.com/0xRcap" target="_blank" rel="noopener">github</a>
+    </nav></div></footer>
+
+<script src="scramble.js"></script>
+<script src="nav.js" defer></script>
+<script src="ascii.js" defer></script>
+<script src="player.js"></script>
+<script>
+/* ── press, live and writing — from media/press.json · npm run posts ── */
+(async () => {
+  try {
+    const pr = await fetch("media/press.json", { cache: "no-store" });
+    if (!pr.ok) return;
+    const p = await pr.json();
+
+    document.getElementById("press-n").textContent = p.views.toLocaleString();
+    if (p.own != null && p.amplified != null) {
+      document.getElementById("press-split").textContent =
+        p.own.toLocaleString() + " on my own channels / "
+        + p.amplified.toLocaleString() + " on theirs";
+    }
+    document.getElementById("press-grid").innerHTML = p.tiles.map(t => {
+      const shot = t.src
+        ? `<img src="media/${t.poster}" alt="" loading="lazy">`
+          + `<video data-src="media/${t.src}" autoplay muted loop playsinline preload="none"></video>`
+        : `<img src="media/${t.poster}" alt="" loading="lazy">`;
+      return `<a class="pcard" href="${t.href}" target="_blank" rel="noopener">`
+        + `<span class="shot"><span class="kind">${t.src ? "clip" : "live"}</span>${shot}</span>`
+        + `<span class="t">${t.title}</span>`
+        + `<span class="v">${t.views.toLocaleString()} impressions / ${t.client}</span></a>`;
+    }).join("");
+    document.querySelectorAll("#press-grid .pcard").forEach(c => mediaWall.observe(c));
+
+    const writes = p.writings || [];
+    if (writes.length) {
+      document.getElementById("write-grid").innerHTML = writes.map(w => {
+        const when = w.date
+          ? new Date(w.date + "T00:00:00Z").toLocaleDateString("en-GB",
+              { year: "numeric", month: "short", timeZone: "UTC" })
+          : "";
+        const meta = [w.outlet, when].filter(Boolean).join(" / ");
+        const cover = w.cover
+          ? `<span class="cover"><img src="media/${w.cover}" alt="" loading="lazy"></span>`
+          : "";
+        return `<a class="wcard" href="${w.href}" target="_blank" rel="noopener">`
+          + cover
+          + `<span class="meta">${meta}</span>`
+          + `<span class="h">${w.title}</span>`
+          + `<span class="go">read \u2197</span></a>`;
+      }).join("");
+      document.getElementById("writings").hidden = false;
+    } else {
+      document.getElementById("write-empty").hidden = false;
+    }
+  } catch (e) { /* file:// — the bands just stay empty */ }
+})();
+</script>
+
+</body>
+</html>
