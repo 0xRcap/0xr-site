@@ -26,7 +26,7 @@
 <link rel="stylesheet" href="style.css">
 <style>
   .sc { font-style: normal; opacity: 0.45; }
-  .page p:not(.creed) { max-width: 34rem; margin: 0 0 1.1rem; color: var(--ink-soft); }
+  .page p:not(.creed):not(.intro) { max-width: 34rem; margin: 0 0 1.1rem; color: var(--ink-soft); }
 
   .pre-reveal { opacity: 0; transform: translateY(14px); }
   [data-reveal] {
@@ -35,11 +35,7 @@
     transition-delay: calc(var(--i, 0) * 60ms);
   }
 
-  .intro {
-    font-size: clamp(1.05rem, 3.4vw, 1.25rem); line-height: 1.55;
-    max-width: 32rem; margin: 0 0 clamp(2.4rem, 7vw, 3.6rem);
-    color: var(--ink-soft);
-  }
+  .page p.intro { max-width: 32rem; }   /* the essay wants a narrower measure */
 
   /* ── the argument runs as three steps on a spine ── */
   .steps { list-style: none; margin: 0; padding: 0; }
