@@ -166,10 +166,6 @@
     color: var(--ink-soft); max-width: 18rem;
   }
   /* not yet sold: the ghost the system already uses for a thing that is coming */
-  [data-state="soon"] b, [data-state="soon"] em { color: var(--tone); }
-  [data-state="soon"] span { color: var(--tone); }
-  .fn[data-state="soon"] .num, .fn[data-state="soon"] h2 { color: var(--rule); }
-  .fn[data-state="soon"]:hover .num { color: var(--tone); }
   .fn span a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 
   /* the offer ended on a closed list and the only way to reach him was a grey
@@ -221,28 +217,8 @@
             <h2 data-scramble>So what is media?</h2>
             <p class="creed" data-scramble>Media is everything<br class="lb">
             that carries your story to a person.</p>
-            <div class="map">
-              <div class="surface">
-                <b>Brand</b>
-                <em>What stays the same on every other surface.</em>
-                <span>brand identity / logotype / typography / art direction</span>
-              </div>
-              <div class="surface">
-                <b>Film</b>
-                <em>The story with time in it.</em>
-                <span>campaign films / AI video / character systems / product films</span>
-              </div>
-              <div class="surface">
-                <b>Comms</b>
-                <em>The story in words, on a schedule.</em>
-                <span>copywriting / content systems / social / editorial</span>
-              </div>
-              <div class="surface">
-                <b>Product</b>
-                <em>The surface they touch.</em>
-                <span>product design (UI/UX) / web design / design systems</span>
-              </div>
-            </div>
+            <p>Your brand, your films, your words and the product itself.
+            All four carry it, so all four are media.</p>
           </div>
         </li>
 
@@ -313,17 +289,18 @@
           <div>
             <h2 data-scramble="hover" data-delay="0">Production</h2>
             <em>The story, made every week.</em>
-            <span>art direction / AI video / character systems / copywriting / content systems / product design (UI/UX) / web design</span>
             <p class="hand">Six agents produce it. <a href="crew.html">Meet the crew</a></p>
           </div>
         </div>
 
-        <div class="fn" data-scramble-host data-reveal data-state="soon">
+        <div class="fn" data-scramble-host data-reveal>
           <p class="num">03</p>
           <div>
-            <h2>Distribution</h2>
-            <em>The story, moved. Coming when the channel under it is ours.</em>
-            <span>coming soon / what has shipped so far is on the <a href="studio.html">work page</a></span>
+            <h2 data-scramble="hover" data-delay="0">Distribution</h2>
+            <em>The story, moved to where people already are.</em>
+            <span>launch calendars / channel plans / activations / ecosystem-led growth</span>
+            <p class="hand">I run this one by hand. KIM is not built yet.
+            <a href="studio.html#sail">See it on Sail</a></p>
           </div>
         </div>
       </div>
