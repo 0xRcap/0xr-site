@@ -240,8 +240,9 @@ a:hover > .tile-t { color: var(--ink); }
    a single page. Same block everywhere, so the distance from anywhere to an
    address is a scroll to the end rather than a hunt. */
 .next {
-  margin-top: clamp(3rem, 9vw, 5rem); padding-top: clamp(2rem, 6vw, 3rem);
-  border-top: 1px solid var(--rule);
+  /* no rule: the site already carries nine hairlines and this block is the last
+     thing before a dark footer, so space separates it. The creed does the same. */
+  margin: clamp(4rem, 11vw, 7rem) 0 clamp(3.5rem, 9vw, 5.5rem);
 }
 /* mono, never the display face: Oliveira's zero carries no slash, so the
    address renders as rodrigo@Oxr.io and stops being an address. */
