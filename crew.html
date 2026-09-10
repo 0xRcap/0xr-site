@@ -5,20 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>0xR / the crew</title>
 <meta name="author" content="Rodrigo Rivas Yassin">
-<meta name="description" content="They produce. I direct. Six agents, one job each: YE brand, QUENT film, JEAN look, FRANK words, STEVE product design, and KIM go-to-market next. Each one says what it does on your project.">
+<meta name="description" content="They produce. I direct. Six agents, one job each: YE brand, QUENT film, JEAN look, FRANK words, STEVE product design, and KIM go-to-market. Each one says what it does on your project.">
 <link rel="canonical" href="https://0xr.io/crew.html">
 <link rel="icon" href="favicon.png" type="image/png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="0xR">
 <meta property="og:title" content="0xR / the crew">
-<meta property="og:description" content="They produce. I direct. Six agents, one job each: YE brand, QUENT film, JEAN look, FRANK words, STEVE product design, and KIM go-to-market next. Each one says what it does on your project.">
+<meta property="og:description" content="They produce. I direct. Six agents, one job each: YE brand, QUENT film, JEAN look, FRANK words, STEVE product design, and KIM go-to-market. Each one says what it does on your project.">
 <meta property="og:url" content="https://0xr.io/crew.html">
 <meta property="og:image" content="https://0xr.io/media/card-crew.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="0xR / the crew">
-<meta name="twitter:description" content="They produce. I direct. Six agents, one job each: YE brand, QUENT film, JEAN look, FRANK words, STEVE product design, and KIM go-to-market next. Each one says what it does on your project.">
+<meta name="twitter:description" content="They produce. I direct. Six agents, one job each: YE brand, QUENT film, JEAN look, FRANK words, STEVE product design, and KIM go-to-market. Each one says what it does on your project.">
 <meta name="twitter:image" content="https://0xr.io/media/card-crew.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -64,7 +64,6 @@
   .six .lead { max-width: 34rem; margin: 0; color: var(--ink-soft); }
 
   /* ── the six, as a grid of doors ── */
-  [data-state="soon"] .fig { opacity: 0.55; }
   .roster {
     display: grid; gap: clamp(1.6rem, 5vw, 2.8rem) clamp(1.4rem, 4vw, 2.4rem);
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
@@ -92,7 +91,6 @@
   /* clicking one should not draw a box around it; a keyboard still gets a ring */
   .mate:focus { outline: none; }
   .mate:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 2px; }
-  [data-state="soon"] b, [data-state="soon"] em, [data-state="soon"] span { color: var(--tone); }
 
   /* ── his record: the story beside the figure, the receipts beneath ── */
   .story p { max-width: 34rem; margin: 0 0 1.1rem; color: var(--ink-soft); }
@@ -256,11 +254,11 @@
         <em>design</em>
         <span>what I do</span>
       </button>
-      <button class="mate" data-crew="kim" aria-expanded="false" data-state="soon">
+      <button class="mate" data-crew="kim" aria-expanded="false">
         <canvas class="fig" aria-hidden="true"></canvas>
         <b>{&nbsp;KIM&nbsp;}</b>
         <em>gtm</em>
-        <span>not built yet</span>
+        <span>what I do</span>
       </button>
       </div>
 
@@ -312,7 +310,7 @@
         "jean": "I do art direction. I write the look down before anything is made, in hex values, lens millimetres and a named film stock, and the same document governs the film, the photographs, the site and the clothes. Then I judge what comes back and throw out what drifted.",
         "frank": "I do copywriting. I write the names and the taglines, the film scripts, the posts, the site pages, and the proposal with the price at the bottom. I choose what it says first, what it never says, and how long it is allowed to run.",
         "steve": "I do product design. I lay out what the product does and in what order: the flows, the screens, the checkout, and the first run before anybody has any data. I decide what goes on the first screen and what waits.",
-        "kim": "I am not built yet. When I am, I will do go-to-market: build the calendar, choose the channels, shape the launch as an event, and put the partners and the paid behind it. I will set what goes out on which day, what gets held back, and what the numbers change next week."
+        "kim": "I do go-to-market. I build the calendar, choose the channels, shape the launch as an event, and put the partners and the paid behind it. I set what goes out on which day, what gets held back, and what the numbers change next week."
     };
     const cast   = document.querySelector(".cast");
     const mates  = [...document.querySelectorAll(".roster [data-crew]")];
