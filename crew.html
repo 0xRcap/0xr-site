@@ -40,12 +40,12 @@
      beside it. Both edges of the page are used, so nothing reads cut off. */
   .him {
     display: grid; grid-template-columns: minmax(0, 34rem) auto;
-    justify-content: start; gap: clamp(2rem, 5vw, 3.5rem); align-items: start;
+    justify-content: start; gap: clamp(3rem, 9vw, 8rem); align-items: start;
   }
   /* his paper is trimmed on both sides so the ink, not the canvas, meets the
      rail; the shared img/video/canvas cap would squeeze the bitmap instead. */
   .director { justify-self: start; }
-  .director .mate { cursor: pointer; }
+  .director .mate { cursor: default; }   /* he does not speak; the six do */
   /* load-bearing: his canvas is 252px inside a button as narrow as 133px, and
      the shared img/video/canvas cap would scale the bitmap to a fractional
      ratio, which is what makes a pixelated figure go ragged. Do not tidy. */
@@ -175,39 +175,39 @@
       <div class="story">
         <p class="lab" data-scramble>The record</p>
         <p>I cofounded Boveda in 2022. We sold decentralized storage on the
-        Filecoin network and won 1.4 petabytes of client data, Interdominios
-        among them, which then had to physically live somewhere: machines in a
-        Madrid data centre, a technical partnership with Protocol Labs, a
-        storage partner in San Diego.</p>
+        Filecoin network and won 1.4 petabytes of client data, which then had
+        to physically live somewhere: machines in a Madrid data centre.</p>
         <p>Next was Fungi, a ChatGPT for crypto that executed onchain actions
         in plain English. The go-to-market was a token, and it reached <a
         href="https://dexscreener.com/solana/bkrvgxjsghfjw8vakhgbijpdxtr11etbo2gn7j26acbn"
         target="_blank" rel="noopener">$9M market cap on Solana</a> with around
         a thousand people in the Telegram. When we pivoted to a yield agent I
         launched it on a 24 hour livestream instead of an announcement,
-        building it while people watched. It had $50k under management in the
-        first week.</p>
-        <p>Fungi became Sail. It was the first agent to run swaps and bridges
-        autonomously and without custody, it moved $700M across 56 yield
-        sources for around a thousand users, and it <a
+        building it while people watched. It had $50k in assets under
+        management in the first week.</p>
+        <p>After Fungi became Sail my work was ecosystem growth. The agent
+        plugged into 56 yield sources, and each one meant a team to launch
+        with, co-marketing that ran on both accounts. It moved $700M
+        autonomously and <a
         href="https://x.com/SaildotMoney/status/2042315862229577747"
-        target="_blank" rel="noopener">beat the stablecoin yield market</a>. Sail is
-        open source now, a permission layer other agents can transact
+        target="_blank" rel="noopener">beat the stablecoin yield market</a>,
+        and the products I cofounded passed $1.1M in assets under management.
+        Sail is open source now, a permission layer other agents can transact
         under.</p>
         <p>We never paid a PR agency, a design studio or an influencer. I
         raised more than $1M as a cofounder and ran every surface the story
         travelled on, brand, film, comms and product, alone at first and then
-        with agents. Four million impressions since 2024 came out of that crew.
+        with six agents whose work I edit all day into one shared creative
+        vision. Four million impressions since 2024 came out of that crew.
         Running it on my own companies first is the only reason I can sell it
         to&nbsp;yours.</p>
       </div>
       <div class="director">
-        <button class="mate" data-crew="rodrigo" aria-expanded="false">
+        <div class="mate" data-crew="rodrigo">
           <canvas class="fig" aria-hidden="true"></canvas>
           <b>(&nbsp;RODRIGO&nbsp;)</b>
           <em>direction</em>
-          <span>read the brief</span>
-        </button>
+        </div>
       </div>
       </div>
 
@@ -267,7 +267,7 @@
       <div class="next" data-reveal>
         <p class="label" data-scramble>Start here</p>
         <p class="addr"><a href="mailto:rodrigo@0xr.io?subject=A%20project">rodrigo@0xr.io</a></p>
-        <p class="what">Tell me what you are making and where the crew could come in.</p>
+        <p class="what">Tell me what you are making and I&rsquo;ll get my crew on&nbsp;it.</p>
       </div>
 
       </div>
@@ -300,7 +300,6 @@
   addEventListener("DOMContentLoaded", () => {
     if (!window.crew3d || !window.crewModels) return;
     const SAY = {
-        "rodrigo": "I direct the work my agents produce. I am back and forth with each one all day, editing what comes back and making them better at it. You get what entire departments used to make, at a fraction of the cost and the time, because the six of them work from one shared creative vision.",
         "ye": "I do brand identity. I find the name, draw the mark, set the type and the colour, and write the guidelines other people build inside. I own what is allowed to change and what never does.",
         "quent": "I do film. I write the script, build the shot list, shoot it and cut it, whether the piece is a launch film, an ad or a month of vertical cuts. I decide what the camera is on, how long you sit in a shot, and what never makes it in.",
         "jean": "I do art direction. I write the look down before anything is made, in hex values, lens millimetres and a named film stock, and the same document governs the film, the photographs, the site and the clothes. Then I judge what comes back and throw out what drifted.",
@@ -309,7 +308,7 @@
         "kim": "I do distribution. I build the calendar, choose the channels, shape the launch as an event, and put the partners and the paid behind it. I set what goes out on which day, what gets held back, and what the numbers change next week."
     };
     const cast   = document.querySelector(".cast");
-    const mates  = [...document.querySelectorAll("[data-crew]")];
+    const mates  = [...document.querySelectorAll(".roster [data-crew]")];
     const bubble = document.getElementById("bubble");
     const who    = bubble.querySelector(".who");
     const say    = bubble.querySelector(".say");
@@ -412,7 +411,8 @@
       type(SAY[k]);
     };
 
-    for (const btn of document.querySelectorAll("[data-crew]")) {
+    /* the six speak. He does not: his record is the page. */
+    for (const btn of document.querySelectorAll(".roster [data-crew]")) {
       btn.addEventListener("click", (e) => { e.stopPropagation(); speak(btn); });
     }
     document.addEventListener("click", hush);
