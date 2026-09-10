@@ -7,7 +7,10 @@
    2. one padding token that shrinks with the viewport
    3. grids are auto-fit/minmax, so columns fall out of the width
       and almost no breakpoints are needed
-   4. anything tappable is at least 44px on a touch screen
+   4. anything tappable is at least 44 by 44 px, on both axes. The one
+      exception is a link inside running text, which stays inline and gets
+      spacing instead. (Ruled 2026-09-10; the rule named no axis before, which
+      is how a 7px wide close link survived in the footer.)
    ══════════════════════════════════════════════════════════════════════ */
 
 @font-face {
@@ -102,13 +105,15 @@ h2 { font-size: var(--t-h2); line-height: 1.2; margin-bottom: 1.2rem; }
   position: fixed; top: 1rem; left: 50%; transform: translateX(-50%);
   z-index: 20; width: min(var(--shell) - 3rem, calc(100% - 2rem));
   display: flex; justify-content: space-between; align-items: center;
-  gap: 1rem; padding: 0.2rem 0.4rem 0.2rem 1rem; border-radius: 99px;
+  gap: 1rem; padding: 0.1rem 0.4rem 0.1rem 1rem; border-radius: 99px;
   background: var(--card-bg); color: var(--card-ink);
   transition: transform 0.35s ease, opacity 0.35s ease;
 }
 .bar.hidden { transform: translateX(-50%) translateY(-160%); opacity: 0; }
 .bar .name {
-  display: flex; align-items: center; min-height: 40px;
+  /* 44 on both axes. It sits flush left in a space-between row, so the
+     min-width costs no layout. */
+  display: flex; align-items: center; min-height: var(--tap); min-width: var(--tap);
   font-family: var(--display); font-size: 1.25rem;
   text-decoration: none; color: var(--card-ink); white-space: nowrap;
 }
@@ -118,8 +123,10 @@ h2 { font-size: var(--t-h2); line-height: 1.2; margin-bottom: 1.2rem; }
 .bar .name i { font-family: var(--mono); font-style: normal; font-size: 0.84em; letter-spacing: -0.02em; }
 .bar nav { display: flex; align-items: center; }
 .bar nav a {
-  /* padding carries the 44px touch target without inflating the pill */
-  display: flex; align-items: center; min-height: 40px;
+  /* 44 on both axes: the side padding carries the width, min-height the
+     height. The bar's own vertical padding came down 1.6px to pay for it,
+     so the pill stands within a pixel of where it stood. */
+  display: flex; align-items: center; min-height: var(--tap);
   padding: 0 clamp(0.5rem, 2.4vw, 0.85rem);
   font-size: clamp(0.8rem, 0.72rem + 0.35vw, 0.9rem);
   color: var(--card-ink); text-decoration: none; opacity: 0.85;
@@ -149,7 +156,11 @@ h2 { font-size: var(--t-h2); line-height: 1.2; margin-bottom: 1.2rem; }
 }
 .foot nav { display: flex; flex-wrap: wrap; gap: 0.2rem 1.4rem; }
 .foot a {
-  display: flex; align-items: center; min-height: var(--tap);
+  /* min-width, not just min-height: "x" is one glyph and measured 7px wide
+     against a 44px tall box, which is the miss that produced the both-axes
+     ruling on 2026-09-10. */
+  display: flex; align-items: center; justify-content: center;
+  min-height: var(--tap); min-width: var(--tap);
   color: #6b6862; text-decoration: none; transition: color 0.2s ease;
 }
 .foot a:hover, .foot a:focus-visible { color: #fff; }
@@ -225,7 +236,15 @@ a:hover > .tile-t { color: var(--ink); }
 .page { padding: clamp(5rem, 15vw, 7.5rem) 0 var(--band); }
 .page > .wrap > h1:first-child, .page .lede {
   font-size: var(--t-title); line-height: 1.1; letter-spacing: -0.022em;
-  margin: 0 0 clamp(1.6rem, 5vw, 2.6rem);
+  margin: 0 0 clamp(0.9rem, 2.6vw, 1.35rem);
+}
+/* the subtitle belongs to the title, so it sits close under it, and the
+   page proper starts after a real gap. One rule for all four inner pages,
+   2026-09-10, replacing three near-identical copies in page <style> blocks. */
+.page .intro {
+  font-size: clamp(1.05rem, 3.4vw, 1.25rem); line-height: 1.55;
+  max-width: 34rem; margin: 0 0 clamp(3.4rem, 9vw, 5.5rem);
+  color: var(--ink-soft);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -250,6 +269,17 @@ a:hover > .tile-t { color: var(--ink); }
   margin: 0; font-family: var(--mono);
   font-size: clamp(1.15rem, 4vw, 1.7rem); letter-spacing: -0.01em;
 }
-.next a { color: var(--ink); text-decoration: none; border-bottom: 2px solid var(--rule); }
-.next a:hover, .next a:focus-visible { border-bottom-color: var(--ink); }
+/* The address is the only link in this block and it is the page's one call.
+   It sets at 21px of font box on a phone, so it needs 44. Vertical padding on
+   an inline element grows the hit box and moves no line box, which is why the
+   underline had to leave the border and become a decoration: a border-bottom
+   would have travelled down with the padding. skip-ink off keeps the rule
+   unbroken under the g, the way the border drew it. */
+.next a {
+  color: var(--ink); text-decoration: underline;
+  text-decoration-thickness: 2px; text-underline-offset: 0.26em;
+  text-decoration-skip-ink: none; text-decoration-color: var(--rule);
+  padding-block: 0.75rem;
+}
+.next a:hover, .next a:focus-visible { text-decoration-color: var(--ink); }
 .next .what { margin: 0.7rem 0 0; font-size: var(--t-small); color: var(--ink-soft); max-width: 30rem; }

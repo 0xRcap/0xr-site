@@ -89,8 +89,13 @@
   .brands .grp + .grp { margin-top: 1.8rem; }
   .brands .lab { display: block; font-family: var(--mono); font-size: var(--t-micro);
                  letter-spacing: 0.08em; color: var(--tone); margin: 0 0 0.6rem; }
-  .brands .row { display: flex; flex-wrap: wrap; gap: 0.3rem 1.8rem; align-items: baseline; }
-  .brands a { display: inline-block; padding: 0.35rem 0; font-family: var(--display); font-weight: normal;
+  /* row gap to zero because the links now carry 0.7rem of their own above
+     and below, which is the 44px floor and more air than the old 0.3rem gave. */
+  .brands .row { display: flex; flex-wrap: wrap; gap: 0 1.8rem; align-items: baseline; }
+  /* 0.7rem, not 0.35: the name sets at 22px of line box on a phone and the
+     floor is 44 on both axes. min-width covers a short one (BNB, Base). */
+  .brands a { display: inline-block; padding: 0.7rem 0; min-width: var(--tap);
+              font-family: var(--display); font-weight: normal;
               line-height: 1.26; font-size: clamp(1.1rem, 3vw, 1.5rem); color: var(--ink); text-decoration: none; }
   .brands a:hover { text-decoration: underline; }
 
@@ -212,7 +217,7 @@
         </div>
       </section>
 
-      <details class="entry" id="alle" open>
+      <details class="entry" id="alle">
         <summary data-scramble-host>
           <span class="idx">01</span>
           <div><h2 data-scramble="hover" data-delay="0">All&eacute; Studios</h2></div>
