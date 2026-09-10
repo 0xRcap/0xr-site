@@ -35,11 +35,15 @@
   /* ── one human, then the crew ──
      He is bracketed ( ) and they are bracketed { }, which is the whole
      argument set in type: the rule between them is the sentence's full stop. */
-  /* his figure and his record are one thing: the figure stands at the left
-     of his own story, and the receipts run beneath both. The roster's rule
-     still separates him from the six. */
-  .director { float: left; margin: 0 clamp(1.6rem, 5vw, 2.8rem) 0.6rem 0; }
-  .director .mate { max-width: 14rem; }
+  /* his figure and his record are one thing: one grid row, the figure in
+     the left column and his story beside it, so the text cannot wrap under
+     him and no line escapes below. Receipts run beneath both, full width. */
+  .him {
+    display: grid; grid-template-columns: auto 1fr;
+    gap: 0.5rem clamp(1.8rem, 5vw, 3rem); align-items: center;
+  }
+  .director .mate { max-width: 14rem; cursor: pointer; }
+  @media (max-width: 560px) { .him { grid-template-columns: 1fr; } }
   .roster {
     padding-top: clamp(2rem, 6vw, 3.2rem); border-top: 1px solid var(--rule);
   }
@@ -72,14 +76,14 @@
   .mate:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 2px; }
   [data-state="soon"] b, [data-state="soon"] em, [data-state="soon"] span { color: var(--tone); }
 
-  /* ── his record, under the crew: the founder's own receipts are the brief ── */
-  .me { margin: 0 0 clamp(2.4rem, 7vw, 3.6rem); }
-  .me::after { content: ""; display: block; clear: both; }
-  .me p { max-width: 34rem; margin: 0 0 1.1rem; color: var(--ink-soft); }
-  .me .lab { font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.18em;
+  /* ── his record: the story beside the figure, the receipts beneath ── */
+  .story p { max-width: 34rem; margin: 0 0 1.1rem; color: var(--ink-soft); }
+  .story p:last-child { margin-bottom: 0; }
+  .story .lab { font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.18em;
              text-transform: uppercase; color: var(--tone); margin-bottom: 1.2rem; }
   .mine { display: grid; gap: clamp(1.6rem, 5vw, 2.4rem);
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); margin: 2.6rem 0 0; }
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+    margin: clamp(2.2rem, 6vw, 3.2rem) 0 clamp(2.6rem, 7vw, 4rem); }
   .mine .n { font-family: var(--display); font-weight: normal; line-height: 1.06;
              font-size: clamp(2rem, 6.5vw, 3.2rem); letter-spacing: -0.02em; margin: 0 0 0.4rem;
              color: var(--ink); max-width: none; }
@@ -153,6 +157,7 @@
       <p class="intro" data-reveal>If we work together, these go to work on your project. Each holds one job and none of them does another's. They produce. I&nbsp;direct.</p>
 
       <div class="stage">
+      <div class="him" data-reveal>
       <div class="director">
         <button class="mate" data-crew="rodrigo" aria-haspopup="dialog">
           <canvas class="fig" aria-hidden="true"></canvas>
@@ -161,8 +166,7 @@
           <span>read the brief</span>
         </button>
       </div>
-
-      <div class="me" data-reveal>
+      <div class="story">
         <p class="lab" data-scramble>The record</p>
         <p>I cofounded Sail and Fungi and ran every surface the story travelled
         on for both: brand, film, comms and product. Before that I cofounded
@@ -172,6 +176,8 @@
         brand, the film, the comms and the product came out of a crew of one
         human, later with many agents. That is the argument, and running it on
         my own companies first is the only reason I can sell it.</p>
+      </div>
+      </div>
 
       <div class="mine">
         <div>
@@ -242,7 +248,6 @@
       <div class="bubble" id="bubble" role="status" aria-live="polite" hidden>
         <p class="who"></p>
         <p class="say"></p>
-      </div>
       </div>
 
       <div class="brands" id="brands"></div>
