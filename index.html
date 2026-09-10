@@ -85,33 +85,6 @@
   :root { --terrain: 44vh; }
   @media (max-height: 760px), (max-width: 700px) { :root { --terrain: 34vh; } }
 
-  /* ── the index of the work: a row is a name, a line, and a count ──
-     Butcher's shape at visualizevalue.com/studio: no thumbnails at the top
-     level, because a count a reader can check sells harder than a crop. */
-  .work { padding: clamp(3rem, 9vw, 5rem) 0 0; }
-  .rows { display: grid; }
-  .row {
-    display: grid; grid-template-columns: 8.5rem 1fr auto; gap: 0.3rem 1.4rem;
-    align-items: baseline; padding: 1.1rem 0; border-top: 1px solid var(--rule);
-    text-decoration: none; color: inherit; transition: background 0.25s ease;
-  }
-  .row:last-child { border-bottom: 1px solid var(--rule); }
-  .row:hover, .row:focus-visible { background: var(--tile-bg); }
-  .row b {
-    font-family: var(--mono); font-weight: 500; font-size: var(--t-micro);
-    letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink);
-  }
-  .row em { font-style: normal; font-size: var(--t-small); color: var(--ink-soft); max-width: 34rem; }
-  .row span {
-    font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.12em;
-    text-transform: uppercase; color: var(--tone); white-space: nowrap;
-  }
-  .row:hover span, .row:focus-visible span { color: var(--ink); }
-  @media (max-width: 620px) {
-    .row { grid-template-columns: 1fr auto; }
-    .row em { grid-column: 1 / -1; }
-  }
-
   /* ── the films: every clip, with the number it earned ── */
   .films { background: var(--paper); }
   /* padding-block only: the shorthand zeroed the horizontal padding that
@@ -280,25 +253,6 @@
     </div>
 </header>
 
-    <section class="work" aria-label="the work">
-      <div class="wrap">
-        <p class="label" data-scramble>The work</p>
-        <div class="rows">
-          <a class="row" href="studio.html#brand">
-            <b>Brand</b><em>Marks, type and the guidelines other people build inside.</em><span>Sail / Fungi</span>
-          </a>
-          <a class="row" href="#films">
-            <b>Film</b><em>AI films with a per-post audit trail, since December.</em><span>19 films</span>
-          </a>
-          <a class="row" href="studio.html#product">
-            <b>Product</b><em>Interfaces, landing pages and the first run before there is data.</em><span>Two products shipped</span>
-          </a>
-          <a class="row" href="studio.html#distribution">
-            <b>Distribution</b><em>A token launch, a 24-hour livestream, and the ecosystem that carried them.</em><span>12 partners</span>
-          </a>
-        </div>
-      </div>
-    </section>
 
     <section class="films" id="films" aria-label="AI films">
       <div class="wrap head">
@@ -322,22 +276,6 @@
       </div>
     </section>
     <div class="wrap">
-    <section class="work" aria-label="the record">
-      <div class="wrap">
-        <p class="label" data-scramble>The record</p>
-        <div class="rows">
-          <a class="row" href="studio.html">
-            <b>Positions</b><em>0xR, Sail, Fungi and Boveda, and what each one reached.</em><span>2022 &ndash; now</span>
-          </a>
-          <a class="row" href="crew.html">
-            <b>The crew</b><em>Six agents, one job each, and the human who directs them.</em><span>Seven</span>
-          </a>
-          <a class="row" href="thesis.html">
-            <b>The thesis</b><em>Why every company becomes a media company, and why that got affordable.</em><span>The argument</span>
-          </a>
-        </div>
-      </div>
-    </section>
 
       <div class="next" data-reveal>
         <p class="label" data-scramble>Start here</p>

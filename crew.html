@@ -35,7 +35,10 @@
   /* ── one human, then the crew ──
      He is bracketed ( ) and they are bracketed { }, which is the whole
      argument set in type: the rule between them is the sentence's full stop. */
-  .director { margin-bottom: clamp(2rem, 6vw, 3.2rem); }
+  /* his figure and his record are one thing: the figure stands at the left
+     of his own story, and the receipts run beneath both. The roster's rule
+     still separates him from the six. */
+  .director { float: left; margin: 0 clamp(1.6rem, 5vw, 2.8rem) 0.6rem 0; }
   .director .mate { max-width: 14rem; }
   .roster {
     padding-top: clamp(2rem, 6vw, 3.2rem); border-top: 1px solid var(--rule);
@@ -70,7 +73,8 @@
   [data-state="soon"] b, [data-state="soon"] em, [data-state="soon"] span { color: var(--tone); }
 
   /* ── his record, under the crew: the founder's own receipts are the brief ── */
-  .me { margin-top: clamp(3.5rem, 10vw, 6rem); padding-top: clamp(2.2rem, 6vw, 3rem); border-top: 1px solid var(--rule); }
+  .me { margin: 0 0 clamp(2.4rem, 7vw, 3.6rem); }
+  .me::after { content: ""; display: block; clear: both; }
   .me p { max-width: 34rem; margin: 0 0 1.1rem; color: var(--ink-soft); }
   .me .lab { font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.18em;
              text-transform: uppercase; color: var(--tone); margin-bottom: 1.2rem; }
@@ -158,6 +162,44 @@
         </button>
       </div>
 
+      <div class="me" data-reveal>
+        <p class="lab" data-scramble>The record</p>
+        <p>I cofounded Sail and Fungi and ran every surface the story travelled
+        on for both: brand, film, comms and product. Before that I cofounded
+        Boveda, where we stored 1.4 petabytes of client data on the Filecoin
+        network.</p>
+        <p>We never paid a PR agency, a design studio or an influencer. The
+        brand, the film, the comms and the product came out of a crew of one
+        human, later with many agents. That is the argument, and running it on
+        my own companies first is the only reason I can sell it.</p>
+
+      <div class="mine">
+        <div>
+          <p class="n" id="mine-impressions">&mdash;</p>
+          <p class="k">impressions since 2024<br>across all channels</p>
+        </div>
+        <div>
+          <p class="n">$1.1M+</p>
+          <p class="k">AUM on products cofounded<br>Sail and Fungi</p>
+        </div>
+        <div>
+          <p class="n">1,000+</p>
+          <p class="k">Telegram and Discord members<br>at Sail and Fungi</p>
+        </div>
+        <div>
+          <p class="n">$1M+</p>
+          <p class="k">raised as cofounder</p>
+        </div>
+        <div>
+          <p class="n">2,000+</p>
+          <p class="k">unique users<br>across Sail and Fungi</p>
+        </div>
+        <div>
+          <p class="n"><a href="https://dexscreener.com/solana/bkrvgxjsghfjw8vakhgbijpdxtr11etbo2gn7j26acbn" target="_blank" rel="noopener">$9M MC</a></p>
+          <p class="k">token launched on Solana as go-to-market for Fungi</p>
+        </div>
+      </div>
+
       <div class="roster">
       <button class="mate" data-crew="ye" aria-haspopup="dialog">
         <canvas class="fig" aria-hidden="true"></canvas>
@@ -201,43 +243,6 @@
         <p class="who"></p>
         <p class="say"></p>
       </div>
-      </div>
-      <div class="me" data-reveal>
-        <p class="lab" data-scramble>The record</p>
-        <p>I cofounded Sail and Fungi and ran every surface the story travelled
-        on for both: brand, film, comms and product. Before that I cofounded
-        Boveda, where we stored 1.4 petabytes of client data on the Filecoin
-        network.</p>
-        <p>We never paid a PR agency, a design studio or an influencer. The
-        brand, the film, the comms and the product came out of a crew of one
-        human, later with many agents. That is the argument, and running it on
-        my own companies first is the only reason I can sell it.</p>
-
-      <div class="mine">
-        <div>
-          <p class="n" id="mine-impressions">&mdash;</p>
-          <p class="k">impressions since 2024<br>across all channels</p>
-        </div>
-        <div>
-          <p class="n">$1.1M+</p>
-          <p class="k">AUM on products cofounded<br>Sail and Fungi</p>
-        </div>
-        <div>
-          <p class="n">1,000+</p>
-          <p class="k">Telegram and Discord members<br>at Sail and Fungi</p>
-        </div>
-        <div>
-          <p class="n">$1M+</p>
-          <p class="k">raised as cofounder</p>
-        </div>
-        <div>
-          <p class="n">2,000+</p>
-          <p class="k">unique users<br>across Sail and Fungi</p>
-        </div>
-        <div>
-          <p class="n"><a href="https://dexscreener.com/solana/bkrvgxjsghfjw8vakhgbijpdxtr11etbo2gn7j26acbn" target="_blank" rel="noopener">$9M MC</a></p>
-          <p class="k">token launched on Solana as go-to-market for Fungi</p>
-        </div>
       </div>
 
       <div class="brands" id="brands"></div>

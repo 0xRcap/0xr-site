@@ -31,6 +31,8 @@
         lives inside it. Native <details> so it works without script and
         keyboard users get it for free. ── */
   .entry { border-top: 1px solid var(--rule); }
+  .role-line { font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.14em;
+               text-transform: uppercase; color: var(--tone); margin: 0 0 1rem; }
   .entry:last-of-type { border-bottom: 1px solid var(--rule); }
   .entry > summary {
     display: grid; grid-template-columns: 2.5rem 1fr auto; gap: 0 1.2rem;
@@ -139,19 +141,19 @@
 
     <main class="page">
       <div class="wrap">
-      <h1 class="lede" data-scramble="mount" data-delay="60">The studio.</h1>
+      <h1 class="lede" data-scramble="mount" data-delay="60">Case studies.</h1>
 
-      <p class="intro" data-reveal>Four positions, and under each one the same
-      four disciplines: brand, film, product and distribution. The numbers are
-      the ones the accounts report.</p>
+      <p class="intro" data-reveal>Brand, film, product and distribution, shown
+      per company. The numbers are the ones the accounts report.</p>
 
       <details class="entry" open>
         <summary data-scramble-host>
           <span class="idx">01</span>
-          <div><h2 data-scramble="hover" data-delay="0">0xR</h2><span class="role" data-scramble>Creative studio, for clients</span></div>
+          <div><h2 data-scramble="hover" data-delay="0">0xR</h2></div>
           <span class="when">2026 &ndash; now</span>
         </summary>
         <div class="body">
+          <p class="role-line">Creative studio, for clients.</p>
           <p>A creative studio of one human and many agents. I run the story on every surface it travels
           on: brand, film, comms and product.</p>
           <p class="impact">Clients: All&eacute; Studios, Madrid streetwear,
@@ -161,10 +163,11 @@
       <details class="entry">
         <summary data-scramble-host>
           <span class="idx">02</span>
-          <div><h2 data-scramble="hover" data-delay="0">Sail</h2><span class="role" data-scramble>Cofounder and CMO</span></div>
+          <div><h2 data-scramble="hover" data-delay="0">Sail</h2></div>
           <span class="when">Oct 2025 &ndash; now</span>
         </summary>
         <div class="body">
+          <p class="role-line">Cofounder and CMO.</p>
           <p>Rebranded Fungi into Sail and took the yield agent
           institutional. It was the first agent to run swaps and bridges
           autonomously and without custody, and it <a href="https://x.com/SaildotMoney/status/2042315862229577747"
@@ -186,10 +189,11 @@
       <details class="entry">
         <summary data-scramble-host>
           <span class="idx">03</span>
-          <div><h2 data-scramble="hover" data-delay="0">Fungi</h2><span class="role" data-scramble>Cofounder and CMO</span></div>
+          <div><h2 data-scramble="hover" data-delay="0">Fungi</h2></div>
           <span class="when">Dec 2023 &ndash; Oct 2025</span>
         </summary>
         <div class="body">
+          <p class="role-line">Cofounder and CMO.</p>
           <p>Started as a natural language interface for DeFi, a ChatGPT for
           crypto that executed onchain actions in plain English. The token
           launched as go-to-market reached $9M market cap on Solana, with a
@@ -204,10 +208,11 @@
       <details class="entry">
         <summary data-scramble-host>
           <span class="idx">04</span>
-          <div><h2 data-scramble="hover" data-delay="0">Boveda</h2><span class="role" data-scramble>Cofounder</span></div>
+          <div><h2 data-scramble="hover" data-delay="0">Boveda</h2></div>
           <span class="when">Mar 2022 &ndash; Nov 2023</span>
         </summary>
         <div class="body">
+          <p class="role-line">Cofounder.</p>
           <p>Decentralized storage on the Filecoin network. Ran both sides of
           a B2B market: the companies with data to store, and the partners who
           could store it. Won 1.4 petabytes from clients including
