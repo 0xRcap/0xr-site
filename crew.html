@@ -69,6 +69,28 @@
   .mate:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 2px; }
   [data-state="soon"] b, [data-state="soon"] em, [data-state="soon"] span { color: var(--tone); }
 
+  /* ── his record, under the crew: the founder's own receipts are the brief ── */
+  .me { margin-top: clamp(3.5rem, 10vw, 6rem); padding-top: clamp(2.2rem, 6vw, 3rem); border-top: 1px solid var(--rule); }
+  .me p { max-width: 34rem; margin: 0 0 1.1rem; color: var(--ink-soft); }
+  .me .lab { font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.18em;
+             text-transform: uppercase; color: var(--tone); margin-bottom: 1.2rem; }
+  .mine { display: grid; gap: clamp(1.6rem, 5vw, 2.4rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); margin: 2.6rem 0 0; }
+  .mine .n { font-family: var(--display); font-weight: normal; line-height: 1.06;
+             font-size: clamp(2rem, 6.5vw, 3.2rem); letter-spacing: -0.02em; margin: 0 0 0.4rem;
+             color: var(--ink); max-width: none; }
+  .mine .n a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--rule); }
+  .mine .n a:hover { border-bottom-color: var(--ink); }
+  .mine .k { font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.14em;
+             text-transform: uppercase; color: var(--tone); margin: 0; line-height: 1.6; max-width: none; }
+  .brands { margin-top: 3rem; }
+  .brands .grp + .grp { margin-top: 1.6rem; }
+  .brands .lab { display: block; margin: 0 0 0.55rem; }
+  .brands .row { display: flex; flex-wrap: wrap; gap: 0.3rem 1.8rem; align-items: baseline; }
+  .brands a { display: inline-block; padding: 0.35rem 0; font-family: var(--display); font-weight: normal;
+              line-height: 1.26; font-size: clamp(1.2rem, 4vw, 1.8rem); color: var(--ink); text-decoration: none; }
+  .brands a:hover { text-decoration: underline; }
+
   /* ── the dialogue bubble: the figure speaks, the page does not go dark ──
      Anchored above whoever was clicked, with a tail pointing back down at
      them, and the line typed out rather than pasted in. */
@@ -115,10 +137,9 @@
     <div class="bar" id="bar">
       <a class="name" href="index.html"><i>0</i>xR</a>
       <nav>
-        <a href="what.html">what</a>
+        <a href="studio.html">studio</a>
         <a href="crew.html" aria-current="page">crew</a>
-        <a href="work.html">work</a>
-        <a href="who.html">who</a>
+        <a href="thesis.html">thesis</a>
       </nav>
     </div>
 
@@ -181,6 +202,47 @@
         <p class="say"></p>
       </div>
       </div>
+      <div class="me" data-reveal>
+        <p class="lab" data-scramble>The record</p>
+        <p>I cofounded Sail and Fungi and ran every surface the story travelled
+        on for both: brand, film, comms and product. Before that I cofounded
+        Boveda, where we stored 1.4 petabytes of client data on the Filecoin
+        network.</p>
+        <p>We never paid a PR agency, a design studio or an influencer. The
+        brand, the film, the comms and the product came out of a crew of one
+        human, later with many agents. That is the argument, and running it on
+        my own companies first is the only reason I can sell it.</p>
+
+      <div class="mine">
+        <div>
+          <p class="n" id="mine-impressions">&mdash;</p>
+          <p class="k">impressions since 2024<br>across all channels</p>
+        </div>
+        <div>
+          <p class="n">$1.1M+</p>
+          <p class="k">AUM on products cofounded<br>Sail and Fungi</p>
+        </div>
+        <div>
+          <p class="n">1,000+</p>
+          <p class="k">Telegram and Discord members<br>at Sail and Fungi</p>
+        </div>
+        <div>
+          <p class="n">$1M+</p>
+          <p class="k">raised as cofounder</p>
+        </div>
+        <div>
+          <p class="n">2,000+</p>
+          <p class="k">unique users<br>across Sail and Fungi</p>
+        </div>
+        <div>
+          <p class="n"><a href="https://dexscreener.com/solana/bkrvgxjsghfjw8vakhgbijpdxtr11etbo2gn7j26acbn" target="_blank" rel="noopener">$9M MC</a></p>
+          <p class="k">token launched on Solana as go-to-market for Fungi</p>
+        </div>
+      </div>
+
+      <div class="brands" id="brands"></div>
+      </div>
+
       <div class="next" data-reveal>
         <p class="label" data-scramble>Start here</p>
         <p class="addr"><a href="mailto:rodrigo@0xr.io?subject=A%20project">rodrigo@0xr.io</a></p>
@@ -310,6 +372,25 @@
     addEventListener("resize", hush);
   });
   </script>
+
+<script>
+/* ── the brands row — from media/totals.json · npm run posts ── */
+(async () => {
+  try {
+    const r = await fetch("media/totals.json", { cache: "no-store" });
+    if (!r.ok) return;
+    const totals = await r.json();
+    const imp = document.getElementById("mine-impressions");
+    if (imp && totals.topline) imp.textContent = totals.topline.value;
+    if (!totals.brands || !totals.brands.length) return;
+    document.getElementById("brands").innerHTML = totals.brands.map(g =>
+      `<div class="grp"><span class="lab">${g.label}</span><div class="row">`
+      + g.items.map(i => `<a href="${i.href}" target="_blank" rel="noopener">${i.name}</a>`).join("")
+      + `</div></div>`
+    ).join("");
+  } catch (e) { /* file:// — the row just stays empty */ }
+})();
+</script>
 
 </body>
 </html>

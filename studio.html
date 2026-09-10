@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>0xR / the record</title>
+<title>0xR / studio</title>
 <meta name="author" content="Rodrigo Rivas Yassin">
-<meta name="description" content="Four positions: 0xR, Sail, Fungi and Boveda. The brand, the films, the comms and the product for each, and what they reached.">
-<link rel="canonical" href="https://0xr.io/work.html">
+<meta name="description" content="Brand, film, product and distribution, with the receipts: 19 AI films and 273,757 impressions with a per-post trail, two products shipped, a token launch, and the ecosystem that carried them.">
+<link rel="canonical" href="https://0xr.io/studio.html">
 <link rel="icon" href="favicon.png" type="image/png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="0xR">
-<meta property="og:title" content="0xR / the record">
-<meta property="og:description" content="Four positions: 0xR, Sail, Fungi and Boveda. The brand, the films, the comms and the product for each, and what they reached.">
-<meta property="og:url" content="https://0xr.io/work.html">
-<meta property="og:image" content="https://0xr.io/media/card-work.jpg">
+<meta property="og:title" content="0xR / studio">
+<meta property="og:description" content="Brand, film, product and distribution, with the receipts: 19 AI films and 273,757 impressions with a per-post trail, two products shipped, a token launch, and the ecosystem that carried them.">
+<meta property="og:url" content="https://0xr.io/studio.html">
+<meta property="og:image" content="https://0xr.io/media/card-studio.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="0xR / the record">
-<meta name="twitter:description" content="Four positions: 0xR, Sail, Fungi and Boveda. The brand, the films, the comms and the product for each, and what they reached.">
-<meta name="twitter:image" content="https://0xr.io/media/card-work.jpg">
+<meta name="twitter:title" content="0xR / studio">
+<meta name="twitter:description" content="Brand, film, product and distribution, with the receipts: 19 AI films and 273,757 impressions with a per-post trail, two products shipped, a token launch, and the ecosystem that carried them.">
+<meta name="twitter:image" content="https://0xr.io/media/card-studio.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -131,16 +131,19 @@
     <div class="bar" id="bar">
       <a class="name" href="index.html"><i>0</i>xR</a>
       <nav>
-        <a href="what.html">what</a>
+        <a href="studio.html" aria-current="page">studio</a>
         <a href="crew.html">crew</a>
-        <a href="work.html" aria-current="page">work</a>
-        <a href="who.html">who</a>
+        <a href="thesis.html">thesis</a>
       </nav>
     </div>
 
     <main class="page">
       <div class="wrap">
-      <h1 class="lede" data-scramble="mount" data-delay="60">The record.</h1>
+      <h1 class="lede" data-scramble="mount" data-delay="60">The studio.</h1>
+
+      <p class="intro" data-reveal>Four positions, and under each one the same
+      four disciplines: brand, film, product and distribution. The numbers are
+      the ones the accounts report.</p>
 
       <details class="entry" open>
         <summary data-scramble-host>
@@ -291,7 +294,7 @@
         const groups = cases[m.dataset.cases];
         if (!groups || !groups.length) { m.remove(); continue; }
         m.innerHTML = groups.map(g =>
-          `<div class="cat"><span class="cat-lab">${g.cat}</span>`
+          `<div class="cat" id="${g.cat.toLowerCase().replace(/ .*/, '')}"><span class="cat-lab">${g.cat}</span>`
           + (g.note ? `<p class="cat-note">${g.note}</p>` : "")
           + `<div class="row">${g.items.map(tile).join("")}</div>`
           + ((g.links && g.links.length)
