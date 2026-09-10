@@ -36,8 +36,9 @@
      beside it. Both edges of the page are used, so nothing reads cut off. */
   .him {
     display: grid; grid-template-columns: minmax(0, 34rem) auto;
-    justify-content: start; gap: clamp(3rem, 9vw, 8rem); align-items: start;
+    justify-content: start; gap: 0 clamp(3rem, 9vw, 8rem); align-items: start;
   }
+  .him > .lab { grid-column: 1 / -1; }
   /* his paper is trimmed on both sides so the ink, not the canvas, meets the
      rail; the shared img/video/canvas cap would squeeze the bitmap instead. */
   .director { justify-self: start; }
@@ -51,6 +52,9 @@
      rather than standing in front of it. */
   @media (max-width: 680px) {
     .him { grid-template-columns: 1fr; gap: clamp(1.4rem, 5vw, 2rem); }
+    .him > .lab { order: 1; margin-bottom: 0; }
+    .director { order: 2; }
+    .story { order: 3; }
   }
   /* ── the six open under their own rule, with the line that introduces
      them sitting on it rather than at the top of the page. The gaps are the
@@ -95,8 +99,8 @@
   /* ── his record: the story beside the figure, the receipts beneath ── */
   .story p { max-width: 34rem; margin: 0 0 1.1rem; color: var(--ink-soft); }
   .story p:last-child { margin-bottom: 0; }
-  .story .lab { font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.18em;
-             text-transform: uppercase; color: var(--tone); margin-bottom: 1.2rem; }
+  .him .lab { font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.18em;
+             text-transform: uppercase; color: var(--tone); margin: 0 0 1.2rem; }
   .story p a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px;
                text-underline-offset: 2px; text-decoration-color: var(--tone); }
   .story p a:hover { text-decoration-color: var(--ink); }
@@ -173,8 +177,8 @@
 
       <div class="cast">
       <div class="him" data-reveal>
-      <div class="story">
         <p class="lab" data-scramble>The human</p>
+      <div class="story">
         <p>I cofounded Boveda in 2022. We sold decentralized storage on the
         Filecoin network and stored 1.4 petabytes of client data, which had to
         physically live somewhere. It lived in data centers in Madrid, Spain
