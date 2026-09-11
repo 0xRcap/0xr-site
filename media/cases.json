@@ -1,4 +1,20 @@
 {
+  "alle": [
+    {
+      "cat": "Brand",
+      "note": "Allé's own AS monogram is a soft airbrush, grey with a lilac fringe, printed flat on black cotton. For MID 90'S the letterforms stayed and the render changed: the same two letters inflated into bevelled glass over brushed silver with a hard specular rim, then put through a video pass that leaves scanlines, bloom and colour fringing in the mark itself. The wordmark is built to the same rule, a rounded brush italic stacked on fat geometric numerals, so the two read as one capsule. The films came first and the marks were drawn to sit on them, so the period is carried by the capture on both sides, grain and halation in the footage, scanlines and tracking in the type.",
+      "items": [
+        {
+          "poster": "alle/mark-as.jpg",
+          "label": "The AS monogram, reworked"
+        },
+        {
+          "poster": "alle/mark-mid90s.jpg",
+          "label": "The MID 90'S wordmark"
+        }
+      ]
+    }
+  ],
   "fungi": [
     {
       "cat": "Product design",
