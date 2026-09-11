@@ -573,6 +573,15 @@
       "campaign": "Referral",
       "views": 2804,
       "note": "Instagram reel. Play count read from the account's own reels grid, 2026-09-11. The creative is already on the wall from X, so no asset here: the reach counts once per platform and the film keeps one tile."
+    },
+    {
+      "slug": "alle-sk8trs",
+      "url": "https://www.instagram.com/reel/DdHlLfyMOjA/",
+      "account": "alle.studios",
+      "client": "Alle Studios",
+      "campaign": "MID 90'S",
+      "views": 1584,
+      "note": "THE SK8TRS. Play count read from the account's own reels grid 2026-09-11, about 15 hours after posting and before any paid promotion, so this figure is a baseline and is expected to move. No asset filed yet, so it counts toward the total and has no tile: drop the mp4 in media/alle/ and name it here to give it one."
     }
   ],
   "verified": "every quote re-checked one by one against its own permalink on 2026-08-18; author and quoted-post confirmed via X syndication",
