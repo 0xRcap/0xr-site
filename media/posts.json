@@ -1,6 +1,6 @@
 {
   "asOf": "2026-08-18",
-  "note": "views are the public X view count, recorded by hand. quoteOf marks a post that quotes one of our clips: its views count toward the total and are credited on the tile, but it gets no tile of its own. Our own accounts (SaildotMoney, 0xRcap) are deliberately not counted as amplification. The Base launch trio (Sep 2026) carries X's rounded public display figures (2.1K / 5.3K / 1.2K); every other count here is exact.",
+  "note": "views are the public X view count, recorded by hand, plus the offX entries, which are plays on platforms other than X and are read from each account's own page. asOf stamps the X counts only; every offX entry carries the date its own figure was read. quoteOf marks a post that quotes one of our clips: its views count toward the total and are credited on the tile, but it gets no tile of its own. Our own accounts (SaildotMoney, 0xRcap) are deliberately not counted as amplification. The Base launch trio (Sep 2026) carries X's rounded public display figures (2.1K / 5.3K / 1.2K); every other count here is exact.",
   "posts": [
     {
       "id": "2074188329164181806",
@@ -537,6 +537,42 @@
       "views": 83200,
       "asset": "mid-90s.mp4",
       "note": "video track pulled from the reel DASH stream — VP9, no H.264 rendition exists; mid-90s.jpg is the poster fallback"
+    },
+    {
+      "slug": "sail-referral-DSnmLaaDoa9",
+      "url": "https://www.instagram.com/reel/DSnmLaaDoa9/",
+      "account": "sail.money",
+      "client": "Sail",
+      "campaign": "Referral",
+      "views": 6459,
+      "note": "Instagram reel. Play count read from the account's own reels grid, 2026-09-11. The creative is already on the wall from X, so no asset here: the reach counts once per platform and the film keeps one tile."
+    },
+    {
+      "slug": "sail-referral-DSijJydjhOy",
+      "url": "https://www.instagram.com/reel/DSijJydjhOy/",
+      "account": "sail.money",
+      "client": "Sail",
+      "campaign": "Referral",
+      "views": 3318,
+      "note": "Instagram reel. Play count read from the account's own reels grid, 2026-09-11. The creative is already on the wall from X, so no asset here: the reach counts once per platform and the film keeps one tile."
+    },
+    {
+      "slug": "sail-referral-DSX8cj_jSa8",
+      "url": "https://www.instagram.com/reel/DSX8cj_jSa8/",
+      "account": "sail.money",
+      "client": "Sail",
+      "campaign": "Referral",
+      "views": 3443,
+      "note": "Instagram reel. Play count read from the account's own reels grid, 2026-09-11. The creative is already on the wall from X, so no asset here: the reach counts once per platform and the film keeps one tile."
+    },
+    {
+      "slug": "sail-referral-DSVZLUKDdgt",
+      "url": "https://www.instagram.com/reel/DSVZLUKDdgt/",
+      "account": "sail.money",
+      "client": "Sail",
+      "campaign": "Referral",
+      "views": 2804,
+      "note": "Instagram reel. Play count read from the account's own reels grid, 2026-09-11. The creative is already on the wall from X, so no asset here: the reach counts once per platform and the film keeps one tile."
     }
   ],
   "verified": "every quote re-checked one by one against its own permalink on 2026-08-18; author and quoted-post confirmed via X syndication",
