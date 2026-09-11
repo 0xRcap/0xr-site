@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════════════════════════════
-   0xR, the shared sheet. Tokens, reset, chrome and the tile system.
+   0xR — the shared sheet. Tokens, reset, chrome and the tile system.
    Every page links this and adds only what is unique to it.
 
    Responsive rules of the house:
@@ -156,8 +156,8 @@ h2 { font-size: var(--t-h2); line-height: 1.2; margin-bottom: 1.2rem; }
 }
 .foot nav { display: flex; flex-wrap: wrap; gap: 0.2rem 1.4rem; }
 .foot a {
-  /* Both axes carry a floor here. "x" is one glyph and measured 7px wide
-     inside a 44px tall box, which is the miss that produced the both-axes
+  /* min-width, not just min-height: "x" is one glyph and measured 7px wide
+     against a 44px tall box, which is the miss that produced the both-axes
      ruling on 2026-09-10. */
   display: flex; align-items: center; justify-content: center;
   min-height: var(--tap); min-width: var(--tap);
@@ -233,7 +233,11 @@ a:hover > .tile-t { color: var(--ink); }
   margin: 2rem 0 2.4rem;
 }
 
-.page { padding: clamp(5rem, 15vw, 7.5rem) 0 var(--band); }
+/* the nav pill is a fixed 47px at a 16px offset, so it clears at 63px on
+   every viewport while this padding used to shrink to 80px on a phone,
+   leaving 17px under the bar against 57px on desktop. The floor now clears
+   the bar by the same air the widest screen gets. */
+.page { padding: clamp(7rem, 12vw, 7.5rem) 0 var(--band); }
 .page > .wrap > h1:first-child, .page .lede {
   font-size: var(--t-title); line-height: 1.1; letter-spacing: -0.022em;
   margin: 0 0 clamp(0.9rem, 2.6vw, 1.35rem);
