@@ -104,7 +104,10 @@
      case studies that are made of them, not inside an argument. ── */
   .make { margin: 0 0 clamp(3rem, 8vw, 4.5rem); }
   .make .label { margin-bottom: 0.5rem; }
-  .make .sub { font-size: var(--t-small); color: var(--ink-soft); margin: 0 0 1.8rem; }
+  .cases-head { margin-bottom: clamp(1.4rem, 4vw, 2rem); }
+  .cases-head .label { margin-bottom: 0.5rem; }
+  .cases-head .lead { font-size: var(--t-small); line-height: 1.55; color: var(--ink-soft);
+                      max-width: 34rem; margin: 0; }
   .map {
     display: grid; gap: clamp(1.6rem, 4.5vw, 2.6rem) clamp(1.6rem, 5vw, 3rem);
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
@@ -186,13 +189,11 @@
 
     <main class="page">
       <div class="wrap">
-      <h1 class="lede" data-scramble="mount" data-delay="60">Case studies.</h1>
+      <h1 class="lede" data-scramble="mount" data-delay="60">The studio.</h1>
 
-      <p class="intro" data-reveal>The agents produced all of this under my direction. Company by&nbsp;company.</p>
+      <p class="intro" data-reveal>Every case study below is made of&nbsp;these.</p>
 
       <section class="make" data-reveal>
-        <p class="label" data-scramble>What we make</p>
-        <p class="sub">Every case study below is made of these.</p>
         <div class="map">
           <div class="surface">
             <b>Brand</b>
@@ -221,6 +222,11 @@
           </div>
         </div>
       </section>
+
+      <div class="cases-head" data-reveal>
+        <p class="label" data-scramble>Case studies</p>
+        <p class="lead">The agents produced all of this under my direction. Company by&nbsp;company.</p>
+      </div>
 
       <details class="entry" id="alle">
         <summary data-scramble-host>
