@@ -3,18 +3,24 @@
    dark ink ground the crew bubble already uses. It is a card, not a modal:
    nothing is blocked, nothing is dimmed, and the page behind it stays usable.
 
-   It shows once. A dismissal is remembered, and so is a click through to the
-   film, because someone who has watched it does not need telling again. */
+   Two kinds of no. Closing it means not right now, so it is forgotten when the
+   visit ends and the card is back next time. Watching the film means done, and
+   that is kept for good: nobody needs telling twice about something they have
+   already seen. */
 (() => {
   const KEY = "0xr.film.theseus";
   const HREF = "https://www.youtube.com/watch?v=YIVVL7GtiGM";
 
-  let seen = false;
-  try { seen = localStorage.getItem(KEY) === "1"; } catch (e) { /* private window */ }
-  if (seen) return;
+  let done = false, hushed = false;
+  try {
+    done = localStorage.getItem(KEY) === "watched";
+    hushed = sessionStorage.getItem(KEY) === "closed";
+  } catch (e) { /* private window: the card simply shows */ }
+  if (done || hushed) return;
   if (!document.body) return;
 
-  const remember = () => { try { localStorage.setItem(KEY, "1"); } catch (e) {} };
+  const hush    = () => { try { sessionStorage.setItem(KEY, "closed"); } catch (e) {} };
+  const watched = () => { try { localStorage.setItem(KEY, "watched"); } catch (e) {} };
 
   const card = document.createElement("aside");
   card.className = "film-card";
@@ -32,12 +38,12 @@
 
   const close = () => {
     card.classList.remove("on");
-    remember();
+    hush();
     setTimeout(() => card.remove(), 260);
   };
 
   card.querySelector(".film-x").addEventListener("click", close);
-  card.querySelector(".film-go").addEventListener("click", remember);
+  card.querySelector(".film-go").addEventListener("click", watched);
   addEventListener("keydown", (e) => { if (e.key === "Escape" && card.isConnected) close(); });
 
   document.body.appendChild(card);
