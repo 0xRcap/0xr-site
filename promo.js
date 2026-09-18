@@ -1,26 +1,15 @@
 /* ── the film card ──
-   One thing to announce, on every page, in the site's own card language: the
-   dark ink ground the crew bubble already uses. It is a card, not a modal:
-   nothing is blocked, nothing is dimmed, and the page behind it stays usable.
+   One thing to announce, on the home page only, in the site's own card
+   language: the dark ink ground the crew bubble already uses. It is a card,
+   not a modal: nothing is blocked, nothing is dimmed, and the page behind it
+   stays usable.
 
-   Two kinds of no. Closing it means not right now, so it is forgotten when the
-   visit ends and the card is back next time. Watching the film means done, and
-   that is kept for good: nobody needs telling twice about something they have
-   already seen. */
+   It keeps no memory. Every load of the home page shows it, because the film
+   is the thing worth interrupting for and a visitor who closed it last week
+   is not the same visitor. Closing it clears it for the page you are on. */
 (() => {
-  const KEY = "0xr.film.theseus";
   const HREF = "https://www.youtube.com/watch?v=YIVVL7GtiGM";
-
-  let done = false, hushed = false;
-  try {
-    done = localStorage.getItem(KEY) === "watched";
-    hushed = sessionStorage.getItem(KEY) === "closed";
-  } catch (e) { /* private window: the card simply shows */ }
-  if (done || hushed) return;
   if (!document.body) return;
-
-  const hush    = () => { try { sessionStorage.setItem(KEY, "closed"); } catch (e) {} };
-  const watched = () => { try { localStorage.setItem(KEY, "watched"); } catch (e) {} };
 
   const card = document.createElement("aside");
   card.className = "film-card";
@@ -38,15 +27,13 @@
 
   const close = () => {
     card.classList.remove("on");
-    hush();
     setTimeout(() => card.remove(), 260);
   };
 
   card.querySelector(".film-x").addEventListener("click", close);
-  card.querySelector(".film-go").addEventListener("click", watched);
   addEventListener("keydown", (e) => { if (e.key === "Escape" && card.isConnected) close(); });
 
   document.body.appendChild(card);
-  /* let the page arrive first: the hero gets its own moment before this does */
-  setTimeout(() => card.classList.add("on"), 1400);
+  /* the hero gets its own moment first. Long enough to read the headline. */
+  setTimeout(() => card.classList.add("on"), 2400);
 })();
