@@ -332,6 +332,16 @@ a:hover > .tile-t { color: var(--ink); }
   backdrop-filter: blur(6px); transition: background 0.2s ease;
 }
 .film-x:hover, .film-x:focus-visible { background: rgba(14, 13, 11, 0.85); }
+/* on a phone it sits centred, with the same gutter left and right rather than
+   hugging one corner. left and right together do the centring, so the entry
+   transform stays a plain translateY and nothing has to compose. The safe area
+   keeps it clear of the home indicator. */
+@media (max-width: 560px) {
+  .film-card {
+    left: var(--pad); right: var(--pad); width: auto;
+    bottom: calc(var(--pad) + env(safe-area-inset-bottom, 0px));
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .film-card { transition: none; transform: none; }
   .film-shot img { transition: none; }
