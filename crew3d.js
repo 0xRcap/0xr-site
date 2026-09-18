@@ -17,8 +17,11 @@
 
    THE RIG. The depth file also names three row ranges: head, torso, legs.
    The ray march is a per row walk, so each row can be marched at its own
-   angle for free: the head yaws, the torso follows at a fraction, the legs
-   stand on the ground at 0. Vertical moves are whole rows remapped from
+   angle for free. Since 2026-09-18 all three of those angles are alive and
+   none of them is a copy of another: one command goes into three springs
+   with three different masses, so the head leads, the shoulders are
+   recruited only past six degrees and arrive later, and the hips oppose the
+   head at the start of a move and carry past rest at the end. Vertical moves are whole rows remapped from
    screen row to model row (a nod is the head drawn one row lower, over the
    collar; a lifted head doubles its chin row so the neck never opens; a
    shrug lifts the shoulder band a row against a still head).
@@ -56,10 +59,23 @@
   const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const PX = 4;                        /* css px per voxel on the page */
   /* 12: measured on the sheet, each leg's projection widens about a cell on
-     the turn and by 20 the near one swallows the gap between them. The legs
-     no longer turn at all, but the head still respects it at idle. */
+     the turn and by 20 the near one swallows the gap between them. The head
+     respects it at idle; the reduced motion rest has always stood the legs
+     at it, which is why LEG_MAX below is set where it is. */
   const IDLE = 12;
   const MAX_TURN = 24;                 /* past this the head has grown a helmet */
+  /* ── the chain (2026-09-18) ──
+     A turn used to be one rotation drawn at three sizes: the legs at zero
+     forever, the torso a fixed fraction of the head's current angle, so the
+     two could never be out of step. A real turn is a chain with time between
+     its links. Each link is now a spring with its own mass, so the lag, the
+     overshoot and the settle come out of the mechanics instead of a curve. */
+  const LEG_MAX = 8;      /* deg. 20 swallows the gap between the legs, 12 is the
+                             documented edge, 8 keeps a margin on every figure */
+  const TORSO_DEAD = 6;   /* deg of yaw the shoulders ignore: nobody turns their
+                             body to glance, so a small look stays head only */
+  const WEIGHT = 6;       /* deg of shoulder per px the upper body counterweights */
+  const DT_MAX = 1 / 15;  /* the longest step the integrator will take */
   const FOCAL = 240;                   /* px of pointer offset for a 45° turn */
   const DECODE = 1.4;                  /* seconds, slice by slice */
   const ARRIVE = 300;                  /* ms between one figure's decode and the next */
@@ -121,24 +137,37 @@
      blink/act: mean seconds between (Poisson). idle: scale on the ±12 noise.
      radius: px from the head within which the pointer is noticed. back: the
      chance of returning a neighbour's glance. ease: fraction of the way to
-     the target per frame (the speed of a turn). follow: how much of the head
-     yaw the torso takes. holdx: scale on every hold. mix: act weights. */
+     the target per frame (the speed of a turn). follow: how much of the
+     recruited yaw the torso eventually takes. holdx: scale on every hold.
+     mix: act weights.
+     The chain, per figure: lag is the shoulders' speed as a fraction of the
+     head's, so a low lag arrives later. bounce is the head's damping, under
+     1 overshoots and settles, at 1 arrives and stops. tbounce is the same for
+     the shoulders. plant is the share of the shoulder angle the hips take.
+     counter is how hard the hips oppose the head at the start of a move,
+     which is the anticipation. */
   const TEMPER = {
     ye:    { blink: 5.0, act: 9.0,  idle: 0.6,  radius: 220, back: 0.3, ease: 0.06, follow: 0.4,  holdx: 1.6,
+             lag: 0.55, bounce: 0.82, tbounce: 0.90, plant: 0.30, counter: 0.8,
              mix: { glanceL: 2, glanceR: 2, lookUp: 1, nod: 1, weight: 3 } },
     /* he stays near front on. His eyes are scattered single cells rather than
        a mass, so the side darkening on a turn swallows them and the chin
        flattens into the jaw: past a few degrees he stops being a face. The
        fidget moves into the body instead, which is where it survives. */
     quent: { blink: 3.0, act: 3.5,  idle: 0.25, radius: 260, back: 0.8, ease: 0.22, follow: 0.18, holdx: 0.6,
+             lag: 0.70, bounce: 0.70, tbounce: 0.80, plant: 0.35, counter: 1.4,
              mix: { nod: 3, weight: 4, shrug: 2, step: 1, lookUp: 1, glanceL: 1, glanceR: 1 } },
     frank: { blink: 6.0, act: 14.0, idle: 0.35, radius: 180, back: 0.2, ease: 0.05, follow: 0.6,  holdx: 1.4,
+             lag: 0.40, bounce: 0.95, tbounce: 1.00, plant: 0.25, counter: 0.5,
              mix: { nod: 3, glanceL: 1, glanceR: 1, lookUp: 1 } },
     jean:  { blink: 4.0, act: 5.0,  idle: 0.9,  radius: 240, back: 0.5, ease: 0.12, follow: 0.5,  holdx: 1.0,
+             lag: 0.60, bounce: 0.70, tbounce: 0.80, plant: 0.45, counter: 1.1,
              mix: { weight: 4, tilt: 3, glanceL: 2, glanceR: 2, shrug: 1, step: 1, nod: 1, lookUp: 1 } },
     steve: { blink: 4.5, act: 10.0, idle: 0.4,  radius: 200, back: 0.4, ease: 0.25, follow: 0.35, holdx: 1.5,
+             lag: 0.45, bounce: 0.72, tbounce: 0.85, plant: 0.40, counter: 1.2,
              mix: { turn: 5, nod: 1, weight: 1, glanceL: 1, glanceR: 1 } },
     kim:   { blink: 4.0, act: 7.0,  idle: 0.5,  radius: 360, back: 0.6, ease: 0.14, follow: 0.45, holdx: 1.0,
+             lag: 0.65, bounce: 0.78, tbounce: 0.85, plant: 0.35, counter: 1.0,
              mix: { glanceL: 2, glanceR: 2, nod: 1, weight: 1, tilt: 1, lookUp: 1 } },
   };
   const DEFAULT_T = TEMPER.jean;
@@ -155,6 +184,30 @@
     return -0.08 + 0.08 * ease((u - 0.6) / 0.4);
   }
   const clamp = (v, lo, hi) => (v < lo ? lo : v > hi ? hi : v);
+
+  /* ── one link of the chain ──
+     Semi implicit Euler on a spring. w is the inverse of the rise time in
+     seconds, z is damping: under 1 it overshoots and settles, at 1 it
+     arrives and stops. Four multiplies per link per frame, three links.
+     Why a spring and not the shape()/back() curves the acts use: those are
+     parameterised on u, the fraction of a known duration, and a turn has no
+     duration. Its command is continuous, the sum of pointer, idle noise and
+     whatever act is running. The act keeps its curve, so its anticipation
+     and overshoot are still in the command; the chain then filters that one
+     command through three different masses, which is what puts time between
+     the links. */
+  const link = (x, v, target, w, z, dt) =>
+    v + ((target - x) * w * w - 2 * z * w * v) * dt;
+  /* the old per frame lerp stays the tuning knob: a rate of r at 30fps has a
+     time constant of -FRAME/ln(1-r), and the spring's w is its inverse. So
+     ease keeps meaning the speed of a turn and no block had to be retuned. */
+  const omega = (r) => -1000 * Math.log(1 - clamp(r, 0.01, 0.9)) / FRAME;
+  /* a lerp and a spring do not reach 63% at the same time: a spring damped at
+     z gets there at about (1 + z) / w. Folding that in is what let every
+     temperament keep the ease it was tuned with, measured against the old
+     rig to within a frame or two on the head. */
+  const speed = (r, z) => omega(r) * (1 + z);
+  const W_HELD = omega(0.15);          /* the floor when a pointer or pin is on */
 
   /* a seeded generator per figure, so two figures never share a clock */
   function mulberry(seed) {
@@ -349,6 +402,7 @@
   /* ── the loop: one for every figure on the page ── */
   const figures = [];
   let raf = 0, skip = 0, t0 = 0, driven = false, vnow = 0, lastArrival = -1e9;
+  let prevNow = 0;                      /* the real gap between frames, for the springs */
   let order = null;                     /* explicit neighbour order, if given */
   const stat = { ms: 0, avg: 0, max: 0, draws: 0, figures: 0, frames: 0 };
   const clock = () => (driven ? vnow : performance.now());
@@ -406,6 +460,10 @@
     const s0 = performance.now();
     if (!t0) t0 = now;
     const t = (now - t0) / 1000;
+    /* the springs are integrated in seconds, not in frames, so a dropped
+       frame or a driven step of any size lands the figure in the same place */
+    const dt = clamp((now - (prevNow || now - FRAME)) / 1000, 1 / 240, DT_MAX);
+    prevNow = now;
     draws = 0;
     let blinked = false, active = 0;
     for (let fi = 0; fi < figures.length; fi++) {
@@ -465,20 +523,49 @@
         NOISE[0][1] * Math.sin(TAU * t / NOISE[0][0] + f.ph[0]) +
         NOISE[1][1] * Math.sin(TAU * t / NOISE[1][0] + f.ph[1]) +
         NOISE[2][1] * Math.sin(TAU * t / NOISE[2][0] + f.ph[2]));
-      const target = f.pin !== null ? f.pin
+      const cmd = f.pin !== null ? f.pin
         : f.attn !== null ? f.attn
         : clamp(idle + ay, -MAX_TURN, MAX_TURN);
-      const rate = f.attn !== null || f.pin !== null ? Math.max(T.ease, 0.15) : T.ease;
-      f.head += (target - f.head) * rate;
-      f.torso += (f.head * T.follow - f.torso) * rate * 0.7;
+      const held = f.attn !== null || f.pin !== null;
+
+      /* the head takes the command whole. Following a pointer or sitting on
+         a pin is critically damped on purpose: overshooting something the
+         reader is holding still reads as a fault, and on QUENT a bounce past
+         a pinned 12 is exactly the angle where he stops being a face. */
+      f.headV = link(f.head, f.headV, cmd, held ? f.wHeld : f.wHead, held ? 1 : f.zHead, dt);
+      f.head = clamp(f.head + f.headV * dt, -MAX_TURN, MAX_TURN);
+
+      /* the shoulders chase the COMMAND, not the head. That is the whole
+         difference: a fraction of the head's current angle can only ever be
+         the same move at a smaller size, while a slower spring on the same
+         command arrives late, holds, and comes back late. And they ignore
+         the first TORSO_DEAD degrees, so a glance stays head only and a real
+         turn recruits the body. */
+      const recruit = cmd > TORSO_DEAD ? cmd - TORSO_DEAD
+        : cmd < -TORSO_DEAD ? cmd + TORSO_DEAD : 0;
+      f.torsoV = link(f.torso, f.torsoV, recruit * T.follow, f.wTorso, f.zTorso, dt);
+      f.torso = clamp(f.torso + f.torsoV * dt, -MAX_TURN, MAX_TURN);
+
+      /* the hips: a share of the shoulders, less a term in how fast the head
+         is moving. At the top of the move that term wins and the hips go the
+         other way, which is the anticipation; at the hold it is zero and they
+         sit under the shoulders; on the way back it flips and they carry past
+         rest, which is the follow through. Clamped well inside the angle at
+         which the near leg eats the gap between them. */
+      const hips = f.plant * f.torso - f.counter * f.headV * 0.05;
+      f.legsV = link(f.legs, f.legsV, clamp(hips, -LEG_MAX, LEG_MAX), f.wLegs, 1, dt);
+      f.legs = clamp(f.legs + f.legsV * dt, -LEG_MAX, LEG_MAX);
 
       /* breath: a whole pixel, up, level, down, slightly irregular */
       const br = Math.sin(TAU * t / BREATH + f.ph[3] + 0.5 * Math.sin(TAU * t / BREATH_WOBBLE + f.ph[4]));
       p.bob = Math.round(0.9 * br);
-      p.tx = Math.round(wx + 0.6 * Math.sin(TAU * t / SWAY + f.ph[5]));
+      /* the weight: the upper body counterweights the turn by a whole pixel,
+         the mass settling over the leg on the far side. It rides the torso
+         angle, so it arrives with the shoulders and leaves with them. */
+      p.tx = Math.round(wx + 0.6 * Math.sin(TAU * t / SWAY + f.ph[5]) + f.torso / WEIGHT);
       p.fx = Math.round(fx);
       p.tilt = tilt;
-      setAngles(p, 0, f.torso, f.head);
+      setAngles(p, f.legs, f.torso, f.head);
       setRows(p, f.m, hy, rise, sh);
       draw(f.ctx, f.m, p, f.opts, resolved, f.noise);
     }
@@ -576,7 +663,14 @@
     }
     const f = {
       canvas, ctx, m, opts, T, rng, pose, name,
-      head: 0, torso: 0, attn: null, pin: null,
+      head: 0, torso: 0, legs: 0, headV: 0, torsoV: 0, legsV: 0,
+      wHead: speed(T.ease, T.bounce ?? 0.8),
+      wHeld: Math.max(omega(T.ease), W_HELD) * 2,
+      wTorso: speed(T.ease, T.tbounce ?? 0.9) * (T.lag ?? 0.55),
+      wLegs: omega(T.ease) * (T.lag ?? 0.55) * 1.8,
+      zHead: T.bounce ?? 0.8, zTorso: T.tbounce ?? 0.9,
+      plant: T.plant ?? 0.35, counter: T.counter ?? 1,
+      attn: null, pin: null,
       ph: [rng() * TAU, rng() * TAU, rng() * TAU, rng() * TAU, rng() * TAU, rng() * TAU],
       seen: false, visible: true, frozen: false,
       decodeAt: null, hold: opts.hold || 0, noise: [],
@@ -598,7 +692,8 @@
         f.frozen = !!on;
         if (!on) return;
         /* rest: no act, breath at its midpoint, eyes open, everything at 0 */
-        f.act = -1; f.head = 0; f.torso = 0;
+        f.act = -1; f.head = 0; f.torso = 0; f.legs = 0;
+        f.headV = 0; f.torsoV = 0; f.legsV = 0;
         pose.blink = false; pose.bob = 0; pose.tx = 0; pose.fx = 0; pose.tilt = 0;
         setAngles(pose, 0, 0, 0); setRows(pose, m, 0, 0);
         draw(ctx, m, pose, opts, 0, f.noise);
