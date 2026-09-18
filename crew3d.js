@@ -12,8 +12,20 @@
    line where the coat meets the jaw. A brightness heightfield puts the lit
    band of the shades at the BACK of the head and the face turns inside out
    on the first degree of turn. Authoring it costs one text file and is
-   diffable. The back is not authored: it mirrors the front, clamped at
-   backmax.
+   diffable.
+
+   THE BACK, 2026-09-18. One grid can only describe a symmetric solid: the
+   back mirrored the front and clamped at backmax, so every figure was a bas
+   relief and a turn revealed the extruded edge of the front silhouette and
+   nothing else. Measured on STEVE at 24 degrees, the body widened 12px at the
+   head, 4px at the torso and 0px at the legs. So there is a second optional
+   grid, crew/<name>.back.txt, same alphabet: how far the BACK surface sits
+   behind the base plane. `~` is no opinion and falls through to the old
+   mirror rule, which is also what a figure with no back file gets, so a
+   half authored back is legal and the five figures without one are byte
+   identical to before. A back value on a thin card extrudes it into a slab;
+   without one a card stays a card, which is how STEVE's one cell leg gap
+   survives.
 
    THE RIG. The depth file also names three row ranges: head, torso, legs.
    The ray march is a per row walk, so each row can be marched at its own
@@ -63,7 +75,14 @@
      respects it at idle; the reduced motion rest has always stood the legs
      at it, which is why LEG_MAX below is set where it is. */
   const IDLE = 12;
-  const MAX_TURN = 24;                 /* past this the head has grown a helmet */
+  /* 28 since 2026-09-18. The old 24 was set before the back of the head was
+     authored, and it was the clamp, not the spring, that shaped the top of a
+     turn: STEVE hit exactly 24.00 in five of five 90 second windows. Painted
+     at 0/22/24/28/32 against the back map, 28 still reads as a head turning
+     and 32 is where the near lens reaches the silhouette edge and the skull
+     goes wide. So 28 is headroom, not a new target: the turn act still peaks
+     at 22 x 1.12 and now overshoots inside the clamp instead of against it. */
+  const MAX_TURN = 28;
   /* ── the chain (2026-09-18) ──
      A turn used to be one rotation drawn at three sizes: the legs at zero
      forever, the torso a fixed fraction of the head's current angle, so the
@@ -123,7 +142,7 @@
   const ACTS = [
     { name: "glanceL", ch: 0, amp: 14,  in: 0.35,  hold: [0.6, 1.4],     out: 0.5 },
     { name: "glanceR", ch: 0, amp: -14, in: 0.35,  hold: [0.6, 1.4],     out: 0.5 },
-    { name: "turn",    ch: 0, amp: 22,  in: 0.28,  hold: [1.8, 3.2],     out: 0.9,  sign: 1 },
+    { name: "turn",    ch: 0, amp: 22,  in: 0.28,  hold: [1.2, 2.4],     out: 0.9,  sign: 1 },
     { name: "lookUp",  ch: 1, amp: -1,  in: 0.25,  hold: [0.8, 1.8],     out: 0.35 },
     { name: "nod",     ch: 1, amp: 1,   in: 0.18,  hold: [0.2, 0.45],    out: 0.3 },
     { name: "tilt",    ch: 2, amp: 1,   in: 0.3,   hold: [2, 5],         out: 0.5,  sign: 1 },
@@ -140,6 +159,12 @@
      the target per frame (the speed of a turn). follow: how much of the
      recruited yaw the torso eventually takes. holdx: scale on every hold.
      mix: act weights.
+     2026-09-18: every figure carries turn. Before this, five of the six had
+     no act above the 14 degree glance, so in a 90 second window FRANK never
+     once crossed 15 and QUENT and JEAN crossed it in one window out of five.
+     idle also came up across the board, because a median of 1.5 degrees is a
+     figure standing still. The three noise periods are 7.3, 11.1 and 17.9
+     seconds, so a bigger idle is a slower drift, never a faster one.
      The chain, per figure: lag is the shoulders' speed as a fraction of the
      head's, so a low lag arrives later. bounce is the head's damping, under
      1 overshoots and settles, at 1 arrives and stops. tbounce is the same for
@@ -147,28 +172,34 @@
      counter is how hard the hips oppose the head at the start of a move,
      which is the anticipation. */
   const TEMPER = {
-    ye:    { blink: 5.0, act: 9.0,  idle: 0.6,  radius: 220, back: 0.3, ease: 0.06, follow: 0.4,  holdx: 1.6,
+    ye:    { blink: 5.0, act: 7.0,  idle: 0.75, radius: 220, back: 0.3, ease: 0.06, follow: 0.4,  holdx: 1.6,
              lag: 0.55, bounce: 0.82, tbounce: 0.90, plant: 0.30, counter: 0.8,
-             mix: { glanceL: 2, glanceR: 2, lookUp: 1, nod: 1, weight: 3 } },
+             mix: { glanceL: 2, glanceR: 2, lookUp: 1, nod: 1, weight: 2, turn: 2 } },
     /* he stays near front on. His eyes are scattered single cells rather than
        a mass, so the side darkening on a turn swallows them and the chin
        flattens into the jaw: past a few degrees he stops being a face. The
-       fidget moves into the body instead, which is where it survives. */
-    quent: { blink: 3.0, act: 3.5,  idle: 0.25, radius: 260, back: 0.8, ease: 0.22, follow: 0.18, holdx: 0.6,
+       fidget moves into the body instead, which is where it survives.
+       2026-09-18, measured against the back map: the face does lose its
+       features by 22, but the silhouette turns and the legs open, so the
+       move reads on the body exactly as the note says. He gets the smallest
+       turn share of the six. weight drops from 3 to 2 because its 5 to 13
+       second hold was holding a third of his clock and blocking every other
+       act while it ran. */
+    quent: { blink: 3.0, act: 3.5,  idle: 0.45, radius: 260, back: 0.8, ease: 0.22, follow: 0.18, holdx: 0.6,
              lag: 0.70, bounce: 0.70, tbounce: 0.80, plant: 0.35, counter: 1.4,
-             mix: { nod: 3, weight: 4, shrug: 2, step: 1, lookUp: 1, glanceL: 1, glanceR: 1 } },
-    frank: { blink: 6.0, act: 14.0, idle: 0.35, radius: 180, back: 0.2, ease: 0.05, follow: 0.6,  holdx: 1.4,
+             mix: { nod: 3, weight: 3, shrug: 2, step: 1, lookUp: 1, glanceL: 2, glanceR: 2, turn: 4 } },
+    frank: { blink: 6.0, act: 11.0, idle: 0.55, radius: 180, back: 0.2, ease: 0.05, follow: 0.6,  holdx: 1.4,
              lag: 0.40, bounce: 0.95, tbounce: 1.00, plant: 0.25, counter: 0.5,
-             mix: { nod: 3, glanceL: 1, glanceR: 1, lookUp: 1 } },
-    jean:  { blink: 4.0, act: 5.0,  idle: 0.9,  radius: 240, back: 0.5, ease: 0.12, follow: 0.5,  holdx: 1.0,
+             mix: { nod: 3, glanceL: 1, glanceR: 1, lookUp: 1, turn: 4 } },
+    jean:  { blink: 4.0, act: 5.0,  idle: 0.85, radius: 240, back: 0.5, ease: 0.12, follow: 0.5,  holdx: 1.0,
              lag: 0.60, bounce: 0.70, tbounce: 0.80, plant: 0.45, counter: 1.1,
-             mix: { weight: 4, tilt: 3, glanceL: 2, glanceR: 2, shrug: 1, step: 1, nod: 1, lookUp: 1 } },
-    steve: { blink: 4.5, act: 10.0, idle: 0.4,  radius: 200, back: 0.4, ease: 0.25, follow: 0.35, holdx: 1.5,
+             mix: { weight: 3, tilt: 2, glanceL: 2, glanceR: 2, shrug: 1, step: 1, nod: 1, lookUp: 1, turn: 4 } },
+    steve: { blink: 4.5, act: 7.0,  idle: 0.6,  radius: 200, back: 0.4, ease: 0.25, follow: 0.35, holdx: 1.5,
              lag: 0.45, bounce: 0.72, tbounce: 0.85, plant: 0.40, counter: 1.2,
-             mix: { turn: 5, nod: 1, weight: 1, glanceL: 1, glanceR: 1 } },
-    kim:   { blink: 4.0, act: 7.0,  idle: 0.5,  radius: 360, back: 0.6, ease: 0.14, follow: 0.45, holdx: 1.0,
+             mix: { turn: 2, nod: 1, weight: 1, glanceL: 1, glanceR: 1 } },
+    kim:   { blink: 4.0, act: 7.0,  idle: 0.65, radius: 360, back: 0.6, ease: 0.14, follow: 0.45, holdx: 1.0,
              lag: 0.65, bounce: 0.78, tbounce: 0.85, plant: 0.35, counter: 1.0,
-             mix: { glanceL: 2, glanceR: 2, nod: 1, weight: 1, tilt: 1, lookUp: 1 } },
+             mix: { glanceL: 2, glanceR: 2, nod: 1, weight: 1, tilt: 1, lookUp: 1, turn: 3 } },
   };
   const DEFAULT_T = TEMPER.jean;
 
@@ -225,11 +256,13 @@
   function build(src) {
     const rows = (t) => t.split("\n").filter((l) => l.length);
     const vs = rows(src.value), ds = rows(src.depth);
+    const bs = src.back ? rows(src.back) : null;
     const W = src.w, H = src.h, BACK = src.backmax;
-    let front = 0;
+    let front = 0, back = BACK;
     for (const r of ds) for (const c of r) if (c !== ".")
       front = Math.max(front, RAMP.indexOf(c), THIN.indexOf(c));
-    const D = front + BACK + 1;
+    if (bs) for (const r of bs) for (const c of r) back = Math.max(back, RAMP.indexOf(c));
+    const D = front + back + 1;
     const grid = new Uint8Array(W * H * D);
     const ground = [];
     for (let j = 0; j < H; j++) {
@@ -238,10 +271,13 @@
         const dc = ds[j][i];
         if (!v) continue;
         if (dc === ".") { ground.push(i, j, v); continue; }   /* the cast shadow strip */
+        /* the back map, where one exists. `~` and `.` are both no opinion and
+           fall through to the mirror rule, so a half authored back is legal. */
+        const b = bs ? RAMP.indexOf(bs[j][i]) : -1;
         const t = THIN.indexOf(dc);
-        if (t >= 0) { grid[((front - t) * H + j) * W + i] = v; continue; }
-        const f = RAMP.indexOf(dc);
-        const k0 = front - f, k1 = front + Math.min(f, BACK);
+        if (t >= 0 && b < 0) { grid[((front - t) * H + j) * W + i] = v; continue; }
+        const f = t >= 0 ? t : RAMP.indexOf(dc);
+        const k0 = front - f, k1 = front + (b >= 0 ? b : Math.min(f, BACK));
         for (let k = k0; k <= k1; k++) grid[(k * H + j) * W + i] = v;
       }
     }
