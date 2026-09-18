@@ -287,3 +287,53 @@ a:hover > .tile-t { color: var(--ink); }
 }
 .next a:hover, .next a:focus-visible { text-decoration-color: var(--ink); }
 .next .what { margin: 0.7rem 0 0; font-size: var(--t-small); color: var(--ink-soft); max-width: 30rem; }
+
+/* ── the film card: one announcement, bottom right, in the card language the
+   crew bubble already speaks. Not a modal: the page behind it stays live. ── */
+.film-card {
+  position: fixed; z-index: 60; right: var(--pad); bottom: var(--pad);
+  width: min(21rem, calc(100vw - 2 * var(--pad)));
+  background: var(--ink); color: var(--card-ink);
+  border-radius: 10px; padding: 0.5rem 0.5rem 1rem;
+  box-shadow: 0 18px 40px rgba(14, 13, 11, 0.22);
+  opacity: 0; transform: translateY(12px);
+  transition: opacity 0.28s ease, transform 0.28s cubic-bezier(.22,1.2,.4,1);
+}
+.film-card.on { opacity: 1; transform: none; }
+.film-go { display: block; text-decoration: none; color: inherit; }
+.film-shot {
+  display: block; aspect-ratio: 16 / 9; overflow: hidden;
+  border-radius: 6px; background: #000; margin-bottom: 0.9rem;
+}
+.film-shot img { width: 100%; height: 100%; object-fit: cover; display: block;
+                 transition: transform 0.4s ease; }
+.film-go:hover .film-shot img, .film-go:focus-visible .film-shot img { transform: scale(1.04); }
+.film-lab, .film-h, .film-t, .film-cta { display: block; padding-inline: 0.5rem; }
+.film-lab {
+  font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--card-tone); margin-bottom: 0.45rem;
+}
+.film-h {
+  font-family: var(--display); font-weight: normal; letter-spacing: 0.02em;
+  font-size: clamp(1.5rem, 5vw, 1.9rem); line-height: 1.05; margin-bottom: 0.5rem;
+}
+.film-t { font-size: var(--t-small); line-height: 1.5; color: var(--card-ink); opacity: 0.82; }
+.film-cta {
+  font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--card-tone); margin-top: 0.9rem;
+  transition: color 0.25s ease;
+}
+.film-go:hover .film-cta, .film-go:focus-visible .film-cta { color: var(--card-ink); }
+.film-x {
+  position: absolute; top: 0.85rem; right: 0.85rem; z-index: 2;
+  width: 1.7rem; height: 1.7rem; display: grid; place-items: center;
+  border: 0; border-radius: 50%; cursor: pointer; font-size: 1rem; line-height: 1;
+  background: rgba(14, 13, 11, 0.55); color: var(--card-ink);
+  backdrop-filter: blur(6px); transition: background 0.2s ease;
+}
+.film-x:hover, .film-x:focus-visible { background: rgba(14, 13, 11, 0.85); }
+@media (prefers-reduced-motion: reduce) {
+  .film-card { transition: none; transform: none; }
+  .film-shot img { transition: none; }
+  .film-go:hover .film-shot img { transform: none; }
+}
