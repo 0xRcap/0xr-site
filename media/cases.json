@@ -51,7 +51,7 @@
           "label": "Natural language walkthrough"
         },
         {
-          "poster": "fungi/ui-dashboard.png",
+          "poster": "fungi/ui-dashboard.jpg",
           "label": "Yield agent dashboard"
         },
         {
@@ -67,19 +67,19 @@
       "note": "One company + two products = two logos. The natural language interface carried a plain mushroom. When it became a yield agent that holds money, the logo got glasses: a character that does nothing but read the yield market and answer questions about it. The character was built out from there.",
       "items": [
         {
-          "poster": "fungi/mark-nl-flat.png",
+          "poster": "fungi/mark-nl-flat.jpg",
           "label": "Natural language logo"
         },
         {
-          "poster": "fungi/mark-nl-3d.png",
+          "poster": "fungi/mark-nl-3d.jpg",
           "label": "The same logo, rendered"
         },
         {
-          "poster": "fungi/mark-agent.png",
+          "poster": "fungi/mark-agent.jpg",
           "label": "Yield agent logo"
         },
         {
-          "poster": "fungi/character-fungi.png",
+          "poster": "fungi/character-fungi.jpg",
           "label": "Fungi, the character"
         }
       ],
