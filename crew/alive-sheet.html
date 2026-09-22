@@ -1,0 +1,65 @@
+<!doctype html><meta charset="utf-8"><title>crew, alive, the filmstrip</title>
+<style>
+  :root{--paper:#FAF8F4;--rule:#E9E7E2;--tone:#8A8781;--ink-soft:#3F3D38;--ink:#0E0D0B}
+  body{background:#FAF8F4;color:#0E0D0B;margin:0;padding:20px;width:2960px;
+       font:12px/1.4 ui-monospace,Menlo,monospace}
+  h1{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#8A8781;font-weight:normal;margin:0 0 10px}
+  .row{display:flex;gap:8px;align-items:flex-end;margin:0 0 16px}
+  .p{display:flex;flex-direction:column;gap:4px}
+  .p i{font-style:normal;color:#3F3D38;font-size:11px;white-space:nowrap}
+  .p i b{color:#0E0D0B}
+  canvas{display:block;image-rendering:pixelated}
+</style>
+<h1 id="h">crew3d / alive / JEAN, ten seconds at 2fps, 8px per voxel, acts forced by name on a driven clock</h1>
+<div id="strip1" class="row"></div><div id="strip2" class="row"></div>
+<h1>all six, mid idle, after 6.7 seconds on their own clocks, 8px then 4px</h1>
+<div id="six8" class="row"></div><div id="six4" class="row"></div>
+<canvas id="src" style="display:none"></canvas>
+<script src="models.js"></script>
+<script src="../crew3d.js"></script>
+<script>
+(() => {
+  const NAMES = ["ye", "steve", "jean", "frank", "quent", "kim"];
+  const panel = (host, label, from) => {
+    const d = document.createElement("div"); d.className = "p";
+    const i = document.createElement("i"); i.innerHTML = label;
+    const c = document.createElement("canvas"); c.width = from.width; c.height = from.height;
+    c.getContext("2d").drawImage(from, 0, 0);
+    d.append(i, c); host.append(d);
+  };
+  /* the strip figure, on a seeded clock, decode skipped */
+  const star = crew3d.register(document.getElementById("src"), window.crewModels.jean, { scale: 8, seed: 7, instant: true });
+  /* the six, also seeded, with the arrival skipped so the clocks start now */
+  const six = NAMES.map((n, i) => {
+    const c = document.createElement("canvas");
+    return crew3d.register(c, window.crewModels[n], { scale: 8, seed: 100 + i, instant: true });
+  });
+  const six4 = NAMES.map((n, i) => {
+    const c = document.createElement("canvas");
+    return crew3d.register(c, window.crewModels[n], { scale: 4, seed: 100 + i, instant: true });
+  });
+  crew3d.neighbours(six);
+  /* the schedule, in frames at 30fps: what to force before that frame is stepped */
+  const AT = { 15: ["act", "glanceL"], 75: ["act", "nod"], 105: ["blink"], 135: ["act", "lookUp"],
+               195: ["act", "shrug"], 210: ["act", "step"], 255: ["act", "weight"] };
+  let on = "idle";
+  const FRAME = 1000 / 30;
+  for (let s = 0; s <= 300; s++) {
+    const a = AT[s];
+    if (a) { on = a[1] || a[0]; if (a[0] === "act") star.act(a[1]); else star.blink(); }
+    crew3d.drive(s === 0 ? 0 : FRAME);
+    if (on !== "idle" && star._f.act < 0 && star._f.blinkFrames === 0 && !a) on = "idle";
+    if (s % 15 === 0 && s < 300) {
+      const host = document.getElementById(s < 150 ? "strip1" : "strip2");
+      const t = (s / 30).toFixed(1) + "s";
+      panel(host, t + " &nbsp;<b>" + on + "</b>", star.canvas);
+    }
+    if (s === 200) {
+      six.forEach((h, i) => panel(document.getElementById("six8"), NAMES[i], h.canvas));
+      six4.forEach((h, i) => panel(document.getElementById("six4"), NAMES[i], h.canvas));
+    }
+  }
+  const st = crew3d.stats();
+  document.title = "READY " + st.avg.toFixed(2);
+})();
+</script>

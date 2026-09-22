@@ -1,0 +1,349 @@
+/* ══════════════════════════════════════════════════════════════════════
+   0xR — the shared sheet. Tokens, reset, chrome and the tile system.
+   Every page links this and adds only what is unique to it.
+
+   Responsive rules of the house:
+   1. one type scale, fluid, no per-component font sizes
+   2. one padding token that shrinks with the viewport
+   3. grids are auto-fit/minmax, so columns fall out of the width
+      and almost no breakpoints are needed
+   4. anything tappable is at least 44 by 44 px, on both axes. The one
+      exception is a link inside running text, which stays inline and gets
+      spacing instead. (Ruled 2026-09-10; the rule named no axis before, which
+      is how a 7px wide close link survived in the footer.)
+   ══════════════════════════════════════════════════════════════════════ */
+
+@font-face {
+  font-family: "Oliveira";
+  src: url("fonts/oliveira.otf") format("opentype");
+  font-weight: normal; font-style: normal; font-display: swap;
+}
+
+:root {
+  --paper: #FAF8F4;          /* bone, not white: warm enough to read as paper */
+  --ink: #0E0D0B;
+  --ink-soft: #3F3D38;
+  --tone: #8A8781;
+  --rule: #E9E7E2;
+  --card-bg: #0E0D0B;
+  --card-ink: #FFFFFF;
+  --card-tone: #9B988F;
+  --tile-bg: #EFEDE6;        /* holds its distance from the new paper */
+  --ascii: 138, 133, 124;   /* the terrain lives on the ink footer now, not on paper */
+
+  --display: "Oliveira", "Iowan Old Style", Georgia, serif;
+  --sans: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+  /* named, not left to the reader's OS: the eyebrows, the labels and the
+     agent names are half the brand's face. */
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* type: one scale, every size interpolates on viewport width */
+  --t-hero:  clamp(1.9rem, 5.6vw, 4rem);
+  --t-title: clamp(2.4rem, 9vw, 4.6rem);   /* inner-page h1, one scale for all */
+  --t-huge:  clamp(2.6rem, 9vw, 6rem);
+  --t-h2:    clamp(1.7rem, 4.4vw, 2.6rem);
+  --t-body:  clamp(0.95rem, 0.9rem + 0.2vw, 1.05rem);
+  --t-small: 0.9rem;
+  --t-mono:  clamp(0.68rem, 0.62rem + 0.25vw, 0.78rem);
+  --t-micro: clamp(0.58rem, 0.54rem + 0.2vw, 0.66rem);
+
+  /* space: one gutter token, everything else is a multiple */
+  --pad: clamp(1.25rem, 4.5vw, 1.6rem);
+  --gap: clamp(1rem, 3vw, 1.6rem);
+  --band: clamp(2.8rem, 8vw, 5rem);
+  --shell: 72rem;
+  --tap: 44px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  background: var(--paper);
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: var(--sans);
+  font-size: var(--t-body);
+  line-height: 1.6;
+  overflow-x: hidden;              /* nothing may scroll the page sideways */
+  -webkit-font-smoothing: antialiased;
+}
+
+img, video, canvas { max-width: 100%; display: block; }
+
+.wrap { width: 100%; max-width: var(--shell); margin: 0 auto; padding: 0 var(--pad); }
+
+/* ── the crew figures: a voxel canvas is drawn at 1:1 and blown up, so it
+   must never be smoothed. Shared by every page that stands one up. ── */
+.fig { display: block; flex: none; image-rendering: pixelated; }
+
+h1, h2 {
+  font-family: var(--display);
+  font-weight: normal;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+  margin: 0;
+}
+h1 { font-size: var(--t-hero); line-height: 1.14; }
+h2 { font-size: var(--t-h2); line-height: 1.2; margin-bottom: 1.2rem; }
+
+/* the mono eyebrow that labels every band */
+.label {
+  font-family: var(--mono); font-size: var(--t-micro);
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--tone); margin: 0 0 1.4rem;
+}
+
+/* ── navbar: floats, hides going down, returns going up ── */
+.bar {
+  position: fixed; top: 1rem; left: 50%; transform: translateX(-50%);
+  z-index: 20; width: min(var(--shell) - 3rem, calc(100% - 2rem));
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 1rem; padding: 0.1rem 0.4rem 0.1rem 1rem; border-radius: 99px;
+  background: var(--card-bg); color: var(--card-ink);
+  transition: transform 0.35s ease, opacity 0.35s ease;
+}
+.bar.hidden { transform: translateX(-50%) translateY(-160%); opacity: 0; }
+.bar .name {
+  /* 44 on both axes. It sits flush left in a space-between row, so the
+     min-width costs no layout. */
+  display: flex; align-items: center; min-height: var(--tap); min-width: var(--tap);
+  font-family: var(--display); font-size: 1.25rem;
+  text-decoration: none; color: var(--card-ink); white-space: nowrap;
+}
+/* Oliveira has no slashed zero, so "0xR" set in it reads OxR: the practice
+   misspelling its own name in the first glyph anyone sees. The zero comes from
+   the mono, which has the slash, and the letters stay in the display face. */
+.bar .name i { font-family: var(--mono); font-style: normal; font-size: 0.84em; letter-spacing: -0.02em; }
+.bar nav { display: flex; align-items: center; }
+.bar nav a {
+  /* 44 on both axes: the side padding carries the width, min-height the
+     height. The bar's own vertical padding came down 1.6px to pay for it,
+     so the pill stands within a pixel of where it stood. */
+  display: flex; align-items: center; min-height: var(--tap);
+  padding: 0 clamp(0.5rem, 2.4vw, 0.85rem);
+  font-size: clamp(0.8rem, 0.72rem + 0.35vw, 0.9rem);
+  color: var(--card-ink); text-decoration: none; opacity: 0.85;
+}
+.bar nav a:hover, .bar nav a[aria-current] { opacity: 1; }
+
+/* ── the footer: the terrain is the ground the whole site stands on ──
+   The glyphs fade out across the bottom third so the links are read rather
+   than decoded. Every page carries it, not just the hero. */
+.foot {
+  padding: 3.5rem var(--pad) 1.1rem; background: var(--ink); color: #6b6862;
+  font-family: var(--mono); font-size: var(--t-mono);
+  letter-spacing: 0.06em; text-transform: uppercase;
+  position: relative; z-index: 2; overflow: hidden;
+  min-height: clamp(190px, 26vh, 300px); align-content: end;
+}
+.foot #ascii {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  z-index: 0; display: block; pointer-events: none; opacity: 0.9;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 52%, transparent 88%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 52%, transparent 88%);
+}
+.foot-row {
+  position: relative; z-index: 1;
+  display: flex; flex-wrap: wrap; align-items: center;
+  justify-content: space-between; gap: 0.4rem 1.4rem;
+}
+.foot nav { display: flex; flex-wrap: wrap; gap: 0.2rem 1.4rem; }
+.foot a {
+  /* min-width, not just min-height: "x" is one glyph and measured 7px wide
+     against a 44px tall box, which is the miss that produced the both-axes
+     ruling on 2026-09-10. */
+  display: flex; align-items: center; justify-content: center;
+  min-height: var(--tap); min-width: var(--tap);
+  color: #6b6862; text-decoration: none; transition: color 0.2s ease;
+}
+.foot a:hover, .foot a:focus-visible { color: #fff; }
+
+/* ── the tile system: every openable piece of media on the site ──
+   A shot is a 16:9 window with the media absolutely filling it and a
+   badge that says how it opens. An arrow leaves for the post, the
+   corners open it here. Both are drawn as SVG so no font has to carry
+   the glyph. */
+.shot {
+  position: relative; display: block; width: 100%; aspect-ratio: 16 / 9;
+  overflow: hidden; background: var(--ink); border-radius: 2px;
+  isolation: isolate;
+}
+.shot > img, .shot > video {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s ease, filter 0.35s ease;
+}
+.shot > video { opacity: 0; transition: opacity 0.25s, transform 0.35s ease, filter 0.35s ease; }
+.shot > video.ready { opacity: 1; }
+
+.shot::after {
+  content: ""; position: absolute; top: 0.45rem; right: 0.45rem; z-index: 3;
+  width: 1.6rem; height: 1.6rem; border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.94);
+  background-repeat: no-repeat; background-position: center;
+  background-size: 0.8rem 0.8rem;
+  opacity: 0; transform: translateY(-0.25rem) scale(0.9);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+}
+.opens-away .shot::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230E0D0B' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17 17 7'/%3E%3Cpath d='M8 7h9v9'/%3E%3C/svg%3E");
+}
+.opens-here .shot::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230E0D0B' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10 3H3v7'/%3E%3Cpath d='M14 21h7v-7'/%3E%3Cpath d='M3 3l7.5 7.5'/%3E%3Cpath d='M21 21l-7.5-7.5'/%3E%3C/svg%3E");
+}
+.opens-away { cursor: pointer; }
+.opens-here { cursor: -webkit-zoom-in; cursor: zoom-in; }
+
+/* hover is driven from .shot itself: keying it off the parent works on an
+   anchor and silently fails on a span in WebKit */
+.shot:hover::after, :hover > .shot::after, :focus-visible > .shot::after { opacity: 1; transform: none; }
+.shot:hover > img, .shot:hover > video,
+:hover > .shot > img, :hover > .shot > video { transform: scale(1.04); filter: brightness(0.8); }
+
+/* on a touch screen there is no hover, so the badge is simply always on */
+@media (hover: none) {
+  .shot::after { opacity: 1; transform: none; }
+}
+
+.tile-t {
+  display: block; font-family: var(--mono); font-size: var(--t-micro);
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--tone);
+  margin-top: 0.45rem; line-height: 1.45;
+}
+a:hover > .tile-t { color: var(--ink); }
+
+:where(a, summary, [role="button"]):focus-visible {
+  outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 2px;
+}
+
+/* the big statement: display type set between body copy, held apart by
+   space rather than rules. One size everywhere it appears. */
+.creed {
+  font-family: var(--display); color: var(--ink);
+  font-size: clamp(1.5rem, 5.4vw, 2.2rem); line-height: 1.3;
+  letter-spacing: -0.015em; text-wrap: balance;
+  margin: 2rem 0 2.4rem;
+}
+
+/* the nav pill is a fixed 47px at a 16px offset, so it clears at 63px on
+   every viewport while this padding used to shrink to 80px on a phone,
+   leaving 17px under the bar against 57px on desktop. The floor now clears
+   the bar by the same air the widest screen gets. */
+.page { padding: clamp(7rem, 12vw, 7.5rem) 0 var(--band); }
+.page > .wrap > h1:first-child, .page .lede {
+  font-size: var(--t-title); line-height: 1.1; letter-spacing: -0.022em;
+  margin: 0 0 clamp(0.9rem, 2.6vw, 1.35rem);
+}
+/* the subtitle belongs to the title, so it sits close under it, and the
+   page proper starts after a real gap. One rule for all four inner pages,
+   2026-09-10, replacing three near-identical copies in page <style> blocks. */
+.page .intro {
+  font-size: clamp(1.05rem, 3.4vw, 1.25rem); line-height: 1.55;
+  max-width: 34rem; margin: 0 0 clamp(3.4rem, 9vw, 5.5rem);
+  color: var(--ink-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shot > img, .shot > video { transition: none; }
+  .shot:hover > img, .shot:hover > video,
+  :hover > .shot > img, :hover > .shot > video { transform: none; }
+}
+
+/* ── the closing block: every page ends on a way to reply ──
+   The site had 23 links in its main content and all 23 left it; four of five
+   pages ended on a copyright line, and the only invitation sat at 86% depth of
+   a single page. Same block everywhere, so the distance from anywhere to an
+   address is a scroll to the end rather than a hunt. */
+.next {
+  /* no rule: the site already carries nine hairlines and this block is the last
+     thing before a dark footer, so space separates it. The creed does the same. */
+  margin: clamp(4rem, 11vw, 7rem) 0 clamp(3.5rem, 9vw, 5.5rem);
+}
+/* mono, never the display face: Oliveira's zero carries no slash, so the
+   address renders as rodrigo@Oxr.io and stops being an address. */
+.addr {
+  margin: 0; font-family: var(--mono);
+  font-size: clamp(1.15rem, 4vw, 1.7rem); letter-spacing: -0.01em;
+}
+/* The address is the only link in this block and it is the page's one call.
+   It sets at 21px of font box on a phone, so it needs 44. Vertical padding on
+   an inline element grows the hit box and moves no line box, which is why the
+   underline had to leave the border and become a decoration: a border-bottom
+   would have travelled down with the padding. skip-ink off keeps the rule
+   unbroken under the g, the way the border drew it. */
+.next a {
+  color: var(--ink); text-decoration: underline;
+  text-decoration-thickness: 2px; text-underline-offset: 0.26em;
+  text-decoration-skip-ink: none; text-decoration-color: var(--rule);
+  padding-block: 0.75rem;
+}
+.next a:hover, .next a:focus-visible { text-decoration-color: var(--ink); }
+.next .what { margin: 0.7rem 0 0; font-size: var(--t-small); color: var(--ink-soft); max-width: 30rem; }
+
+/* ── the film card: one announcement, bottom right, in the card language the
+   crew bubble already speaks. Not a modal: the page behind it stays live. ── */
+.film-card {
+  position: fixed; z-index: 60; right: var(--pad); bottom: var(--pad);
+  width: min(21rem, calc(100vw - 2 * var(--pad)));
+  background: var(--ink); color: var(--card-ink);
+  border-radius: 10px; padding: 0.5rem 0.5rem 1rem;
+  box-shadow: 0 18px 40px rgba(14, 13, 11, 0.22);
+  opacity: 0; transform: translateY(12px);
+  transition: opacity 0.28s ease, transform 0.28s cubic-bezier(.22,1.2,.4,1);
+}
+.film-card.on { opacity: 1; transform: none; }
+.film-go { display: block; text-decoration: none; color: inherit; }
+.film-shot {
+  display: block; aspect-ratio: 16 / 9; overflow: hidden;
+  border-radius: 6px; background: #000; margin-bottom: 0.9rem;
+}
+.film-shot img { width: 100%; height: 100%; object-fit: cover; display: block;
+                 transition: transform 0.4s ease; }
+.film-go:hover .film-shot img, .film-go:focus-visible .film-shot img { transform: scale(1.04); }
+.film-lab, .film-h, .film-t, .film-cta { display: block; padding-inline: 0.5rem; }
+.film-lab {
+  font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--card-tone); margin-bottom: 0.45rem;
+}
+.film-h {
+  font-family: var(--display); font-weight: normal; letter-spacing: 0.02em;
+  font-size: clamp(1.5rem, 5vw, 1.9rem); line-height: 1.05; margin-bottom: 0.5rem;
+}
+.film-t { font-size: var(--t-small); line-height: 1.5; color: var(--card-ink); opacity: 0.82; }
+.film-cta {
+  font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--card-tone); margin-top: 0.9rem;
+  transition: color 0.25s ease;
+}
+.film-go:hover .film-cta, .film-go:focus-visible .film-cta { color: var(--card-ink); }
+.film-x {
+  position: absolute; top: 0.85rem; right: 0.85rem; z-index: 2;
+  width: 1.7rem; height: 1.7rem; display: grid; place-items: center;
+  border: 0; border-radius: 50%; cursor: pointer; font-size: 1rem; line-height: 1;
+  background: rgba(14, 13, 11, 0.55); color: var(--card-ink);
+  backdrop-filter: blur(6px); transition: background 0.2s ease;
+}
+.film-x:hover, .film-x:focus-visible { background: rgba(14, 13, 11, 0.85); }
+/* on a phone it sits centred, with the same gutter left and right rather than
+   hugging one corner. left and right together do the centring, so the entry
+   transform stays a plain translateY and nothing has to compose. The safe area
+   keeps it clear of the home indicator. */
+@media (max-width: 560px) {
+  .film-card {
+    left: var(--pad); right: var(--pad); width: auto;
+    bottom: calc(var(--pad) + env(safe-area-inset-bottom, 0px));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .film-card { transition: none; transform: none; }
+  .film-shot img { transition: none; }
+  .film-go:hover .film-shot img { transform: none; }
+}

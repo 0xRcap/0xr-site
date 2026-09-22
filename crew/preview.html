@@ -1,0 +1,131 @@
+<!doctype html><meta charset="utf-8"><title>crew, alive, the proving ground</title>
+<style>
+  :root{--paper:#FAF8F4;--rule:#E9E7E2;--tone:#8A8781;--ink-soft:#3F3D38;--ink:#0E0D0B;
+        --mono:ui-monospace,Menlo,monospace}
+  body{background:var(--paper);color:var(--ink);font:13px/1.5 var(--mono);margin:0;padding:2rem}
+  h1{font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--tone);font-weight:normal;margin:0 0 1.2rem}
+  .cap{color:var(--tone);letter-spacing:.14em;text-transform:uppercase;margin:0 0 1rem}
+  .row{display:flex;gap:3rem;align-items:flex-end;flex-wrap:wrap;margin:2rem 0}
+  .mate{max-width:13rem}
+  .mate b{display:block;letter-spacing:.1em;margin:.5rem 0 .2rem}
+  .mate em{display:block;font-style:normal;color:var(--ink-soft)}
+  canvas{display:block;image-rendering:pixelated}
+  .ctl{margin:1.2rem 0 0;line-height:2.4}
+  .ctl span{color:var(--tone);letter-spacing:.14em;text-transform:uppercase;margin-right:.6rem}
+  button,select{font:inherit;background:none;border:1px solid var(--rule);color:var(--ink);
+         padding:.3rem .7rem;margin-right:.4rem;cursor:pointer}
+  #stat,#test{margin-top:1.4rem;padding:.7rem 1rem;border:1px solid var(--rule);white-space:pre-line}
+  .fail{background:var(--rule)}
+</style>
+<h1>crew3d / alive / six at 4px per voxel</h1>
+<p class="cap">move the pointer over a figure and it looks at you. a glance at a neighbour may be returned.</p>
+<div class="row" id="row"></div>
+<div class="ctl">
+  <span>who</span><select id="who"><option value="all">all six</option></select>
+  <span>act</span><span id="acts" style="all:unset"></span>
+  <button id="blink">blink</button>
+</div>
+<div class="ctl">
+  <span>turn</span>
+  <button data-a="-20">-20</button><button data-a="-10">-10</button><button data-a="0">0</button>
+  <button data-a="10">+10</button><button data-a="20">+20</button><button data-a="">release</button>
+  <span>rest</span><button id="rest">freeze at rest</button><button id="wake">back to life</button>
+  <span>pointer</span><button id="sweep">sweep left to right</button>
+  <button id="again">decode again</button>
+</div>
+<div id="stat">measuring…</div>
+<div id="test">running the 0 degree identity test on all six…</div>
+<script src="models.js"></script>
+<script src="../crew3d.js"></script>
+<script>
+(() => {
+  const NAMES = ["ye", "steve", "jean", "frank", "quent", "kim"];
+  const ROLE = { ye: "brand", steve: "product design", jean: "look", frank: "words", quent: "film", kim: "go-to-market" };
+  const row = document.getElementById("row"), who = document.getElementById("who");
+  const handles = {};
+  for (const n of NAMES) {
+    const d = document.createElement("div"); d.className = "mate"; d.dataset.crewHost = "";
+    const c = document.createElement("canvas"); c.setAttribute("aria-hidden", "true");
+    const b = document.createElement("b"); b.textContent = "{ " + n.toUpperCase() + " }";
+    const e = document.createElement("em"); e.textContent = ROLE[n];
+    d.append(c, b, e); row.append(d);
+    handles[n] = crew3d.register(c, window.crewModels[n], { scale: 4 });
+    const o = document.createElement("option"); o.value = n; o.textContent = n; who.append(o);
+  }
+  crew3d.neighbours(NAMES.map((n) => handles[n]));
+  const each = (fn) => { const w = who.value; (w === "all" ? NAMES : [w]).forEach((n) => fn(handles[n])); };
+
+  const acts = document.getElementById("acts");
+  for (const a of crew3d.ACTS) {
+    const b = document.createElement("button"); b.textContent = a.name;
+    b.onclick = () => each((h) => h.act(a.name)); acts.append(b);
+  }
+  document.getElementById("blink").onclick = () => each((h) => h.blink());
+  for (const b of document.querySelectorAll("[data-a]"))
+    b.onclick = () => each((h) => h.turn(b.dataset.a === "" ? null : +b.dataset.a));
+  document.getElementById("rest").onclick = () => each((h) => h.freeze(true));
+  document.getElementById("wake").onclick = () => each((h) => h.freeze(false));
+  document.getElementById("again").onclick = () => location.reload();
+
+  /* a scripted pointer, for judging attention without a hand on the mouse */
+  let sweep = 0;
+  document.getElementById("sweep").onclick = () => {
+    clearInterval(sweep);
+    const r = row.getBoundingClientRect(), x0 = r.left + scrollX - 80, x1 = r.right + scrollX + 80;
+    const y = r.top + scrollY + r.height * 0.2, t0 = performance.now();
+    sweep = setInterval(() => {
+      const u = (performance.now() - t0) / 6000;
+      if (u >= 1) { clearInterval(sweep); crew3d.attend(null); return; }
+      crew3d.attend(x0 + (x1 - x0) * u, y);
+    }, 33);
+  };
+
+  /* the cost, from crew3d.stats(): a rolling average and the worst frame */
+  const stat = document.getElementById("stat");
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  setInterval(() => {
+    const s = crew3d.stats();
+    stat.textContent = `frame: ${s.avg.toFixed(2)} ms average, ${s.max.toFixed(2)} ms worst, ${s.ms.toFixed(2)} ms last. `
+      + `${s.draws} canvas draw calls per frame for ${s.figures} figures, ${s.frames} frames so far. `
+      + (reduced ? "reduced motion: settled, blink only." : "full motion.");
+    window.CREW_STAT = { avg: +s.avg.toFixed(2), max: +s.max.toFixed(2), draws: s.draws, figures: s.figures, frames: s.frames };
+  }, 500);
+
+  /* the identity test: paint the solid figure at 0 degrees, one canvas pixel
+     per voxel, and compare every cell against gen/<name>.png. This is the rest
+     pose: no act, breath at its midpoint, eyes open. Needs an http origin. */
+  const out = document.getElementById("test");
+  const results = [];
+  let pending = NAMES.length, bad = 0;
+  for (const name of NAMES) {
+    const img = new Image(); img.src = "gen/" + name + ".png";
+    const test = () => {
+      const c = document.createElement("canvas"); c.width = 32; c.height = 56;
+      const cx = c.getContext("2d", { willReadFrequently: true });
+      cx.imageSmoothingEnabled = false;
+      cx.drawImage(img, 0, 0, 384, 672, 0, 0, 32, 56);
+      const a = cx.getImageData(0, 0, 32, 56).data;
+      const r = document.createElement("canvas");
+      const m = crew3d.paint(r, handles[name].model, { angle: 0, scale: 1, glyphs: false });
+      const rx = r.getContext("2d").getImageData(0, 0, m.LW, m.LH).data;
+      const off = (m.LW - m.W) / 2;
+      let diff = 0, first = "";
+      for (let y = 0; y < 56; y++) for (let x = 0; x < 32; x++) {
+        const p = (y * 32 + x) * 4, q = (y * m.LW + x + off) * 4;
+        const paper = a[p] === 0xFA && a[p + 1] === 0xF8 && a[p + 2] === 0xF4;
+        const same = a[p] === rx[q] && a[p + 1] === rx[q + 1] && a[p + 2] === rx[q + 2] && rx[q + 3] > 200;
+        if (paper ? rx[q + 3] > 8 : !same) { diff++; if (!first) first = " first at " + x + "," + y; }
+      }
+      bad += diff;
+      results.push(`${name} ${1792 - diff}/1792${first}`);
+      if (--pending === 0) {
+        out.textContent = "0° identity, rest pose: " + (bad ? "FAIL. " : "PASS. ") + results.join(" | ");
+        if (bad) out.className = "fail";
+        window.CREW_TEST = results.join(" | ");
+      }
+    };
+    if (img.complete) test(); else img.onload = test;
+    img.onerror = () => { out.textContent = "could not load gen/" + name + ".png (serve over http)"; };
+  }
+})();
+</script>

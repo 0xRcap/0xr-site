@@ -1,0 +1,72 @@
+<!doctype html><meta charset="utf-8"><title>crew, six figures, 3D contact sheet</title>
+<style>
+  :root{--paper:#FAF8F4;--rule:#E9E7E2;--tone:#8A8781;--ink-soft:#3F3D38;--ink:#0E0D0B}
+  body{background:#FAF8F4;color:#0E0D0B;margin:0;padding:20px;
+       font:12px/1.4 ui-monospace,Menlo,monospace;width:1960px}
+  h1{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#8A8781;font-weight:normal;margin:0 0 10px}
+  .row{display:flex;gap:14px;align-items:flex-start;margin:0 0 18px}
+  .p{display:flex;flex-direction:column;gap:5px}
+  .p i{font-style:normal;color:#8A8781;letter-spacing:.14em;text-transform:uppercase;font-size:10px}
+  canvas,img{display:block;image-rendering:pixelated}
+  .t{padding:5px 9px;border:1px solid #E9E7E2;margin:0 0 14px}
+  .fail{color:#0E0D0B;background:#E9E7E2}
+</style>
+<h1>crew3d / six figures / source, 0&deg;, -12&deg;, +12&deg; at 8px, decode, and the row at page size 4px</h1>
+<div id="out"></div>
+<script src="models.js"></script>
+<script src="../crew3d.js"></script>
+<script>
+(() => {
+  const NAMES = ["ye","steve","jean","frank","quent","kim"];
+  const out = document.getElementById("out");
+  const panel = (row, label, node) => {
+    const d = document.createElement("div"); d.className = "p";
+    const i = document.createElement("i"); i.textContent = label;
+    d.append(i, node); row.append(d);
+  };
+  const results = [];
+  let pending = NAMES.length;
+  NAMES.forEach((name) => {
+    const src = window.crewModels[name];
+    const m = crew3d.build(src);
+    const t = document.createElement("div"); t.className = "t"; t.textContent = name + ": testing…";
+    out.append(t);
+    const row = document.createElement("div"); row.className = "row"; out.append(row);
+    const img = new Image(); img.src = "gen/" + name + ".png";
+    img.width = 32*8; img.height = 56*8;
+    panel(row, "source " + name + ".png", img);
+    const shot = (label, opts) => { const c = document.createElement("canvas"); crew3d.paint(c, m, opts); panel(row, label, c); };
+    shot("0°", {angle:0, scale:8});
+    shot("-12°", {angle:-12, scale:8});
+    shot("+12°", {angle:12, scale:8});
+    shot("decode", {angle:-8, scale:8, resolved:6});
+    shot("4px 0°", {angle:0, scale:4});
+    shot("4px -12°", {angle:-12, scale:4});
+    shot("4px +12°", {angle:12, scale:4});
+    const test = () => {
+      const c = document.createElement("canvas"); c.width=32; c.height=56;
+      const cx = c.getContext("2d",{willReadFrequently:true});
+      cx.imageSmoothingEnabled = false;
+      cx.drawImage(img, 0,0,384,672, 0,0,32,56);
+      const a = cx.getImageData(0,0,32,56).data;
+      const r = document.createElement("canvas");
+      crew3d.paint(r, m, {angle:0, scale:1, glyphs:false});
+      const rx = r.getContext("2d").getImageData(0,0,m.LW,m.LH).data;
+      const off = (m.LW - m.W)/2;
+      let bad = 0, first = "";
+      for (let y=0;y<56;y++) for (let x=0;x<32;x++) {
+        const p=(y*32+x)*4, q=(y*m.LW+x+off)*4;
+        const paper = a[p]===0xFA&&a[p+1]===0xF8&&a[p+2]===0xF4;
+        const same = a[p]===rx[q]&&a[p+1]===rx[q+1]&&a[p+2]===rx[q+2]&&rx[q+3]>200;
+        if (paper ? rx[q+3]>8 : !same) { bad++; if(!first) first = " first at "+x+","+y; }
+      }
+      t.textContent = name + " 0° identity: " + (bad===0 ? "PASS, 1792 of 1792 cells match gen/"+name+".png"
+        : "FAIL, "+bad+" of 1792 cells differ."+first);
+      if (bad) t.className = "t fail";
+      results.push(name+" "+(1792-bad)+"/1792");
+      if (--pending === 0) { window.CREW_TEST = results.join(" | "); document.title = "READY " + results.join(" | "); }
+    };
+    if (img.complete) test(); else img.onload = test;
+  });
+})();
+</script>

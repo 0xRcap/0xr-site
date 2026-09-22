@@ -1,0 +1,73 @@
+<!doctype html><meta charset="utf-8"><title>YE 3D contact sheet</title>
+<style>
+  :root{--paper:#FAF8F4;--rule:#E9E7E2;--tone:#8A8781;--ink-soft:#3F3D38;--ink:#0E0D0B}
+  body{background:#FAF8F4;color:#0E0D0B;margin:0;padding:24px;
+       font:12px/1.4 ui-monospace,Menlo,monospace;width:1860px}
+  h1{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#8A8781;font-weight:normal;margin:0 0 14px}
+  .row{display:flex;gap:18px;align-items:flex-start;margin-bottom:22px}
+  .p{display:flex;flex-direction:column;gap:6px}
+  .p i{font-style:normal;color:#8A8781;letter-spacing:.14em;text-transform:uppercase}
+  canvas,img{display:block;image-rendering:pixelated}
+  #test{padding:8px 12px;border:1px solid #E9E7E2;display:inline-block}
+</style>
+<div id="test">…</div>
+<h1>YE / depth map v1 / 8px per voxel</h1>
+<div class="row" id="big"></div>
+<h1>at page size, 4px per voxel, glyphs off below 6px</h1>
+<div class="row" id="small"></div>
+<script src="ye.model.js"></script>
+<script src="../crew3d.js"></script>
+<script>
+(() => {
+  const src = window.crewModels.ye;
+  const m = crew3d.build(src);
+  const panel = (host, label, node) => {
+    const d = document.createElement("div"); d.className = "p";
+    const i = document.createElement("i"); i.textContent = label;
+    d.append(i, node); document.getElementById(host).append(d);
+  };
+  const img = new Image(); img.src = "gen/ye.png";
+  img.width = 32 * 8; img.height = 56 * 8;
+  panel("big", "source gen/ye.png", img);
+  const shot = (host, label, opts) => {
+    const c = document.createElement("canvas");
+    crew3d.paint(c, m, opts);
+    panel(host, label, c);
+  };
+  shot("big", "0° settled", { angle: 0, scale: 8 });
+  shot("big", "-20°", { angle: -20, scale: 8 });
+  shot("big", "+20°", { angle: 20, scale: 8 });
+  shot("big", "decode, early", { angle: -8, scale: 8, resolved: 12 });
+  shot("big", "decode, late", { angle: -8, scale: 8, resolved: 5 });
+  shot("small", "0°", { angle: 0, scale: 4 });
+  shot("small", "-20°", { angle: -20, scale: 4 });
+  shot("small", "+20°", { angle: 20, scale: 4 });
+  shot("small", "0°, glyphs forced on", { angle: 0, scale: 4, glyphs: true });
+  shot("small", "8px, glyphs on", { angle: -12, scale: 8, glyphs: true });
+  shot("small", "4px decode", { angle: -8, scale: 4, resolved: 8 });
+  shot("small", "6px, glyphs on", { angle: 0, scale: 6, glyphs: true });
+  shot("small", "6px decode", { angle: -8, scale: 6, resolved: 8 });
+
+  const test = () => {
+    const c = document.createElement("canvas"); c.width = 32; c.height = 56;
+    const cx = c.getContext("2d", { willReadFrequently: true });
+    cx.imageSmoothingEnabled = false;
+    cx.drawImage(img, 0, 0, 384, 672, 0, 0, 32, 56);
+    const a = cx.getImageData(0, 0, 32, 56).data;
+    const r = document.createElement("canvas");
+    crew3d.paint(r, m, { angle: 0, scale: 1, glyphs: false });
+    const rx = r.getContext("2d").getImageData(0, 0, m.LW, m.LH).data;
+    const off = (m.LW - m.W) / 2;
+    let bad = 0;
+    for (let y = 0; y < 56; y++) for (let x = 0; x < 32; x++) {
+      const p = (y * 32 + x) * 4, q = (y * m.LW + x + off) * 4;
+      const paper = a[p] === 0xFA && a[p+1] === 0xF8 && a[p+2] === 0xF4;
+      if (paper ? rx[q+3] > 8 : !(a[p]===rx[q] && a[p+1]===rx[q+1] && a[p+2]===rx[q+2] && rx[q+3] > 200)) bad++;
+    }
+    document.getElementById("test").textContent =
+      bad === 0 ? "0° identity: PASS, 1792 of 1792 cells match gen/ye.png"
+                : "0° identity: FAIL, " + bad + " of 1792 cells differ";
+  };
+  if (img.complete) test(); else img.onload = test;
+})();
+</script>

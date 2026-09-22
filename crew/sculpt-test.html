@@ -1,0 +1,76 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Sculpt test</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+  body { padding: 3rem 2rem; }
+  h1 { font-size: 1.4rem; margin: 0 0 .4rem; }
+  p.sub { max-width: 46rem; opacity: .7; margin: 0 0 2.5rem; font-size: .9rem; line-height: 1.55; }
+  .row { margin-bottom: 2rem; }
+  .row h2 { font-size: .72rem; letter-spacing: .12em; text-transform: uppercase;
+            opacity: .55; margin: 0 0 .6rem; font-weight: 500; }
+  .strip { display: flex; gap: .6rem; align-items: flex-end; flex-wrap: wrap; }
+  .cell { text-align: center; }
+  .cell span { display: block; font-size: .65rem; opacity: .45; margin-top: .3rem;
+               font-variant-numeric: tabular-nums; }
+  canvas { display: block; }
+  .diff canvas { outline: 1px solid color-mix(in srgb, currentColor 18%, transparent); }
+  #verdict { font-size: .85rem; margin-top: 2rem; padding: .8rem 1rem;
+             border-left: 2px solid currentColor; opacity: .8; max-width: 46rem; }
+</style>
+
+<h1>Sculpt test: rodrigo</h1>
+<p class="sub">
+  Top row reads <code>rodrigo.volume.txt</code>, one value per voxel. Bottom row is
+  the extrusion the site has always drawn, one value per depth column. The third row
+  marks every screen cell where the two disagree. While the volume is only a seed the
+  rows match exactly and the diff is empty; after a sculpt in MagicaVoxel the top row
+  is the new figure and the bottom is what it replaced.
+</p>
+
+<div class="row"><h2>Sculpted volume</h2><div class="strip" id="vol"></div></div>
+<div class="row"><h2>Extrusion, as shipped</h2><div class="strip" id="ext"></div></div>
+<div class="row diff"><h2>Where they differ</h2><div class="strip" id="dif"></div></div>
+<div id="verdict">measuring…</div>
+
+<script src="rodrigo.model.js"></script>
+<script src="../crew3d.js"></script>
+<script>
+const ANGLES = [-28, -20, -12, 0, 12, 20, 28];
+const PX = 6;
+const src = window.crewModels.rodrigo;
+const flat = Object.assign({}, src); delete flat.volume;   /* the same figure, extruded */
+
+const cell = (parent, angle) => {
+  const d = document.createElement("div"); d.className = "cell";
+  const c = document.createElement("canvas");
+  const s = document.createElement("span"); s.textContent = angle + "°";
+  d.append(c, s); parent.append(d); return c;
+};
+
+let changed = 0, total = 0;
+for (const a of ANGLES) {
+  const cv = cell(vol, a), ce = cell(ext, a), cd = cell(dif, a);
+  crew3d.paint(cv, src, { angle: a, scale: PX, instant: true });
+  crew3d.paint(ce, flat, { angle: a, scale: PX, instant: true });
+  /* the diff: same pixels, painted where the two canvases disagree */
+  cd.width = cv.width; cd.height = cv.height;
+  cd.style.width = cv.style.width; cd.style.height = cv.style.height;
+  const A = cv.getContext("2d").getImageData(0, 0, cv.width, cv.height);
+  const B = ce.getContext("2d").getImageData(0, 0, ce.width, ce.height);
+  const O = cd.getContext("2d").createImageData(cv.width, cv.height);
+  for (let p = 0; p < A.data.length; p += 4) {
+    const same = A.data[p] === B.data[p] && A.data[p + 1] === B.data[p + 1]
+              && A.data[p + 2] === B.data[p + 2] && A.data[p + 3] === B.data[p + 3];
+    total++;
+    if (!same) { changed++; O.data[p] = 220; O.data[p + 1] = 60; O.data[p + 2] = 40; O.data[p + 3] = 255; }
+  }
+  cd.getContext("2d").putImageData(O, 0, 0);
+}
+const pct = (changed / total * 100).toFixed(2);
+verdict.textContent = changed === 0
+  ? `Identical across all ${ANGLES.length} angles. The volume is still the seed, so the pipeline `
+    + `changes nothing: sculpt the .vox and this line will tell you how much moved.`
+  : `${changed.toLocaleString()} of ${total.toLocaleString()} pixels differ (${pct}%) across `
+    + `${ANGLES.length} angles.`;
+</script>

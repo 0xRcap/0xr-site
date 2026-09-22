@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>0xR / the thesis</title>
+<meta name="author" content="Rodrigo Rivas Yassin">
+<meta name="description" content="Everything you sell is becoming a commodity. The story is the only part you still own, and it travels on four surfaces: brand, film, words, product. One human directs, six agents produce.">
+<link rel="canonical" href="https://0xr.io/thesis.html">
+<link rel="icon" href="favicon.png" type="image/png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="0xR">
+<meta property="og:title" content="0xR / the thesis">
+<meta property="og:description" content="Everything you sell is becoming a commodity. The story is the only part you still own, and it travels on four surfaces: brand, film, words, product. One human directs, six agents produce.">
+<meta property="og:url" content="https://0xr.io/thesis.html">
+<meta property="og:image" content="https://0xr.io/media/card-thesis.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="0xR / the thesis">
+<meta name="twitter:description" content="Everything you sell is becoming a commodity. The story is the only part you still own, and it travels on four surfaces: brand, film, words, product. One human directs, six agents produce.">
+<meta name="twitter:image" content="https://0xr.io/media/card-thesis.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .sc { font-style: normal; opacity: 0.45; }
+  .page p:not(.creed):not(.intro) { max-width: 34rem; margin: 0 0 1.1rem; color: var(--ink-soft); }
+
+  .pre-reveal { opacity: 0; transform: translateY(14px); }
+  [data-reveal] {
+    transition: opacity 0.6s cubic-bezier(.22,.61,.36,1),
+                transform 0.6s cubic-bezier(.22,.61,.36,1);
+    transition-delay: calc(var(--i, 0) * 60ms);
+  }
+
+
+  /* ── the argument runs as three steps on a spine ── */
+  .steps { list-style: none; margin: 0; padding: 0; }
+  .step {
+    position: relative; display: grid;
+    grid-template-columns: clamp(3.2rem, 8vw, 5rem) 1fr;
+    gap: 0 clamp(1.1rem, 4vw, 2.4rem);
+    padding: clamp(2.2rem, 6vw, 3.6rem) 0;
+  }
+  .step-n {
+    margin: 0; align-self: start;
+    font-family: var(--display); font-size: clamp(1.9rem, 6vw, 3rem);
+    line-height: 1; color: var(--rule); transition: color 0.4s ease;
+  }
+  .step:hover .step-n { color: var(--ink); }
+  .step h2 {
+    font-size: clamp(1.25rem, 4.2vw, 1.7rem); line-height: 1.1;
+    letter-spacing: -0.015em; margin: 0 0 1.4rem; color: var(--ink-soft);
+  }
+  @media (max-width: 620px) {
+    .step { grid-template-columns: 1fr; gap: 0.5rem; }
+  }
+
+  /* the definition, the loudest thing on the page */
+  .lb { display: none; }
+  @media (min-width: 621px) { .lb { display: inline; } }
+  /* wide enough for the longest authored half; the <br> sets each line */
+  .page .creed { max-width: 40rem; }
+  .step h2.creed { margin: 0 0 1.4rem; color: var(--ink); }
+
+  /* the three eras, inside step 02 */
+  .era {
+    display: grid; grid-template-columns: 7.5rem 1fr; gap: 0.3rem 1.4rem;
+    padding: 1.1rem 0; border-top: 1px solid var(--rule); align-items: baseline;
+    position: relative; transition: background 0.3s ease;
+  }
+  .era:first-of-type { border-top: none; }
+  .era:hover { background: var(--tile-bg); }
+  .era .yr {
+    font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--tone); margin: 0; transition: color 0.3s ease;
+  }
+  .era:hover .yr { color: var(--ink); }
+  .era h3 {
+    font-family: var(--display); font-weight: normal;
+    font-size: clamp(1.2rem, 4.2vw, 1.6rem); line-height: 1.22;
+    letter-spacing: -0.01em; margin: 0 0 0.45rem;
+  }
+  .era p { margin: 0; font-size: var(--t-small); max-width: 32rem; }
+  @media (max-width: 620px) { .era { grid-template-columns: 1fr; gap: 0.4rem; } }
+
+  /* the three functions */
+  .fn + .fn { border-top: 1px solid var(--rule); }
+  .fn {
+    display: grid; grid-template-columns: 4.5rem 1fr; gap: 0.3rem 1.4rem;
+    min-width: 0;
+    padding: clamp(1.4rem,3.5vw,2rem) 0; align-items: start;
+    transition: background 0.3s ease;
+  }
+  .fn > div { min-width: 0; }   /* grid items default to min-width:auto; the crew grid inside would size off content and overflow a phone */
+  /* the slot the numbers vacated. Two numbered spines on one page read as
+     one broken list, so the functions say when instead of how many, in the
+     same mono the era years use. "next" keeps full contrast: a dead cell
+     beside two live ones reads as broken. */
+  .fn .when {
+    font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--tone); margin: 0.35rem 0 0;
+    transition: color 0.3s ease;
+  }
+  .fn:hover .when { color: var(--ink); }
+  .fn h2 { font-size: clamp(1.45rem, 5vw, 2.1rem); margin: 0 0 0.6rem; }
+  .fn em, .fn span { transition: color 0.28s ease; }
+  .fn em {
+    display: block; font-style: normal; font-size: var(--t-small);
+    line-height: 1.5; color: var(--ink-soft); margin: 0 0 0.7rem; max-width: 26rem;
+  }
+  .fn span {
+    display: block; font-family: var(--mono); font-size: var(--t-micro);
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--tone);
+    line-height: 1.75; max-width: 30rem;
+  }
+  @media (max-width: 620px) { .fn { grid-template-columns: 1fr; gap: 0.35rem; } }
+
+  .fn span a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+  .hand {
+    margin: 0.9rem 0 0; font-size: var(--t-small); color: var(--ink-soft);
+  }
+  .hand a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--rule); }
+  .hand a:hover, .hand a:focus-visible { border-bottom-color: var(--ink); }
+
+  .fns { margin-top: clamp(3rem, 9vw, 5rem); }
+  .fns-q {
+    font-size: clamp(1.45rem, 5vw, 2.1rem); line-height: 1.22;
+    letter-spacing: -0.018em; color: var(--ink); margin: 0 0 2rem;
+  }
+
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-reveal], .era, .fn, .fn .when, .step-n { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+
+
+    <div class="bar" id="bar">
+      <a class="name" href="index.html"><i>0</i>xR</a>
+      <nav>
+        <a href="studio.html">studio</a>
+        <a href="crew.html">crew</a>
+        <a href="thesis.html" aria-current="page">thesis</a>
+        <a href="more.html">more</a>
+      </nav>
+    </div>
+
+    <main class="page">
+      <div class="wrap">
+      <h1 data-scramble="mount" data-delay="60">What media is now.</h1>
+      <p class="intro" data-reveal>Medium is Latin for the middle: the thing
+      that carries a message from whoever made it to whoever receives it.
+      Media is the plural.</p>
+
+      <ol class="steps">
+
+        <li class="step" data-reveal>
+          <p class="step-n">01</p>
+          <div>
+            <h2 class="creed" data-scramble>Media is everything<br class="lb">
+            that carries your story to a person.</h2>
+            <p>Your brand, your films, your words and the product itself.
+            All four carry it, so all four are media.</p>
+          </div>
+        </li>
+
+        <li class="step" data-reveal>
+          <p class="step-n">02</p>
+          <div>
+            <h2 data-scramble>Where the idea came from</h2>
+
+            <div class="era" data-scramble-host>
+              <p class="yr">until 2005</p>
+              <div>
+                <h3 data-scramble="hover" data-delay="0">Old media</h3>
+                <p>Your story travelled on channels somebody else owned. You
+                pitched a journalist and waited.</p>
+              </div>
+            </div>
+
+            <div class="era" data-scramble-host>
+              <p class="yr">2005</p>
+              <div>
+                <h3 data-scramble="hover" data-delay="0">Every company a media company</h3>
+                <p>Tom Foremski named it in 2005. Companies stopped pitching
+                and started publishing on channels they owned.</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="step" data-reveal>
+          <p class="step-n">03</p>
+          <div>
+            <h2 data-scramble>Why every company, and why now</h2>
+            <p>Whatever you make, somebody else can make it too. The tools are
+            rented by the month, the factory takes anyone&rsquo;s order, and your
+            competitor is calling the same model you are.</p>
+            <p>When was the last time you tried something completely different
+            from the rest? You can probably name one. And soon enough somebody
+            copies it, then somebody copies the copy, and the thing that felt
+            different is on every menu.</p>
+            <p class="creed" data-scramble>Everything you sell is becoming a commodity.<br class="lb">
+            The story is the only part you still own.</p>
+            <p>And a story does not live on one page of a website. It arrives
+            through the brand, the films, the words and the product in
+            someone&rsquo;s hands. That is the new part: all four surfaces, run as
+            one operation. Feeding them used to take a room full of people,
+            which is why only the funded few ever did it.</p>
+          </div>
+        </li>
+
+      </ol>
+
+      <div class="fns">
+        <h2 class="fns-q" data-scramble>If you want to work on that story,<br class="lb">
+        here is what my agents and I do.</h2>
+
+        <div class="fn" data-scramble-host data-reveal>
+          <p class="when">now</p>
+          <div>
+            <h2 data-scramble="hover" data-delay="0">Direction</h2>
+            <em>What the story is, and what is worth making.</em>
+            <span>what the company is / who it is for / what it is up against / what gets made this month / what gets killed</span>
+            <p class="hand">This part is me.</p>
+          </div>
+        </div>
+
+        <div class="fn" data-scramble-host data-reveal>
+          <p class="when">now</p>
+          <div>
+            <h2 data-scramble="hover" data-delay="0">Production</h2>
+            <em>The story, made every week.</em>
+            <span>brand identity / film / art direction / copy and content / product design / the go-to-market plan</span>
+            <p class="hand">Six agents produce it, one per craft. <a href="crew.html">Meet the crew</a></p>
+          </div>
+        </div>
+
+        <div class="fn" data-scramble-host data-reveal>
+          <p class="when">next</p>
+          <div>
+            <h2 data-scramble="hover" data-delay="0">Distribution</h2>
+            <em>The story, sent out every day.</em>
+            <p class="hand">The plan for it is made today, under production.
+            Putting it out is still me, by hand. The agents that would do that
+            do not exist yet, and when they do, the studio that makes the story
+            also moves&nbsp;it.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="next" data-reveal>
+        <p class="label" data-scramble>Start here</p>
+        <p class="addr"><a href="mailto:rodrigo@0xr.io?subject=A%20project">rodrigo@0xr.io</a></p>
+        <p class="what">Tell me what you are making and I&rsquo;ll get my crew on&nbsp;it.</p>
+      </div>
+
+      </div>
+    </main>
+
+    <footer class="foot">
+      <canvas id="ascii" aria-hidden="true"></canvas>
+      <div class="foot-row"><span>&copy; 2026 0xR</span><nav>
+      <a href="mailto:rodrigo@0xr.io">rodrigo@0xr.io</a>
+      <a href="https://x.com/0xRcap" target="_blank" rel="noopener">x</a>
+      <a href="https://www.youtube.com/@0xrcap" target="_blank" rel="noopener">youtube</a>
+    </nav></div></footer>
+<script src="scramble.js"></script>
+
+<script src="nav.js" defer></script>
+<script src="ascii.js" defer></script>
+</body>
+</html>

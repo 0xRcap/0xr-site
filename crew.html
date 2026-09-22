@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>0xR / the crew</title>
+<meta name="author" content="Rodrigo Rivas Yassin">
+<meta name="description" content="They produce. I direct. Six agents, one job each: YE brand, QUENT film, JEAN look, FRANK words, STEVE product design, and KIM go-to-market. Each one says what it does on your project.">
+<link rel="canonical" href="https://0xr.io/crew.html">
+<link rel="icon" href="favicon.png" type="image/png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="0xR">
+<meta property="og:title" content="0xR / the crew">
+<meta property="og:description" content="They produce. I direct. Six agents, one job each: YE brand, QUENT film, JEAN look, FRANK words, STEVE product design, and KIM go-to-market. Each one says what it does on your project.">
+<meta property="og:url" content="https://0xr.io/crew.html">
+<meta property="og:image" content="https://0xr.io/media/card-crew.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="0xR / the crew">
+<meta name="twitter:description" content="They produce. I direct. Six agents, one job each: YE brand, QUENT film, JEAN look, FRANK words, STEVE product design, and KIM go-to-market. Each one says what it does on your project.">
+<meta name="twitter:image" content="https://0xr.io/media/card-crew.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .sc { font-style: normal; opacity: 0.45; }
+  .page p:not(.creed):not(.intro) { max-width: 34rem; margin: 0 0 1.1rem; color: var(--ink-soft); }
+
+  /* ── one human, then the crew ──
+     He is bracketed ( ) and they are bracketed { }, which is the whole
+     argument set in type: the rule between them is the sentence's full stop. */
+  /* his figure and his record are one thing: his story holds the same left
+     rail as every other line on the page, and he stands at the right rail
+     beside it. Both edges of the page are used, so nothing reads cut off. */
+  .him {
+    display: grid; grid-template-columns: minmax(0, 34rem) auto;
+    justify-content: start; gap: 0 clamp(3rem, 9vw, 8rem); align-items: start;
+  }
+  .him > .lab { grid-column: 1 / -1; }
+  /* his paper is trimmed on both sides so the ink, not the canvas, meets the
+     rail; the shared img/video/canvas cap would squeeze the bitmap instead. */
+  .director { justify-self: start; }
+  .director .mate { cursor: default; }   /* he does not speak; the six do */
+  /* load-bearing: his canvas is 252px inside a button as narrow as 133px, and
+     the shared img/video/canvas cap would scale the bitmap to a fractional
+     ratio, which is what makes a pixelated figure go ragged. Do not tidy. */
+  .director .fig { max-width: none; }
+  /* 680, not 820: 34rem of text plus the gap plus his ink is 733px, which
+     still fits an 820 viewport. Below the breakpoint he follows his story
+     rather than standing in front of it. */
+  @media (max-width: 680px) {
+    .him { grid-template-columns: 1fr; gap: clamp(1.4rem, 5vw, 2rem); }
+    .him > .lab { order: 1; margin-bottom: 0; }
+    .director { order: 2; }
+    .story { order: 3; }
+  }
+  /* ── the six open under their own rule, with the line that introduces
+     them sitting on it rather than at the top of the page. The gaps are the
+     shared band, not a formula of this page's own. ── */
+  .six {
+    margin-top: var(--band); padding-top: var(--band);
+    border-top: 1px solid var(--rule); margin-bottom: calc(var(--band) / 2);
+  }
+  .six .lab { font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.18em;
+              text-transform: uppercase; color: var(--tone); margin: 0 0 1.2rem; }
+  .six .lead { max-width: 34rem; margin: 0; color: var(--ink-soft); }
+
+  /* ── the six, as a grid of doors ── */
+  .roster {
+    display: grid; gap: clamp(1.6rem, 5vw, 2.8rem) clamp(1.4rem, 4vw, 2.4rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
+  }
+  .mate {
+    display: block; text-align: left; min-width: 0; cursor: pointer;
+    background: none; border: 0; padding: 0; font: inherit; color: inherit;
+  }
+  .mate .fig { display: block; margin: 0 0 0.6rem; image-rendering: pixelated; }
+  @media (hover: none) { .mate span { color: var(--ink); text-decoration: underline;
+                                      text-decoration-color: var(--rule); } }
+  .mate b {
+    display: block; font-family: var(--mono); font-weight: normal;
+    font-size: var(--t-mono); letter-spacing: 0.1em; color: var(--ink); margin-bottom: 0.3rem;
+  }
+  .mate em {
+    display: block; font-style: normal; font-family: var(--display);
+    font-size: clamp(1.05rem, 3.2vw, 1.3rem); line-height: 1.2; color: var(--ink);
+  }
+  .mate span {
+    display: block; font-family: var(--mono); font-size: var(--t-micro);
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--tone); margin-top: 0.3rem;
+  }
+  .mate:hover span, .mate:focus-visible span { color: var(--ink); }
+  /* clicking one should not draw a box around it; a keyboard still gets a ring */
+  .mate:focus { outline: none; }
+  .mate:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 2px; }
+
+  /* ── his record: the story beside the figure, the receipts beneath ── */
+  .story p { max-width: 34rem; margin: 0 0 1.1rem; color: var(--ink-soft); }
+  .story p:last-child { margin-bottom: 0; }
+  .him .lab { font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.18em;
+             text-transform: uppercase; color: var(--tone); margin: 0 0 1.2rem; }
+  .story p a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px;
+               text-underline-offset: 2px; text-decoration-color: var(--tone); }
+  .story p a:hover { text-decoration-color: var(--ink); }
+  .story p b { font-weight: 600; color: var(--ink); }
+
+  /* ── the dialogue bubble: the figure speaks, the page does not go dark ──
+     Anchored above whoever was clicked, with a tail pointing back down at
+     them, and the line typed out rather than pasted in. */
+  .cast { position: relative; }
+  .bubble {
+    position: absolute; z-index: 30; width: min(23rem, calc(100vw - 2 * var(--pad)));
+    background: var(--ink); color: var(--card-ink);
+    border-radius: 10px; padding: 0.85rem 1rem 0.95rem;
+    transform-origin: 50% 100%; transform: translate(-50%, 0) scale(0.94);
+    opacity: 0; transition: opacity 0.16s ease, transform 0.16s cubic-bezier(.22,1.2,.4,1);
+    pointer-events: none;
+  }
+  .bubble.on { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  .bubble.below { transform-origin: 50% 0; }
+  .bubble.below::after { bottom: auto; top: -5px; }
+  /* the tail, drawn as a square rotated into a diamond so its two lower
+     edges read as a point aimed at the figure */
+  .bubble::after {
+    content: ""; position: absolute; bottom: -5px; left: var(--tail, 50%);
+    width: 12px; height: 12px; margin-left: -6px;
+    background: var(--ink); transform: rotate(45deg); border-radius: 2px;
+  }
+  /* the id, deliberately. This is the sixth time a page-level catch-all has
+     outranked a bubble rule, and the last one was self-inflicted: adding
+     :not(.intro) to .page p took it to (0,3,1) and beat (0,3,0) here, so the
+     speech went body-copy grey. An id ends the arms race for one unique
+     element instead of escalating the class chain again. */
+  #bubble .who {
+    margin: 0 0 0.3rem; font-family: var(--mono); font-size: var(--t-micro);
+    letter-spacing: 0.14em; color: var(--card-tone); max-width: none;
+  }
+  #bubble .say {
+    margin: 0; font-size: var(--t-small); line-height: 1.5;
+    color: var(--card-ink); max-width: none; min-height: 1.5em;
+  }
+  .bubble .say::after {
+    content: "\25AE"; margin-left: 0.15em; opacity: 0.65;
+    animation: blink 1s steps(1) infinite;
+  }
+  .bubble.done .say::after { content: none; }
+  /* the typed node mutates once per character. A screen reader reads the
+     finished sentence from here instead, once. */
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden;
+        clip-path: inset(50%); white-space: nowrap; }
+  @keyframes blink { 50% { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) {
+    .bubble { transition: none; }
+    .bubble .say::after { animation: none; }
+  }
+
+</style>
+</head>
+<body>
+
+    <div class="bar" id="bar">
+      <a class="name" href="index.html"><i>0</i>xR</a>
+      <nav>
+        <a href="studio.html">studio</a>
+        <a href="crew.html" aria-current="page">crew</a>
+        <a href="thesis.html">thesis</a>
+        <a href="more.html">more</a>
+      </nav>
+    </div>
+
+    <main class="page">
+      <div class="wrap">
+      <h1 data-scramble="mount" data-delay="60">The crew.</h1>
+      <p class="intro" data-reveal>One human and six agents. They produce. I&nbsp;direct.</p>
+
+      <div class="cast">
+      <div class="him" data-reveal>
+        <p class="lab" data-scramble>The human</p>
+      <div class="story">
+        <p>I cofounded Boveda in 2022. We sold decentralized storage on the
+        Filecoin network and stored 1.4 petabytes of client data, which had to
+        physically live somewhere. It lived in data centers in Madrid, Spain
+        and San Diego, California.</p>
+        <p>We exited the business and built Fungi, a ChatGPT for crypto that
+        executed onchain actions in plain English. The go-to-market was a
+        token, and it reached <a
+        href="https://dexscreener.com/solana/bkrvgxjsghfjw8vakhgbijpdxtr11etbo2gn7j26acbn"
+        target="_blank" rel="noopener">$9M market cap on Solana</a> with 1,000+
+        people in our community channels. When we pivoted to a yield agent I
+        launched it on <a
+        href="https://x.com/i/broadcasts/1LyxBWYlPMYKN"
+        target="_blank" rel="noopener">a 24 hour livestream</a> instead of an
+        announcement, building it while people watched. It had $50k in assets
+        under management in the first week.</p>
+        <p>We started managing more capital under our agents, so we rebranded
+        with a more serious look. Fungi became Sail. I ran product design at
+        both, and our UI and UX got copied across the category. My work then
+        expanded to ecosystem-led growth: the agent plugged into 56 yield
+        sources, and each one meant a team to launch with, co-marketing that
+        ran on both accounts.</p>
+        <p>It moved $700M autonomously and <a
+        href="https://x.com/SaildotMoney/status/2042315862229577747"
+        target="_blank" rel="noopener">beat the stablecoin yield market</a>,
+        and the products I cofounded passed $1.1M in assets under management.
+        Two world firsts: <b>the first agent to run swaps and bridges
+        autonomously and without custody, and the first open source permission
+        layer protocol for agents in DeFi</b>, with its harness Sailor on top.
+        Sail is <a href="https://github.com/sail-money" target="_blank"
+        rel="noopener">open source now</a>, so other agents can transact under it.</p>
+        <p>We never paid a PR agency, a design studio or an influencer. I
+        raised more than $1M as a cofounder and ran every surface the story
+        travelled on, brand, product design, film and comms, alone at first and
+        then with six agents whose work I edit all day. Not many people have run
+        all four for their own company. I did, and I can run them
+        for&nbsp;yours.</p>
+      </div>
+      <div class="director">
+        <div class="mate" data-crew="rodrigo">
+          <canvas class="fig" aria-hidden="true"></canvas>
+          <b>(&nbsp;RODRIGO&nbsp;)</b>
+          <em>direction</em>
+        </div>
+      </div>
+      </div>
+
+
+      <div class="six" data-reveal>
+        <p class="lab" data-scramble>The agents</p>
+        <p class="lead">If we work together, these go to work on your project.
+        Each one is a specialist in their own job, and they work with each
+        other every&nbsp;day.</p>
+      </div>
+
+      <div class="roster">
+      <button class="mate" data-crew="ye" aria-expanded="false">
+        <canvas class="fig" aria-hidden="true"></canvas>
+        <b>{&nbsp;YE&nbsp;}</b>
+        <em>brand</em>
+        <span>what I do</span>
+      </button>
+      <button class="mate" data-crew="quent" aria-expanded="false">
+        <canvas class="fig" aria-hidden="true"></canvas>
+        <b>{&nbsp;QUENT&nbsp;}</b>
+        <em>film</em>
+        <span>what I do</span>
+      </button>
+      <button class="mate" data-crew="jean" aria-expanded="false">
+        <canvas class="fig" aria-hidden="true"></canvas>
+        <b>{&nbsp;JEAN&nbsp;}</b>
+        <em>look</em>
+        <span>what I do</span>
+      </button>
+      <button class="mate" data-crew="frank" aria-expanded="false">
+        <canvas class="fig" aria-hidden="true"></canvas>
+        <b>{&nbsp;FRANK&nbsp;}</b>
+        <em>words</em>
+        <span>what I do</span>
+      </button>
+      <button class="mate" data-crew="steve" aria-expanded="false">
+        <canvas class="fig" aria-hidden="true"></canvas>
+        <b>{&nbsp;STEVE&nbsp;}</b>
+        <em>design</em>
+        <span>what I do</span>
+      </button>
+      <button class="mate" data-crew="kim" aria-expanded="false">
+        <canvas class="fig" aria-hidden="true"></canvas>
+        <b>{&nbsp;KIM&nbsp;}</b>
+        <em>gtm</em>
+        <span>what I do</span>
+      </button>
+      </div>
+
+      <div class="bubble" id="bubble" role="status" aria-live="polite" hidden>
+        <p class="who"></p>
+        <p class="say" aria-hidden="true"></p>
+        <p class="sr"></p>
+      </div>
+      </div>
+
+      <div class="next" data-reveal>
+        <p class="label" data-scramble>Start here</p>
+        <p class="addr"><a href="mailto:rodrigo@0xr.io?subject=A%20project">rodrigo@0xr.io</a></p>
+        <p class="what">Tell me what you are making and I&rsquo;ll get my crew on&nbsp;it.</p>
+      </div>
+
+      </div>
+    </main>
+
+
+    <footer class="foot">
+      <canvas id="ascii" aria-hidden="true"></canvas>
+      <div class="foot-row"><span>&copy; 2026 0xR</span><nav>
+      <a href="mailto:rodrigo@0xr.io">rodrigo@0xr.io</a>
+      <a href="https://x.com/0xRcap" target="_blank" rel="noopener">x</a>
+      <a href="https://www.youtube.com/@0xrcap" target="_blank" rel="noopener">youtube</a>
+    </nav></div></footer>
+
+  <script src="crew/rodrigo.model.js" defer></script>
+  <script src="crew/ye.model.js" defer></script>
+  <script src="crew/quent.model.js" defer></script>
+  <script src="crew/jean.model.js" defer></script>
+  <script src="crew/frank.model.js" defer></script>
+  <script src="crew/steve.model.js" defer></script>
+  <script src="crew/kim.model.js" defer></script>
+  <script src="crew3d.js" defer></script>
+  <script src="nav.js" defer></script>
+<script src="ascii.js" defer></script>
+  <script src="scramble.js" defer></script>
+  <script defer>
+  /* ── the roster, and the bubble each figure speaks from ──
+     No modal and no scrim: a game puts the words next to whoever said them.
+     The bubble is one element, moved and refilled, so only one can be open. */
+  addEventListener("DOMContentLoaded", () => {
+    if (!window.crew3d || !window.crewModels) return;
+    const SAY = {
+        "ye": "I do brand identity. I find the name, draw the mark, set the type and the colour, and write the guidelines other people build inside. I own what is allowed to change and what never does.",
+        "quent": "I do film. I write the script, build the shot list, shoot it and cut it, whether the piece is a launch film, an ad or a month of vertical cuts. I decide what the camera is on, how long you sit in a shot, and what never makes it in.",
+        "jean": "I do art direction. I write the look down before anything is made, in hex values, lens millimetres and a named film stock, and the same document governs the film, the photographs, the site and the clothes. Then I judge what comes back and throw out what drifted.",
+        "frank": "I do copywriting. I write the names and the taglines, the film scripts, the posts, the site pages, and the proposal with the price at the bottom. I choose what it says first, what it never says, and how long it is allowed to run.",
+        "steve": "I do product design. I lay out what the product does and in what order: the flows, the screens, the checkout, and the first run before anybody has any data. I decide what goes on the first screen and what waits.",
+        "kim": "I do go-to-market. I build the calendar, choose the channels, shape the launch as an event, and put the partners and the paid behind it. I set what goes out on which day, what gets held back, and what the numbers change next week."
+    };
+    const cast   = document.querySelector(".cast");
+    const mates  = [...document.querySelectorAll(".roster [data-crew]")];
+    const bubble = document.getElementById("bubble");
+    const who    = bubble.querySelector(".who");
+    const say    = bubble.querySelector(".say");
+    const sr     = bubble.querySelector(".sr");
+    const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let speaking = null, timer = 0, current = null;
+
+    /* each figure is centred in a 32 cell canvas but is only 13 to 21 cells
+       wide, so the canvas carries up to nine cells of paper on its left and
+       the ink starts well to the right of the label beneath it. Pull the
+       canvas left by that margin, read off the model, so the ink edge sits on
+       the label's edge like everything else on the site. */
+    const inkLeft = (m) => Math.min(...m.value.split("\n")
+      .map((r) => r.search(/[-+#]/)).filter((i) => i >= 0));
+    const inkRight = (m) => Math.max(...m.value.split("\n")
+      .map((r) => r.replace(/[^-+#]+$/, "").length));
+    const cols = (m) => Math.max(...m.value.split("\n").map((r) => r.length));
+    /* he is the one human on the page and stands half again as tall as the
+       six. He also sits on the right rail, so his paper is trimmed on both
+       sides and the ink, not the canvas, is what the page aligns to. */
+    const SCALE = 4;
+    const HIS = matchMedia("(max-width: 680px)").matches ? 5 : 7;
+    const handles = [...document.querySelectorAll("[data-crew]")].map((btn) => {
+      const m = window.crewModels[btn.dataset.crew];
+      if (!m) return null;
+      const mine = btn.dataset.crew === "rodrigo";
+      const px = mine ? HIS : SCALE;
+      const c = btn.querySelector("canvas");
+      c.style.marginLeft = -(inkLeft(m) * px) + "px";
+      if (mine) c.style.marginRight = -((cols(m) - inkRight(m)) * px) + "px";
+      return crew3d.register(c, m, { scale: px });
+    }).filter(Boolean);
+    crew3d.neighbours(handles);
+
+    const hush = () => {
+      clearTimeout(timer);
+      bubble.classList.remove("on", "done", "below");
+      for (const b of mates) b.setAttribute("aria-expanded", "false");
+      current = null;
+      setTimeout(() => { if (!current) bubble.hidden = true; }, 180);
+    };
+
+    /* typed, not pasted: the line arrives at reading speed, and a second
+       click on the same figure finishes it rather than restarting */
+    const type = (text) => {
+      if (REDUCED) { say.textContent = sr.textContent = text; bubble.classList.add("done"); return; }
+      let i = 0;
+      say.textContent = "";
+      const step = () => {
+        say.textContent = text.slice(0, ++i);
+        if (i < text.length) timer = setTimeout(step, text[i - 1] === "." ? 50 : 8);
+        else { bubble.classList.add("done"); sr.textContent = text; }
+      };
+      step();
+    };
+
+    const speak = (btn) => {
+      const k = btn.dataset.crew;
+      if (current === k) {                      /* second click: finish or close */
+        if (!bubble.classList.contains("done")) {
+          clearTimeout(timer); say.textContent = sr.textContent = SAY[k];
+          bubble.classList.add("done");
+        } else hush();
+        return;
+      }
+      current = k;
+      for (const b of mates) b.setAttribute("aria-expanded", String(b === btn));
+      who.innerHTML = "{&nbsp;" + k.toUpperCase() + "&nbsp;}";
+      bubble.hidden = false;
+      bubble.classList.remove("done");
+
+      /* place it above the figure, tail on the figure's centre, and keep the
+         box inside the cast even when the speaker is at either edge.
+         Measured off rects, not offsetLeft: the canvas is positioned against
+         the cast, not against its button, so the two would double count. */
+      const cr  = cast.getBoundingClientRect();
+      const fr  = btn.querySelector("canvas").getBoundingClientRect();
+      const cx  = fr.left - cr.left + fr.width / 2;
+      bubble.style.left = "0px";
+      bubble.style.bottom = (cr.bottom - fr.top + 14) + "px";
+      const half = bubble.offsetWidth / 2;
+      const x = Math.max(half, Math.min(cx, cr.width - half));
+      bubble.style.left = x + "px";
+      bubble.style.setProperty("--tail", (cx - x + half) + "px");
+
+      /* the box grows upward as it types, so its height has to be known
+         before a character exists. Render the finished line, measure, clear.
+         A figure standing at the top of the cast cannot fit a bubble above
+         it, so that one hangs under its feet instead. */
+      say.textContent = SAY[k];
+      const h = bubble.offsetHeight;
+      say.textContent = "";
+      bubble.classList.toggle("below", fr.top - 14 - h < 72);
+      if (bubble.classList.contains("below")) {
+        bubble.style.bottom = (cr.bottom - fr.bottom - 14 - h) + "px";
+      }
+
+      void bubble.offsetHeight;
+      bubble.classList.add("on");
+      type(SAY[k]);
+    };
+
+    /* the six speak. He does not: his record is the page. */
+    for (const btn of document.querySelectorAll(".roster [data-crew]")) {
+      btn.addEventListener("click", (e) => { e.stopPropagation(); speak(btn); });
+    }
+    document.addEventListener("click", hush);
+    addEventListener("keydown", (e) => { if (e.key === "Escape") hush(); });
+    let vw = innerWidth;   /* iOS fires resize on scroll, when its URL bar
+                              collapses. Only a real width change closes it. */
+    addEventListener("resize", () => { if (innerWidth !== vw) { vw = innerWidth; hush(); } });
+  });
+  </script>
+
+
+</body>
+</html>

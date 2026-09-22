@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>0xR / studio</title>
+<meta name="author" content="Rodrigo Rivas Yassin">
+<meta name="description" content="Brand, film, product and go-to-market, with the receipts: 19 AI films and 273,757 impressions with a per-post trail, two products shipped, a token launch, and the ecosystem that carried them.">
+<link rel="canonical" href="https://0xr.io/studio.html">
+<link rel="icon" href="favicon.png" type="image/png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="0xR">
+<meta property="og:title" content="0xR / studio">
+<meta property="og:description" content="Brand, film, product and go-to-market, with the receipts: 19 AI films and 273,757 impressions with a per-post trail, two products shipped, a token launch, and the ecosystem that carried them.">
+<meta property="og:url" content="https://0xr.io/studio.html">
+<meta property="og:image" content="https://0xr.io/media/card-studio.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="0xR / studio">
+<meta name="twitter:description" content="Brand, film, product and go-to-market, with the receipts: 19 AI films and 273,757 impressions with a per-post trail, two products shipped, a token launch, and the ecosystem that carried them.">
+<meta name="twitter:image" content="https://0xr.io/media/card-studio.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .sc { font-style: normal; opacity: 0.45; }
+
+  /* ── a position is a disclosure: the name is the handle, the record
+        lives inside it. Native <details> so it works without script and
+        keyboard users get it for free. ── */
+  .entry { border-top: 1px solid var(--rule); }
+  .role-line { font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.14em;
+               text-transform: uppercase; color: var(--tone); margin: 0 0 1rem; }
+  .entry:last-of-type { border-bottom: 1px solid var(--rule); }
+  .entry > summary {
+    display: grid; grid-template-columns: 2.5rem 1fr auto; gap: 0 1.2rem;
+    align-items: baseline; padding: clamp(1.4rem, 4vw, 2.1rem) 0;
+    cursor: pointer; list-style: none; min-height: var(--tap);
+  }
+  .entry > summary::-webkit-details-marker { display: none; }
+  .entry .idx { font-family: var(--mono); font-size: var(--t-mono); color: var(--tone); }
+  .entry h2 {
+    font-size: clamp(2.1rem, 9vw, 4.2rem); line-height: 1.1;
+    letter-spacing: -0.018em; margin: 0;
+  }
+  .entry .role {
+    display: block; font-family: var(--mono); font-size: var(--t-micro);
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--tone);
+    margin-top: 0.5rem;
+  }
+  .entry .when {
+    font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--tone); white-space: nowrap;
+  }
+  /* the chevron is the only thing that moves, so the state is never in doubt */
+  .entry .when::after {
+    content: ""; display: inline-block; width: 0.5rem; height: 0.5rem;
+    margin-left: 0.7rem; vertical-align: 0.1em;
+    border-right: 1.5px solid var(--tone); border-bottom: 1.5px solid var(--tone);
+    transform: rotate(45deg); transition: transform 0.25s ease;
+  }
+  .entry[open] .when::after { transform: rotate(-135deg); }
+  .entry > summary:hover h2 { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+  @media (max-width: 620px) {
+    .entry > summary { grid-template-columns: 1fr auto; }
+    .entry .idx { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { .entry .when::after { transition: none; } }
+
+  .entry .body { padding: 0 0 2.4rem; max-width: 40rem; }
+  @media (min-width: 621px) { .entry .body { margin-left: 3.7rem; } }
+  .entry .body p { margin: 0 0 0.9rem; font-size: var(--t-small); color: var(--ink-soft); }
+  .entry .body p a {
+    color: inherit; text-decoration: underline; text-decoration-thickness: 1px;
+    text-underline-offset: 2px; text-decoration-color: var(--tone);
+  }
+  .entry .body p a:hover { text-decoration-color: var(--ink); }
+  .impact {
+    font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--ink) !important;
+    border-left: 2px solid var(--ink); padding-left: 0.8rem; line-height: 1.7;
+  }
+
+  /* ── the ecosystem the launches were run with, inside the case study the
+     work belongs to. No border of its own: one line per boundary. ── */
+  .brands { margin: 1.8rem 0 0; }
+  .brands .grp + .grp { margin-top: 1.8rem; }
+  .brands .lab { display: block; font-family: var(--mono); font-size: var(--t-micro);
+                 letter-spacing: 0.08em; color: var(--tone); margin: 0 0 0.6rem; }
+  /* row gap to zero because the links now carry 0.7rem of their own above
+     and below, which is the 44px floor and more air than the old 0.3rem gave. */
+  .brands .row { display: flex; flex-wrap: wrap; gap: 0 1.8rem; align-items: baseline; }
+  /* 0.7rem, not 0.35: the name sets at 22px of line box on a phone and the
+     floor is 44 on both axes. min-width covers a short one (BNB, Base). */
+  .brands a { display: inline-block; padding: 0.7rem 0; min-width: var(--tap);
+              font-family: var(--display); font-weight: normal;
+              line-height: 1.26; font-size: clamp(1.1rem, 3vw, 1.5rem); color: var(--ink); text-decoration: none; }
+  .brands a:hover { text-decoration: underline; }
+
+  /* ── what gets made: the four surfaces, moved here from the thesis page
+     2026-09-10. They are what Production makes, so they belong above the
+     case studies that are made of them, not inside an argument. ── */
+  .make { margin: 0 0 clamp(3rem, 8vw, 4.5rem); }
+  .make .label { margin-bottom: 0.5rem; }
+  .cases-head { margin-bottom: clamp(1.4rem, 4vw, 2rem); }
+  .cases-head .label { margin-bottom: 0.5rem; }
+  .cases-head .lead { font-size: var(--t-small); line-height: 1.55; color: var(--ink-soft);
+                      max-width: 34rem; margin: 0; }
+  .map {
+    display: grid; gap: clamp(1.6rem, 4.5vw, 2.6rem) clamp(1.6rem, 5vw, 3rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  }
+  .surface b, .surface em, .surface span { transition: color 0.28s ease; }
+  .surface em {
+    display: block; font-style: normal; font-size: var(--t-small);
+    line-height: 1.5; color: var(--ink-soft); margin: 0.1rem 0 0.7rem;
+    max-width: 22rem;
+  }
+  .surface:hover em { color: var(--ink); }
+  .surface b {
+    display: block; font-family: var(--display); font-weight: normal;
+    font-size: clamp(1.15rem, 3.6vw, 1.5rem); line-height: 1.22;
+    letter-spacing: -0.01em; margin-bottom: 0.5rem;
+  }
+  .surface span {
+    display: block; font-family: var(--mono); font-size: var(--t-micro);
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--tone);
+    line-height: 1.75;
+  }
+
+  /* ── product surfaces and case studies, one grid for both ── */
+  .surfaces, .cases { margin: 1.8rem 0 0; }
+  .surfaces .lab, .cat .cat-lab {
+    display: block; font-family: var(--mono); font-size: var(--t-micro);
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--tone);
+    margin: 0 0 0.6rem;
+  }
+  .cat .cat-lab { color: var(--ink); border-top: 1px solid var(--rule); padding-top: 0.7rem; }
+  .cat + .cat { margin-top: 2rem; }
+  .cat .cat-note { font-size: var(--t-small); margin: 0 0 0.9rem; color: var(--ink-soft); }
+  .row {
+    display: grid; gap: 0.6rem;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr));
+  }
+  .row > * { display: block; text-decoration: none; color: var(--ink); }
+
+  .cat-links { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 1rem 0 0; }
+  .cat-links a {
+    display: flex; align-items: center; gap: 0.6rem; min-height: var(--tap);
+    padding: 0.6rem 1.1rem; border: 1px solid var(--rule); border-radius: 2px;
+    text-decoration: none; color: var(--ink); background: var(--paper);
+    font-family: var(--mono); font-size: var(--t-mono); letter-spacing: 0.06em;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+  .cat-links a:hover, .cat-links a:focus-visible {
+    background: var(--card-bg); color: var(--card-ink); border-color: var(--card-bg);
+  }
+
+  /* ── media with nowhere to go opens full size in place ── */
+  .lightbox {
+    position: fixed; inset: 0; z-index: 50; display: flex;
+    align-items: center; justify-content: center;
+    background: rgba(14, 13, 11, 0.94); padding: 3vmin;
+    cursor: zoom-out; opacity: 0; transition: opacity 0.2s;
+  }
+  .lightbox.on { opacity: 1; }
+  .lightbox img, .lightbox video { max-width: 100%; max-height: 100%; object-fit: contain; }
+  .lightbox .cap {
+    position: absolute; left: 0; right: 0; bottom: 1.1rem; text-align: center;
+    font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--card-tone); padding: 0 var(--pad);
+  }
+  @media (prefers-reduced-motion: reduce) { .lightbox { transition: none; } }
+</style>
+</head>
+<body>
+
+    <div class="bar" id="bar">
+      <a class="name" href="index.html"><i>0</i>xR</a>
+      <nav>
+        <a href="studio.html" aria-current="page">studio</a>
+        <a href="crew.html">crew</a>
+        <a href="thesis.html">thesis</a>
+        <a href="more.html">more</a>
+      </nav>
+    </div>
+
+    <main class="page">
+      <div class="wrap">
+      <h1 class="lede" data-scramble="mount" data-delay="60">The studio.</h1>
+
+      <p class="intro" data-reveal>Every case study below is made of&nbsp;these.</p>
+
+      <section class="make" data-reveal>
+        <div class="map">
+          <div class="surface">
+            <b>Brand</b>
+            <em>What stays the same on all the others.</em>
+            <span>brand identity / logotype / typography / art direction</span>
+          </div>
+          <div class="surface">
+            <b>Film</b>
+            <em>What people watch and send to someone.</em>
+            <span>campaign films / AI video / character systems / product films</span>
+          </div>
+          <div class="surface">
+            <b>Comms</b>
+            <em>The story in words, on a schedule.</em>
+            <span>copywriting / content systems / social / editorial</span>
+          </div>
+          <div class="surface">
+            <b>Product</b>
+            <em>The site and the app they land on.</em>
+            <span>product design (UI/UX) / web design / design systems</span>
+          </div>
+          <div class="surface">
+            <b>Go-to-market</b>
+            <em>The plan for putting all four out.</em>
+            <span>launch calendars / channel plans / activations / ecosystem-led growth</span>
+          </div>
+        </div>
+      </section>
+
+      <div class="cases-head" data-reveal>
+        <p class="label" data-scramble>Case studies</p>
+        <p class="lead">The agents produced all of this under my direction. Company by&nbsp;company.</p>
+      </div>
+
+      <details class="entry" id="alle">
+        <summary data-scramble-host>
+          <span class="idx">01</span>
+          <div><h2 data-scramble="hover" data-delay="0">All&eacute; Studios</h2></div>
+          <span class="when">Sep 2026 &ndash; now</span>
+        </summary>
+        <div class="body">
+          <p class="role-line">Brand, film, comms and product. Running now.</p>
+          <p>Allé Studios is a Madrid streetwear label built on music, art,
+          cinema and sport, one era per collection. Before any content was
+          made we worked on the positioning: what the brand stands for and
+          who it is for.</p>
+          <p>Everything made since is built from it, starting with the
+          current capsule. MID 90'S, 1990s New York: an AI film set inside
+          the era, and two marks for it, the AS monogram reworked and a MID
+          90'S wordmark built to match. New films and photographs ship every
+          month.</p>
+          <div class="cases" data-cases="alle"></div>
+        </div>
+      </details>
+      <details class="entry" id="sail">
+        <summary data-scramble-host>
+          <span class="idx">02</span>
+          <div><h2 data-scramble="hover" data-delay="0">Sail</h2></div>
+          <span class="when">Oct 2025 &ndash; now</span>
+        </summary>
+        <div class="body">
+          <p class="role-line">Brand, film, comms and product.</p>
+          <p>Rebranded Fungi into Sail and took the yield agent
+          institutional. It was the first agent to run swaps and bridges
+          autonomously and without custody, and it <a href="https://x.com/SaildotMoney/status/2042315862229577747"
+          target="_blank" rel="noopener">outperformed the stablecoin yield
+          market</a>.</p>
+          <p>The AI films started here, and verified followers and users
+          climbed once the films began shipping.</p>
+          <p>Sail is now a protocol and a harness: the first open source
+          permission layer agents can transact safely under, with Sailor on
+          top of it.</p>
+          <p class="impact">$700M in autonomous volume and $1M AUM at Sail, organic,
+            across roughly 1,000 Sail users and 56 yield sources integrated.</p>
+          <div class="surfaces" data-position="sail"></div>
+          <div class="cases" data-cases="sail"></div>
+          <div class="brands" id="brands"></div>
+        </div>
+      </details>
+      <details class="entry" id="fungi">
+        <summary data-scramble-host>
+          <span class="idx">03</span>
+          <div><h2 data-scramble="hover" data-delay="0">Fungi</h2></div>
+          <span class="when">Dec 2023 &ndash; Oct 2025</span>
+        </summary>
+        <div class="body">
+          <p class="role-line">Brand, film, comms and product.</p>
+          <p>Started as a natural language interface for DeFi, a ChatGPT for
+          crypto that executed onchain actions in plain English. The token
+          launched as go-to-market reached $9M market cap on Solana, with a
+          Telegram community of around 1,000.</p>
+          <p>Pivoted to the yield agent and launched it with a 24-hour
+          livestream instead of an announcement, hitting $50k AUM in the first
+          week. I ran every surface it travelled on: brand, film, comms and
+          product.</p>
+          <div class="cases" data-cases="fungi"></div>
+        </div>
+      </details>
+      <div class="next" data-reveal>
+        <p class="label" data-scramble>Start here</p>
+        <p class="addr"><a href="mailto:rodrigo@0xr.io?subject=A%20project">rodrigo@0xr.io</a></p>
+        <p class="what">Tell me what you are making and I&rsquo;ll get my crew on&nbsp;it.</p>
+      </div>
+
+      </div>
+    </main>
+
+    <footer class="foot">
+      <canvas id="ascii" aria-hidden="true"></canvas>
+      <div class="foot-row"><span>&copy; 2026 0xR</span><nav>
+      <a href="mailto:rodrigo@0xr.io">rodrigo@0xr.io</a>
+      <a href="https://x.com/0xRcap" target="_blank" rel="noopener">x</a>
+      <a href="https://www.youtube.com/@0xrcap" target="_blank" rel="noopener">youtube</a>
+    </nav></div></footer>
+<script src="nav.js" defer></script>
+<script src="ascii.js" defer></script>
+<script src="player.js"></script>
+<script src="scramble.js" defer></script>
+<script>
+/* ── the surfaces, from media/product.json, npm run posts ── */
+(async () => {
+  const mounts = [...document.querySelectorAll(".surfaces[data-position]")];
+  if (!mounts.length) return;
+  let data;
+  try {
+    const r = await fetch("media/product.json", { cache: "no-store" });
+    if (!r.ok) return;
+    data = await r.json();
+  } catch (e) { return; }
+
+  /* the video engine lives in player.js, shared with index.html */
+
+  for (const mount of mounts) {
+    const items = data.items.filter(i => i.position === mount.dataset.position);
+    if (!items.length) { mount.remove(); continue; }
+    mount.innerHTML = '<span class="lab">product and interface</span><div class="row">'
+      + items.map(i => {
+        const shot = i.src
+          ? `<img src="media/${i.poster}" alt="${i.label}" loading="lazy">`
+            + `<video data-src="media/${i.src}" autoplay muted loop playsinline preload="none"></video>`
+          : `<img src="media/${i.poster}" alt="${i.label}" loading="lazy">`;
+        return `<a class="opens-away" href="${i.href}" target="_blank" rel="noopener">`
+          + `<span class="shot">${shot}</span>`
+          + `<span class="tile-t">${i.label}</span></a>`;
+      }).join("")
+      + '</div>';
+    mount.querySelectorAll("a").forEach(a => mediaWall.observe(a));
+  }
+
+  /* the case studies use the same tiles and the same decoder discipline */
+  const caseMounts = [...document.querySelectorAll(".cases[data-cases]")];
+  if (caseMounts.length) {
+    let cases;
+    try {
+      const r = await fetch("media/cases.json", { cache: "no-store" });
+      if (r.ok) cases = await r.json();
+    } catch (e) { /* file:// leaves the block empty */ }
+    if (cases) {
+      const tile = (i) => {
+        const shot = i.src
+          ? `<span class="shot"><img src="media/${i.poster}" alt="" loading="lazy">`
+            + `<video data-src="media/${i.src}" autoplay muted loop playsinline preload="none"></video></span>`
+          : `<span class="shot"><img src="media/${i.poster}" alt="${i.label}" loading="lazy"></span>`;
+        const body = shot + `<span class="tile-t">${i.label}</span>`;
+        return i.href
+          ? `<a class="opens-away" href="${i.href}" target="_blank" rel="noopener">${body}</a>`
+          : `<span class="zoom opens-here" role="button" tabindex="0" data-full="media/${i.src || i.poster}"`
+            + ` data-kind="${i.src ? "video" : "image"}" data-label="${i.label}">${body}</span>`;
+      };
+      for (const m of caseMounts) {
+        const groups = cases[m.dataset.cases];
+        if (!groups || !groups.length) { m.remove(); continue; }
+        m.innerHTML = groups.map(g =>
+          `<div class="cat" id="${g.cat.toLowerCase().replace(/ .*/, '')}"><span class="cat-lab">${g.cat}</span>`
+          + (g.note ? `<p class="cat-note">${g.note}</p>` : "")
+          + `<div class="row">${g.items.map(tile).join("")}</div>`
+          + ((g.links && g.links.length)
+              ? `<div class="cat-links">` + g.links.map(l =>
+                  `<a href="${l.href}" target="_blank" rel="noopener">`
+                  + `<span>${l.label}</span><span class="arw">&#8599;</span></a>`
+                ).join("") + `</div>`
+              : "")
+          + `</div>`
+        ).join("");
+        m.querySelectorAll(".row > *").forEach(el => mediaWall.observe(el));
+      }
+    }
+  }
+  /* open a tile that has no link at full size */
+  let box = null;
+  function close() {
+    if (!box) return;
+    box.classList.remove("on");
+    const gone = box;
+    box = null;
+    setTimeout(() => gone.remove(), 200);
+  }
+  function open(el) {
+    close();
+    const kind = el.dataset.kind, full = el.dataset.full;
+    box = document.createElement("div");
+    box.className = "lightbox";
+    box.innerHTML = (kind === "video"
+        ? `<video src="${full}" autoplay muted loop playsinline controls></video>`
+        : `<img src="${full}" alt="${el.dataset.label}">`)
+      + `<span class="cap">${el.dataset.label} / click anywhere to close</span>`;
+    document.body.appendChild(box);
+    void box.offsetWidth;
+    box.classList.add("on");
+    box.addEventListener("click", close);
+  }
+  document.addEventListener("click", e => {
+    const t = e.target.closest(".zoom");
+    if (t) open(t);
+  });
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") return close();
+    if (e.key !== "Enter" && e.key !== " ") return;
+    const t = document.activeElement && document.activeElement.closest(".zoom");
+    if (t) { e.preventDefault(); open(t); }
+  });
+  /* a closed <details> has no box, so nothing observes. Re-check on open. */
+  document.querySelectorAll("details.entry").forEach(d =>
+    d.addEventListener("toggle", () => {
+      if (!d.open) return;
+      d.querySelectorAll(".row > *, .reel .tile").forEach(el => { mediaWall.reobserve(el); });
+    }));
+})();
+</script>
+
+<script>
+/* ── the ecosystem and client lists, from media/totals.json, npm run posts ── */
+(async () => {
+  try {
+    const r = await fetch("media/totals.json", { cache: "no-store" });
+    if (!r.ok) return;
+    const totals = await r.json();
+    if (!totals.brands || !totals.brands.length) return;
+    document.getElementById("brands").innerHTML = totals.brands.map(g =>
+      `<div class="grp"><span class="lab">${g.label}</span><div class="row">`
+      + g.items.map(i => `<a href="${i.href}" target="_blank" rel="noopener">${i.name}</a>`).join("")
+      + `</div></div>`
+    ).join("");
+  } catch (e) { /* file:// leaves the lists empty */ }
+})();
+</script>
+
+<script>
+/* a link from the home page may target a closed case study: open the
+   entry before the jump lands, and again if the hash changes in place */
+(() => {
+  const openHash = () => {
+    const el = document.getElementById(location.hash.slice(1));
+    const d = el && el.closest("details");
+    if (d) { d.open = true; el.scrollIntoView(); }
+  };
+  addEventListener("hashchange", openHash);
+  if (location.hash) openHash();
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>0xR / creative studio</title>
+<meta name="author" content="Rodrigo Rivas Yassin">
+<meta name="description" content="A creative studio of one human and many agents. We do direction + production for brands, at a fraction of the time and cost of a media department.">
+<link rel="canonical" href="https://0xr.io/">
+<link rel="icon" href="favicon.png" type="image/png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="0xR">
+<meta property="og:title" content="0xR / creative studio">
+<meta property="og:description" content="A creative studio of one human and many agents. We do direction + production for brands, at a fraction of the time and cost of a media department.">
+<meta property="og:url" content="https://0xr.io/">
+<meta property="og:image" content="https://0xr.io/media/card-index.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="0xR / creative studio">
+<meta name="twitter:description" content="A creative studio of one human and many agents. We do direction + production for brands, at a fraction of the time and cost of a media department.">
+<meta name="twitter:image" content="https://0xr.io/media/card-index.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .sc { font-style: normal; opacity: 0.45; }
+  /* ── hero: one viewport, headline over an ascii terrain ──
+     The canvas owns the bottom band. On a short phone it takes less, so
+     the headline always has room above it. */
+  .hero {
+    position: relative; min-height: 100svh; overflow: hidden;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding-bottom: calc(var(--terrain) + clamp(1.5rem, 6vh, 4rem));
+  }
+  .hero .wrap { position: relative; z-index: 2; }
+  .hello {
+    font-family: var(--mono); font-size: var(--t-mono); color: var(--tone);
+    letter-spacing: 0.12em; margin: 0 0 1.1rem;
+  }
+  .loadmore {
+    display: block; margin: clamp(1.4rem, 4vw, 2rem) 0 0; padding: 0.7rem 0;
+    background: none; border: 0; border-bottom: 1px solid var(--rule);
+    font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--tone); cursor: pointer;
+    transition: color 0.25s ease, border-color 0.25s ease;
+  }
+  .loadmore:hover, .loadmore:focus-visible { color: var(--ink); border-bottom-color: var(--ink); }
+  .loadmore[hidden] { display: none; }   /* display: block above outranks the UA rule */
+
+  /* ── one line under the wall: films are not the whole studio ── */
+  .also {
+    padding-block: clamp(2.6rem, 7vw, 4rem) 0; max-width: 34rem;
+    font-size: var(--t-small); line-height: 1.55; color: var(--ink-soft);
+  }
+  .also a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--rule); }
+  .also a:hover, .also a:focus-visible { border-bottom-color: var(--ink); }
+
+  .sub {
+    font-family: var(--mono); font-size: var(--t-mono); line-height: 1.7;
+    color: var(--ink-soft); max-width: 42rem; margin: 1.6rem 0 0;
+  }
+    /* ── the crew's ground: the band the terrain used to hold ──
+       Each figure is placed by a percentage at deliberately uneven gaps:
+       people standing around, not a line-up. They may overlap at narrow
+       widths, which reads as depth rather than as a collision. */
+    .stage {
+      position: absolute; inset: auto 0 0 0; height: var(--terrain);
+      z-index: 1; pointer-events: none;
+    }
+    .stage canvas {
+      position: absolute; bottom: 0; display: block;
+      image-rendering: pixelated; transform: translateX(-50%);
+    }
+    /* He stands alone on the left; the six stand together on the right, with
+       real air between. The group's band (28% to 92%, so 12.8% of the stage
+       between centres) is what sets the scale: six figures 36 voxels wide stop
+       overlapping when 0.128 * stage width >= 36 * scale, which is the /282
+       divisor in the script below. */
+    .stage [data-crew="rodrigo"] { left: 8%; }
+    .stage [data-crew="ye"]      { left: 28%; }
+    .stage [data-crew="steve"]   { left: 40.8%; }
+    .stage [data-crew="jean"]    { left: 53.6%; }
+    .stage [data-crew="frank"]   { left: 66.4%; }
+    .stage [data-crew="quent"]   { left: 79.2%; }
+    .stage [data-crew="kim"]     { left: 92%; }
+
+    /* Under 600px there is no room for a seventh. At the phone scale of 2 the
+       six need 36*2/0.128 = 562px of stage just to stand apart inside that
+       band, and he would take a fifth of the width to say what the who page
+       already says. He drops out and the six take the full width back. */
+    @media (max-width: 599px) {
+      .stage [data-crew="rodrigo"] { display: none; }
+      .stage [data-crew="ye"]      { left: 12%; }
+      .stage [data-crew="steve"]   { left: 27.2%; }
+      .stage [data-crew="jean"]    { left: 42.4%; }
+      .stage [data-crew="frank"]   { left: 57.6%; }
+      .stage [data-crew="quent"]   { left: 72.8%; }
+      .stage [data-crew="kim"]     { left: 88%; }
+    }
+
+  :root { --terrain: 44vh; }
+  @media (max-height: 760px), (max-width: 700px) { :root { --terrain: 34vh; } }
+
+  /* ── the films: every clip, with the number it earned ── */
+  .films { background: var(--paper); }
+  /* padding-block only: the shorthand zeroed the horizontal padding that
+     .wrap sets, and `.films .head` outranks `.wrap` on specificity, so the
+     whole band sat flush to the screen edge on a phone */
+  .films .head { padding-block: var(--band) 2.4rem; }
+  .tally {
+    font-family: var(--display); font-weight: normal; font-size: var(--t-huge);
+    line-height: 1.06; letter-spacing: -0.018em; margin: 0.4rem 0 0.9rem;
+  }
+  .tally small, .scope {
+    display: block; font-family: var(--mono); font-size: var(--t-micro);
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--tone);
+    margin-top: 0.8rem;
+  }
+
+  /* the wall. auto-fill decides the columns, so there is no breakpoint. */
+  .reel {
+    display: grid; gap: 4px; padding: 4px 0 0; background: var(--ink);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+    position: relative; z-index: 2;
+  }
+  .reel .tile {
+    position: relative; margin: 0; width: 100%; aspect-ratio: 16 / 9;
+    overflow: hidden; background: var(--ink); display: block;
+  }
+  /* display: block above outranks the user agent's [hidden] { display: none },
+     so a hidden tile stayed on screen. Say it here or the attribute is inert. */
+  .reel .tile[hidden] { display: none; }
+  .reel .tile img, .reel .tile video {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.35s ease, filter 0.35s ease;
+  }
+  .reel .tile video { opacity: 0; }
+  .reel .tile video.ready { opacity: 1; }
+  .reel .tile a { display: block; position: absolute; inset: 0; cursor: pointer; }
+  .reel .tile figcaption {
+    position: absolute; inset: auto 0 0 0; padding: 0.75rem 0.9rem; z-index: 2;
+    font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.04em;
+    text-transform: uppercase; color: #fff; opacity: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.75));
+    transition: opacity 0.25s;
+  }
+  .reel .tile figcaption b { font-weight: normal; display: block; }
+  .reel .tile figcaption span { display: block; opacity: 0.7; margin-top: 0.15rem; }
+  .reel .tile figcaption em { font-style: normal; opacity: 0.55; }
+  .reel .tile:hover figcaption, .reel .tile:focus-within figcaption { opacity: 1; }
+  .reel .tile a:hover ~ figcaption { opacity: 1; }
+
+  /* the same badge the rest of the site uses, on a tile whose anchor
+     covers the whole frame rather than sitting inside a .shot */
+  .reel .tile a::after {
+    content: ""; position: absolute; top: 0.5rem; right: 0.5rem; z-index: 3;
+    width: 1.6rem; height: 1.6rem; border-radius: 50%;
+    background: rgba(255,255,255,0.94) no-repeat center / 0.8rem 0.8rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230E0D0B' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17 17 7'/%3E%3Cpath d='M8 7h9v9'/%3E%3C/svg%3E");
+    opacity: 0; transform: translateY(-0.25rem) scale(0.9);
+    transition: opacity 0.2s ease, transform 0.2s ease; pointer-events: none;
+  }
+  .reel .tile a:hover::after, .reel .tile a:focus-visible::after { opacity: 1; transform: none; }
+  .reel .tile a:hover ~ figcaption { opacity: 1; }
+  .reel .tile a:hover + figcaption { opacity: 1; }
+  .reel .tile:hover img, .reel .tile:hover video { transform: scale(1.04); filter: brightness(0.8); }
+  /* a touch screen has no hover, so the badge and the caption are simply on.
+     Twenty muted loops with no client, campaign or number is not a wall. */
+  @media (hover: none) {
+    .reel .tile a::after { opacity: 1; transform: none; }
+    .reel .tile figcaption { opacity: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reel .tile img, .reel .tile video { transition: none; }
+    .reel .tile:hover img, .reel .tile:hover video { transform: none; }
+  }
+  .reel .empty {
+    grid-column: 1 / -1; padding: var(--band) var(--pad); text-align: center;
+    font-family: var(--mono); font-size: var(--t-small); color: #6b6862;
+  }
+
+</style>
+</head>
+<body>
+
+
+<div class="bar" id="bar">
+      <a class="name" href="index.html"><i>0</i>xR</a>
+      <nav>
+        <a href="studio.html">studio</a>
+        <a href="crew.html">crew</a>
+        <a href="thesis.html">thesis</a>
+        <a href="more.html">more</a>
+      </nav>
+    </div>
+
+    <main>
+    <header class="hero">
+  <div class="wrap">
+    <p class="hello" data-scramble="mount" data-delay="0">Hello world, I'm Rodrigo Rivas&nbsp;Yassin.</p>
+    <h1 data-scramble="mount" data-delay="60">I run a creative studio of (&nbsp;one&nbsp;) human + {&nbsp;many&nbsp;}&nbsp;agents.</h1>
+    <p class="sub">We do direction + production for brands, at a fraction of the time and cost of a media&nbsp;department.</p>
+  </div>
+    <div class="stage" id="stage" aria-hidden="true">
+      <canvas data-crew="rodrigo"></canvas>
+      <canvas data-crew="ye"></canvas>
+      <canvas data-crew="steve"></canvas>
+      <canvas data-crew="jean"></canvas>
+      <canvas data-crew="frank"></canvas>
+      <canvas data-crew="quent"></canvas>
+      <canvas data-crew="kim"></canvas>
+    </div>
+</header>
+
+
+    <section class="films" id="films" aria-label="AI films">
+      <div class="wrap head">
+        <p class="label" data-scramble>AI films</p>
+        <h2 class="tally"><span id="tally-n">&mdash;</span> impressions
+          <small id="tally-sub">counting</small></h2>
+      </div>
+      <div class="reel" id="reel"></div>
+      <div class="wrap">
+        <button class="loadmore" id="more-films" hidden>load more</button>
+      </div>
+    </section>
+
+    <div class="wrap">
+
+      <p class="also" data-reveal>btw we do brand, product design and comms too, they just
+      don&rsquo;t do pretty&nbsp;loops. Check all work on <a href="studio.html">the case&nbsp;studies</a>.</p>
+
+      <div class="next" data-reveal>
+        <p class="label" data-scramble>Start here</p>
+        <p class="addr"><a href="mailto:rodrigo@0xr.io?subject=A%20project">rodrigo@0xr.io</a></p>
+        <p class="what">Tell me what you are making and I&rsquo;ll get my crew on&nbsp;it.</p>
+      </div>
+    </div>
+    </main>
+
+    <footer class="foot">
+      <canvas id="ascii" aria-hidden="true"></canvas>
+      <div class="foot-row"><span>&copy; 2026 0xR</span><nav>
+      <a href="mailto:rodrigo@0xr.io">rodrigo@0xr.io</a>
+      <a href="https://x.com/0xRcap" target="_blank" rel="noopener">x</a>
+      <a href="https://www.youtube.com/@0xrcap" target="_blank" rel="noopener">youtube</a>
+    </nav></div></footer>
+<script src="crew/rodrigo.model.js" defer></script>
+  <script src="crew/ye.model.js" defer></script>
+  <script src="crew/steve.model.js" defer></script>
+  <script src="crew/jean.model.js" defer></script>
+  <script src="crew/frank.model.js" defer></script>
+  <script src="crew/quent.model.js" defer></script>
+  <script src="crew/kim.model.js" defer></script>
+  <script src="crew3d.js" defer></script>
+  <script defer>
+  /* ── the crew live in the hero ──
+     Scale falls out of the width: the six stand in a 12.8%-of-stage rhythm, so
+     36 * scale must fit inside it. That caps the scale at 5, one step under the
+     old 6, and it is why the crew reads smaller now. The pointer is already
+     wired inside crew3d. */
+  addEventListener("DOMContentLoaded", () => {
+    if (!window.crew3d || !window.crewModels) return;
+    const stage = document.getElementById("stage");
+    let handles = [];
+    const build = () => {
+      for (const h of handles) h.stop();
+      /* display:none under 600px, so he is read out of the list rather than
+         registered and hidden: no loop runs for a figure nobody can see. */
+      const cells = [...stage.querySelectorAll("[data-crew]")]
+        .filter((c) => c.offsetParent !== null);
+      const scale = Math.max(2, Math.min(5, Math.floor(stage.clientWidth / 282)));
+      handles = cells.map((c) => crew3d.register(c, window.crewModels[c.dataset.crew], { scale }));
+      crew3d.neighbours(handles);
+    };
+    build();
+    let t = 0, lastW = innerWidth;
+    addEventListener("resize", () => {
+      /* a phone fires resize on every scroll: its URL bar slides away and the
+         viewport gets shorter. Only a width change can alter the scale, and
+         rebuilding on height replayed the arrival on every scroll. */
+      if (innerWidth === lastW) return;
+      lastW = innerWidth;
+      clearTimeout(t); t = setTimeout(build, 200);
+    });
+  });
+  </script>
+  <script src="nav.js" defer></script>
+<script src="promo.js" defer></script>
+<script src="ascii.js" defer></script>
+<script src="player.js"></script>
+<script src="scramble.js" defer></script>
+<script>
+/* ── the wall — the films, from media/posts.json · npm run posts ── */
+(async () => {
+  const reel = document.getElementById("reel");
+  let films = [], totals = null;
+  try {
+    const [a, b] = await Promise.all([
+      fetch("media/manifest.json", { cache: "no-store" }),
+      fetch("media/totals.json", { cache: "no-store" }),
+    ]);
+    if (a.ok) films = await a.json();
+    if (b.ok) totals = await b.json();
+  } catch (e) { /* file:// — fall through to the empty state */ }
+
+  if (!films.length) {
+    reel.innerHTML = '<div class="empty">the wall fills from site/media/ / run npm run posts</div>';
+    document.getElementById("films").querySelector(".head").style.display = "none";
+    return;
+  }
+
+  if (totals) {
+    document.getElementById("tally-n").textContent = totals.views.toLocaleString();
+    document.getElementById("tally-sub").textContent =
+      totals.since ? `since ${totals.since} (own channels, partners and amplifications)` : "";
+  }
+
+  reel.innerHTML = films.map(it => {
+    const n = it.viewsWithQuotes ? it.viewsWithQuotes.toLocaleString() + " impressions" : "";
+    const amp = it.amplifiedBy && it.amplifiedBy.length ? " <em>/ amplified</em>" : "";
+    const cap = `<figcaption><b>${it.caption}</b>${n ? `<span>${n}${amp}</span>` : ""}</figcaption>`;
+    const media = /\.(mp4|webm|mov)$/i.test(it.src)
+      ? `<img src="media/${it.poster || it.src}" alt="" loading="lazy">`
+        + `<video data-src="media/${it.src}" autoplay muted loop playsinline preload="none"></video>`
+      : `<img src="media/${it.src}" alt="${it.caption || ""}" loading="lazy">`;
+    return it.href
+      ? `<figure class="tile"><a href="${it.href}" target="_blank" rel="noopener" aria-label="${it.caption} / open the post">${media}${cap}</a></figure>`
+      : `<figure class="tile">${media}${cap}</figure>`;
+  }).join("");
+
+  /* ── the wall opens at four rows, at every width ──
+     It used to be six tiles on a phone and the entire wall on desktop.
+     That held only while the wall was twenty tiles, which five columns
+     made exactly four rows; it is a film longer every week and desktop
+     would have grown without limit. So the rule is rows, not a count, and
+     four of them: at twenty films on five columns that is the whole wall
+     and no control, and the button appears on its own as films land.
+
+     The grid is auto-fill, so the column count is a function of the
+     window and not of a breakpoint. Read it off the computed grid rather
+     than guessing it, and recount on resize, or a wall opened narrow and
+     then widened shows three tiles in a row of five.
+
+     Six is the floor. One column at three rows is a stub, and six is also
+     WebKit's simultaneous decoder cap on iOS, which is what set the old
+     phone batch. */
+  const ROWS = 4, FLOOR = 6;
+  const columns = () =>
+    getComputedStyle(reel).gridTemplateColumns.split(" ").filter(Boolean).length || 1;
+  let BATCH = Math.max(FLOOR, columns() * ROWS);
+  const tiles = [...reel.querySelectorAll(".tile")];
+  const more = document.getElementById("more-films");
+  let shown = 0;
+
+  const showNext = () => {
+    const next = tiles.slice(shown, shown + BATCH);
+    for (const t of next) { t.hidden = false; mediaWall.observe(t); }
+    shown += next.length;
+    const left = tiles.length - shown;
+    if (left <= 0) more.hidden = true;
+    else { more.hidden = false; more.textContent = `load ${Math.min(BATCH, left)} more`; }
+  };
+
+  const showAll = () => {
+    for (const t of tiles) { t.hidden = false; mediaWall.observe(t); }
+    shown = tiles.length;
+    more.hidden = true;
+  };
+
+  if (tiles.length <= BATCH) {
+    showAll();
+  } else {
+    for (const t of tiles) t.hidden = true;
+    showNext();
+    more.addEventListener("click", showNext);
+  }
+
+  /* Widening the window makes a row hold more, so the opening batch is a
+     different number than it was. Recount, and top the wall up to whole
+     rows. Tiles already shown are never taken back: hiding a film someone
+     is looking at to keep the arithmetic tidy is worse than a short row. */
+  let resizeTimer = 0;
+  addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      BATCH = Math.max(FLOOR, columns() * ROWS);
+      if (shown && shown < BATCH) showNext();
+      else if (shown >= tiles.length) more.hidden = true;
+      else if (shown) more.textContent = `load ${Math.min(BATCH, tiles.length - shown)} more`;
+    }, 150);
+  });
+
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!doctype html><meta charset="utf-8"><title>fixes</title>
+<style>body{background:#FAF8F4;margin:0;padding:16px;font:12px ui-monospace,Menlo,monospace;color:#0E0D0B}
+canvas{display:block;image-rendering:pixelated}p{margin:8px 0 4px;letter-spacing:.12em;text-transform:uppercase;color:#8A8781}</style>
+<p>frank yaw 0 / 6 / 12 / 18 / 24 / -12 / -18 &nbsp; (8px)</p>
+<canvas id="ang"></canvas>
+<p>shrug, quent, every frame from the call (8px)</p>
+<canvas id="shr"></canvas>
+<script src="models.js"></script><script src="../crew3d.js"></script>
+<script>
+const PX = 10;
+// --- angles ---
+(() => {
+  const angles = [0, 6, 12, 18, 24, -12, -18];
+  const tmp = document.createElement("canvas");
+  const m = crew3d.paint(tmp, crewModels.frank, { angle: 0, scale: PX });
+  const w = m.LW * PX, h = 20 * PX;              // head rows only
+  const out = document.getElementById("ang");
+  out.width = w * angles.length; out.height = h;
+  const c = out.getContext("2d");
+  c.fillStyle = "#FAF8F4"; c.fillRect(0, 0, out.width, out.height);
+  angles.forEach((a, i) => {
+    crew3d.paint(tmp, crewModels.frank, { angle: a, scale: PX });
+    c.drawImage(tmp, 0, 0, w, h, i * w, 0, w, h);
+  });
+})();
+// --- shrug ---
+(() => {
+  const host = document.createElement("canvas");
+  const h = crew3d.register(host, crewModels.quent, { scale: PX, instant: true, seed: 7 });
+  const N = 22, w = host.width, hh = host.height;
+  const out = document.getElementById("shr");
+  out.width = w * N; out.height = 18 * PX;
+  const c = out.getContext("2d");
+  c.fillStyle = "#FAF8F4"; c.fillRect(0, 0, out.width, out.height);
+  crew3d.drive(0);
+  for (let n = 0; n < N; n++) {
+    if (n === 3) h.act("shrug");
+    crew3d.drive(33);
+    c.drawImage(host, 0, 10 * PX, w, 18 * PX, n * w, 0, w, 18 * PX);
+  }
+  document.title = "ready";
+})();
+</script>
