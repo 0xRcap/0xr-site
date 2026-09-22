@@ -9,10 +9,6 @@
 **This repo is the site.** Files at the root, edited here, deployed by Vercel to
 **0xr.io**. Run `npm run posts` at the root after touching `media/posts.json`.
 
-*Transition note (2026-09-22): Vercel still deploys the retiring `0xr-site-old` repo
-until Rodrigo repoints the project here. Until then, `./scripts/publish.sh --write`
-carries changes across. After the repoint, that script and that repo are deleted.*
-
 The old two-repo split (private workspace + public artefact + filter script) existed
 only to keep the CV pages' personal data out of a public repo. The CVs moved to
 `~/Desktop/My_Personal_Agents/cv/` on 2026-09-22, this repo's history was restarted
