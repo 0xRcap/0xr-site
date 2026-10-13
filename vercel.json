@@ -1,0 +1,15 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/index.html", "destination": "/", "permanent": true },
+    { "source": "/index", "destination": "/", "permanent": true },
+    { "source": "/home", "destination": "/", "permanent": true },
+    { "source": "/studio", "destination": "/work", "permanent": true },
+    { "source": "/studio.html", "destination": "/work", "permanent": true },
+    { "source": "/thesis", "destination": "/", "permanent": true },
+    { "source": "/thesis.html", "destination": "/", "permanent": true },
+    { "source": "/who", "destination": "/crew", "permanent": true },
+    { "source": "/who.html", "destination": "/crew", "permanent": true }
+  ]
+}
