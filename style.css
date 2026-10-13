@@ -331,6 +331,12 @@ a:hover > .tile-t { color: var(--ink); }
   background: rgba(14, 13, 11, 0.55); color: var(--card-ink);
   backdrop-filter: blur(6px); transition: background 0.2s ease;
 }
+/* the disc reads better small, but a thumb needs the 44px of rule 5. The tap
+   area grows past the disc without moving it or drawing anything. */
+.film-x::before {
+  content: ""; position: absolute; top: 50%; left: 50%;
+  width: var(--tap); height: var(--tap); transform: translate(-50%, -50%);
+}
 .film-x:hover, .film-x:focus-visible { background: rgba(14, 13, 11, 0.85); }
 /* on a phone it sits centred, with the same gutter left and right rather than
    hugging one corner. left and right together do the centring, so the entry

@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>0xR / creative studio</title>
+<title>0xR / branding + media</title>
 <meta name="author" content="Rodrigo Rivas Yassin">
-<meta name="description" content="A creative studio of one human and many agents. We do direction + production for brands, at a fraction of the time and cost of a media department.">
+<meta name="description" content="We do branding and generative media production at a fraction of the time/cost of an agency.">
 <link rel="canonical" href="https://0xr.io/">
 <link rel="icon" href="favicon.png" type="image/png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="0xR">
-<meta property="og:title" content="0xR / creative studio">
-<meta property="og:description" content="A creative studio of one human and many agents. We do direction + production for brands, at a fraction of the time and cost of a media department.">
+<meta property="og:title" content="0xR / branding + media">
+<meta property="og:description" content="We do branding and generative media production at a fraction of the time/cost of an agency.">
 <meta property="og:url" content="https://0xr.io/">
-<meta property="og:image" content="https://0xr.io/media/card-index.jpg">
+<meta property="og:image" content="https://0xr.io/media/card.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="0xR / creative studio">
-<meta name="twitter:description" content="A creative studio of one human and many agents. We do direction + production for brands, at a fraction of the time and cost of a media department.">
-<meta name="twitter:image" content="https://0xr.io/media/card-index.jpg">
+<meta name="twitter:title" content="0xR / branding + media">
+<meta name="twitter:description" content="We do branding and generative media production at a fraction of the time/cost of an agency.">
+<meta name="twitter:image" content="https://0xr.io/media/card.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -41,6 +41,7 @@
   }
   .loadmore {
     display: block; margin: clamp(1.4rem, 4vw, 2rem) 0 0; padding: 0.7rem 0;
+    min-height: var(--tap);   /* rule 5: a thumb needs 44px, the label does not */
     background: none; border: 0; border-bottom: 1px solid var(--rule);
     font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.16em;
     text-transform: uppercase; color: var(--tone); cursor: pointer;
@@ -50,12 +51,21 @@
   .loadmore[hidden] { display: none; }   /* display: block above outranks the UA rule */
 
   /* ── one line under the wall: films are not the whole studio ── */
-  .also {
-    padding-block: clamp(2.6rem, 7vw, 4rem) 0; max-width: 34rem;
+  /* the block runs wider than its prose: the creed needs room to hold the two
+     lines it is authored in, while the body keeps the 34rem reading measure */
+  .why { padding-block: clamp(2.6rem, 7vw, 4rem) 0; max-width: 46rem; }
+  /* the authored break in the creed, hidden until the line has room, as on thesis */
+  /* a break that only exists where there is room for both lines */
+  .lb { display: none; }
+  @media (min-width: 621px) { .lb { display: inline; } }
+  .why .label { margin: 0 0 0.9rem; }
+  .why a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--rule); }
+  .why b { font-weight: 600; color: var(--ink); }
+  .why a:hover, .why a:focus-visible { border-bottom-color: var(--ink); }
+  .why > p:not(.creed):not(.label) {
     font-size: var(--t-small); line-height: 1.55; color: var(--ink-soft);
+    margin: 0 0 1rem; max-width: 34rem;
   }
-  .also a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--rule); }
-  .also a:hover, .also a:focus-visible { border-bottom-color: var(--ink); }
 
   .sub {
     font-family: var(--mono); font-size: var(--t-mono); line-height: 1.7;
@@ -109,15 +119,7 @@
      .wrap sets, and `.films .head` outranks `.wrap` on specificity, so the
      whole band sat flush to the screen edge on a phone */
   .films .head { padding-block: var(--band) 2.4rem; }
-  .tally {
-    font-family: var(--display); font-weight: normal; font-size: var(--t-huge);
-    line-height: 1.06; letter-spacing: -0.018em; margin: 0.4rem 0 0.9rem;
-  }
-  .tally small, .scope {
-    display: block; font-family: var(--mono); font-size: var(--t-micro);
-    letter-spacing: 0.12em; text-transform: uppercase; color: var(--tone);
-    margin-top: 0.8rem;
-  }
+  .films-title { margin: 0; }
 
   /* the wall. auto-fill decides the columns, so there is no breakpoint. */
   .reel {
@@ -148,9 +150,7 @@
   }
   .reel .tile figcaption b { font-weight: normal; display: block; }
   .reel .tile figcaption span { display: block; opacity: 0.7; margin-top: 0.15rem; }
-  .reel .tile figcaption em { font-style: normal; opacity: 0.55; }
   .reel .tile:hover figcaption, .reel .tile:focus-within figcaption { opacity: 1; }
-  .reel .tile a:hover ~ figcaption { opacity: 1; }
 
   /* the same badge the rest of the site uses, on a tile whose anchor
      covers the whole frame rather than sitting inside a .shot */
@@ -163,8 +163,6 @@
     transition: opacity 0.2s ease, transform 0.2s ease; pointer-events: none;
   }
   .reel .tile a:hover::after, .reel .tile a:focus-visible::after { opacity: 1; transform: none; }
-  .reel .tile a:hover ~ figcaption { opacity: 1; }
-  .reel .tile a:hover + figcaption { opacity: 1; }
   .reel .tile:hover img, .reel .tile:hover video { transform: scale(1.04); filter: brightness(0.8); }
   /* a touch screen has no hover, so the badge and the caption are simply on.
      Twenty muted loops with no client, campaign or number is not a wall. */
@@ -189,9 +187,8 @@
 <div class="bar" id="bar">
       <a class="name" href="index.html"><i>0</i>xR</a>
       <nav>
-        <a href="studio.html">studio</a>
+        <a href="studio.html">work</a>
         <a href="crew.html">crew</a>
-        <a href="thesis.html">thesis</a>
         <a href="more.html">more</a>
       </nav>
     </div>
@@ -200,8 +197,8 @@
     <header class="hero">
   <div class="wrap">
     <p class="hello" data-scramble="mount" data-delay="0">Hello world, I'm Rodrigo Rivas&nbsp;Yassin.</p>
-    <h1 data-scramble="mount" data-delay="60">I run a creative studio of (&nbsp;one&nbsp;) human + {&nbsp;many&nbsp;}&nbsp;agents.</h1>
-    <p class="sub">We do direction + production for brands, at a fraction of the time and cost of a media&nbsp;department.</p>
+    <h1 data-scramble="mount" data-delay="60">A crew of (&nbsp;one&nbsp;) human + {&nbsp;many&nbsp;}&nbsp;agents.</h1>
+    <p class="sub">We do branding and generative media production at a fraction<br class="lb"> of the time/cost of an&nbsp;agency.</p>
   </div>
     <div class="stage" id="stage" aria-hidden="true">
       <canvas data-crew="rodrigo"></canvas>
@@ -217,9 +214,7 @@
 
     <section class="films" id="films" aria-label="AI films">
       <div class="wrap head">
-        <p class="label" data-scramble>AI films</p>
-        <h2 class="tally"><span id="tally-n">&mdash;</span> impressions
-          <small id="tally-sub">counting</small></h2>
+        <h2 class="films-title">AI films.</h2>
       </div>
       <div class="reel" id="reel"></div>
       <div class="wrap">
@@ -229,8 +224,17 @@
 
     <div class="wrap">
 
-      <p class="also" data-reveal>btw we do brand, product design and comms too, they just
-      don&rsquo;t do pretty&nbsp;loops. Check all work on <a href="studio.html">the case&nbsp;studies</a>.</p>
+      <section class="why" id="why" data-reveal>
+        <p class="label" data-scramble>Why we&rsquo;re here</p>
+        <p>If you are a founder, whatever you make, somebody else can make too. Your
+        competitor is calling the same model you&nbsp;are.</p>
+        <p class="creed" data-scramble>Everything you sell is becoming a commodity.<br class="lb">
+        The story is the only part you still own.</p>
+        <p><b>Media</b> is everything that carries your story to a person: your content, your words,
+        the product in someone&rsquo;s hands. A <b>brand</b> is the coherency between all of these
+        (they all tell the same&nbsp;story).</p>
+        <p class="creed" data-scramble>Let&rsquo;s make both 100x&nbsp;better.</p>
+      </section>
 
       <div class="next" data-reveal>
         <p class="label" data-scramble>Start here</p>
@@ -243,7 +247,6 @@
     <footer class="foot">
       <canvas id="ascii" aria-hidden="true"></canvas>
       <div class="foot-row"><span>&copy; 2026 0xR</span><nav>
-      <a href="mailto:rodrigo@0xr.io">rodrigo@0xr.io</a>
       <a href="https://x.com/0xRcap" target="_blank" rel="noopener">x</a>
       <a href="https://www.youtube.com/@0xrcap" target="_blank" rel="noopener">youtube</a>
     </nav></div></footer>
@@ -296,14 +299,10 @@
 /* ── the wall — the films, from media/posts.json · npm run posts ── */
 (async () => {
   const reel = document.getElementById("reel");
-  let films = [], totals = null;
+  let films = [];
   try {
-    const [a, b] = await Promise.all([
-      fetch("media/manifest.json", { cache: "no-store" }),
-      fetch("media/totals.json", { cache: "no-store" }),
-    ]);
+    const a = await fetch("media/manifest.json", { cache: "no-store" });
     if (a.ok) films = await a.json();
-    if (b.ok) totals = await b.json();
   } catch (e) { /* file:// — fall through to the empty state */ }
 
   if (!films.length) {
@@ -312,16 +311,9 @@
     return;
   }
 
-  if (totals) {
-    document.getElementById("tally-n").textContent = totals.views.toLocaleString();
-    document.getElementById("tally-sub").textContent =
-      totals.since ? `since ${totals.since} (own channels, partners and amplifications)` : "";
-  }
-
   reel.innerHTML = films.map(it => {
-    const n = it.viewsWithQuotes ? it.viewsWithQuotes.toLocaleString() + " impressions" : "";
-    const amp = it.amplifiedBy && it.amplifiedBy.length ? " <em>/ amplified</em>" : "";
-    const cap = `<figcaption><b>${it.caption}</b>${n ? `<span>${n}${amp}</span>` : ""}</figcaption>`;
+    const n = it.viewsWithQuotes ? it.viewsWithQuotes.toLocaleString() : "";
+    const cap = `<figcaption><b>${it.caption}</b>${n ? `<span>${n}</span>` : ""}</figcaption>`;
     const media = /\.(mp4|webm|mov)$/i.test(it.src)
       ? `<img src="media/${it.poster || it.src}" alt="" loading="lazy">`
         + `<video data-src="media/${it.src}" autoplay muted loop playsinline preload="none"></video>`
@@ -355,14 +347,16 @@
   const more = document.getElementById("more-films");
   let shown = 0;
 
-  const showNext = () => {
-    const next = tiles.slice(shown, shown + BATCH);
+  const reveal = (n) => {
+    const next = tiles.slice(shown, shown + n);
     for (const t of next) { t.hidden = false; mediaWall.observe(t); }
     shown += next.length;
     const left = tiles.length - shown;
     if (left <= 0) more.hidden = true;
     else { more.hidden = false; more.textContent = `load ${Math.min(BATCH, left)} more`; }
   };
+
+  const showNext = () => reveal(BATCH);
 
   const showAll = () => {
     for (const t of tiles) { t.hidden = false; mediaWall.observe(t); }
@@ -387,9 +381,14 @@
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
       BATCH = Math.max(FLOOR, columns() * ROWS);
-      if (shown && shown < BATCH) showNext();
+      if (!shown) return;
+      /* Top the wall up TO four rows, never BY another four. Calling
+         showNext here reveals a whole fresh batch on top of what is
+         already out, which at one widening opens the entire wall and
+         takes the button away with it. */
+      if (shown < BATCH) reveal(BATCH - shown);
       else if (shown >= tiles.length) more.hidden = true;
-      else if (shown) more.textContent = `load ${Math.min(BATCH, tiles.length - shown)} more`;
+      else more.textContent = `load ${Math.min(BATCH, tiles.length - shown)} more`;
     }, 150);
   });
 

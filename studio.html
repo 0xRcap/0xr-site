@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>0xR / studio</title>
+<title>0xR / work</title>
 <meta name="author" content="Rodrigo Rivas Yassin">
-<meta name="description" content="Brand, film, product and go-to-market, with the receipts: 19 AI films and 273,757 impressions with a per-post trail, two products shipped, a token launch, and the ecosystem that carried them.">
+<meta name="description" content="The positioning came first, every time, then the films, products and launches built on it. The agents produced all of it.">
 <link rel="canonical" href="https://0xr.io/studio.html">
 <link rel="icon" href="favicon.png" type="image/png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="0xR">
-<meta property="og:title" content="0xR / studio">
-<meta property="og:description" content="Brand, film, product and go-to-market, with the receipts: 19 AI films and 273,757 impressions with a per-post trail, two products shipped, a token launch, and the ecosystem that carried them.">
+<meta property="og:title" content="0xR / work">
+<meta property="og:description" content="The positioning came first, every time, then the films, products and launches built on it. The agents produced all of it.">
 <meta property="og:url" content="https://0xr.io/studio.html">
-<meta property="og:image" content="https://0xr.io/media/card-studio.jpg">
+<meta property="og:image" content="https://0xr.io/media/card.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="0xR / studio">
-<meta name="twitter:description" content="Brand, film, product and go-to-market, with the receipts: 19 AI films and 273,757 impressions with a per-post trail, two products shipped, a token launch, and the ecosystem that carried them.">
-<meta name="twitter:image" content="https://0xr.io/media/card-studio.jpg">
+<meta name="twitter:title" content="0xR / work">
+<meta name="twitter:description" content="The positioning came first, every time, then the films, products and launches built on it. The agents produced all of it.">
+<meta name="twitter:image" content="https://0xr.io/media/card.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -31,8 +31,6 @@
         lives inside it. Native <details> so it works without script and
         keyboard users get it for free. ── */
   .entry { border-top: 1px solid var(--rule); }
-  .role-line { font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.14em;
-               text-transform: uppercase; color: var(--tone); margin: 0 0 1rem; }
   .entry:last-of-type { border-bottom: 1px solid var(--rule); }
   .entry > summary {
     display: grid; grid-template-columns: 2.5rem 1fr auto; gap: 0 1.2rem;
@@ -99,36 +97,20 @@
               line-height: 1.26; font-size: clamp(1.1rem, 3vw, 1.5rem); color: var(--ink); text-decoration: none; }
   .brands a:hover { text-decoration: underline; }
 
-  /* ── what gets made: the four surfaces, moved here from the thesis page
-     2026-09-10. They are what Production makes, so they belong above the
-     case studies that are made of them, not inside an argument. ── */
-  .make { margin: 0 0 clamp(3rem, 8vw, 4.5rem); }
-  .make .label { margin-bottom: 0.5rem; }
-  .cases-head { margin-bottom: clamp(1.4rem, 4vw, 2rem); }
-  .cases-head .label { margin-bottom: 0.5rem; }
-  .cases-head .lead { font-size: var(--t-small); line-height: 1.55; color: var(--ink-soft);
-                      max-width: 34rem; margin: 0; }
-  .map {
-    display: grid; gap: clamp(1.6rem, 4.5vw, 2.6rem) clamp(1.6rem, 5vw, 3rem);
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
-  }
-  .surface b, .surface em, .surface span { transition: color 0.28s ease; }
-  .surface em {
-    display: block; font-style: normal; font-size: var(--t-small);
-    line-height: 1.5; color: var(--ink-soft); margin: 0.1rem 0 0.7rem;
-    max-width: 22rem;
-  }
-  .surface:hover em { color: var(--ink); }
-  .surface b {
-    display: block; font-family: var(--display); font-weight: normal;
-    font-size: clamp(1.15rem, 3.6vw, 1.5rem); line-height: 1.22;
-    letter-spacing: -0.01em; margin-bottom: 0.5rem;
-  }
-  .surface span {
-    display: block; font-family: var(--mono); font-size: var(--t-micro);
-    letter-spacing: 0.08em; text-transform: uppercase; color: var(--tone);
-    line-height: 1.75;
-  }
+  /* ── what we did, at the foot of each case: the services, named the way
+     the offer names them. Only what that case actually shipped. ── */
+  .did { margin: clamp(1.8rem, 5vw, 2.6rem) 0 0; padding-top: 0.9rem;
+         border-top: 1px solid var(--rule); display: grid; gap: 0.9rem 2.4rem;
+         grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); }
+  .did .did-lab { grid-column: 1 / -1; margin: 0; font-family: var(--mono);
+                  font-size: var(--t-micro); letter-spacing: 0.16em;
+                  text-transform: uppercase; color: var(--tone); }
+  .did p { margin: 0; }
+  .did b { display: block; font-family: var(--display); font-weight: normal;
+           font-size: 1.15rem; line-height: 1.25; margin-bottom: 0.25rem; }
+  .did span { display: block; font-family: var(--mono); font-size: var(--t-micro);
+              letter-spacing: 0.08em; text-transform: uppercase; color: var(--tone);
+              line-height: 1.75; }
 
   /* ── product surfaces and case studies, one grid for both ── */
   .surfaces, .cases { margin: 1.8rem 0 0; }
@@ -180,52 +162,18 @@
     <div class="bar" id="bar">
       <a class="name" href="index.html"><i>0</i>xR</a>
       <nav>
-        <a href="studio.html" aria-current="page">studio</a>
+        <a href="studio.html" aria-current="page">work</a>
         <a href="crew.html">crew</a>
-        <a href="thesis.html">thesis</a>
         <a href="more.html">more</a>
       </nav>
     </div>
 
     <main class="page">
       <div class="wrap">
-      <h1 class="lede" data-scramble="mount" data-delay="60">The studio.</h1>
-
-      <p class="intro" data-reveal>Every case study below is made of&nbsp;these.</p>
-
-      <section class="make" data-reveal>
-        <div class="map">
-          <div class="surface">
-            <b>Brand</b>
-            <em>What stays the same on all the others.</em>
-            <span>brand identity / logotype / typography / art direction</span>
-          </div>
-          <div class="surface">
-            <b>Film</b>
-            <em>What people watch and send to someone.</em>
-            <span>campaign films / AI video / character systems / product films</span>
-          </div>
-          <div class="surface">
-            <b>Comms</b>
-            <em>The story in words, on a schedule.</em>
-            <span>copywriting / content systems / social / editorial</span>
-          </div>
-          <div class="surface">
-            <b>Product</b>
-            <em>The site and the app they land on.</em>
-            <span>product design (UI/UX) / web design / design systems</span>
-          </div>
-          <div class="surface">
-            <b>Go-to-market</b>
-            <em>The plan for putting all four out.</em>
-            <span>launch calendars / channel plans / activations / ecosystem-led growth</span>
-          </div>
-        </div>
-      </section>
+      <h1 class="lede" data-scramble="mount" data-delay="60">Work.</h1>
 
       <div class="cases-head" data-reveal>
-        <p class="label" data-scramble>Case studies</p>
-        <p class="lead">The agents produced all of this under my direction. Company by&nbsp;company.</p>
+        <p class="lead">Client work first, then the companies I&nbsp;cofounded.</p>
       </div>
 
       <details class="entry" id="alle">
@@ -235,32 +183,35 @@
           <span class="when">Sep 2026 &ndash; now</span>
         </summary>
         <div class="body">
-          <p class="role-line">Brand, film, comms and product. Running now.</p>
           <p>Allé Studios is a Madrid streetwear label built on music, art,
           cinema and sport, one era per collection. Before any content was
           made we worked on the positioning: what the brand stands for and
           who it is for.</p>
           <p>Everything made since is built from it, starting with the
-          current capsule. MID 90'S, 1990s New York: an AI film set inside
+          current capsule. MID 90'S, 1990s New York: AI films set inside
           the era, and two marks for it, the AS monogram reworked and a MID
           90'S wordmark built to match. New films and photographs ship every
-          month.</p>
+          week.</p>
           <div class="cases" data-cases="alle"></div>
+          <div class="did">
+            <p class="did-lab">What we did</p>
+            <p><b>Branding</b><span>positioning / logotype</span></p>
+            <p><b>Generative media production</b><span>campaign films / character systems / product films / content for socials</span></p>
+          </div>
         </div>
       </details>
       <details class="entry" id="sail">
         <summary data-scramble-host>
           <span class="idx">02</span>
           <div><h2 data-scramble="hover" data-delay="0">Sail</h2></div>
-          <span class="when">Oct 2025 &ndash; now</span>
+          <span class="when">Oct 2025 &ndash; Sep 2026</span>
         </summary>
         <div class="body">
-          <p class="role-line">Brand, film, comms and product.</p>
           <p>Rebranded Fungi into Sail and took the yield agent
           institutional. It was the first agent to run swaps and bridges
           autonomously and without custody, and it <a href="https://x.com/SaildotMoney/status/2042315862229577747"
           target="_blank" rel="noopener">outperformed the stablecoin yield
-          market</a>.</p>
+          market in Q1&nbsp;2026</a>.</p>
           <p>The AI films started here, and verified followers and users
           climbed once the films began shipping.</p>
           <p>Sail is now a protocol and a harness: the first open source
@@ -271,6 +222,13 @@
           <div class="surfaces" data-position="sail"></div>
           <div class="cases" data-cases="sail"></div>
           <div class="brands" id="brands"></div>
+          <div class="did">
+            <p class="did-lab">What we did</p>
+            <p><b>Branding</b><span>positioning / brand identity / logotype / typography / art direction</span></p>
+            <p><b>Generative media production</b><span>campaign films / character systems / product films / copywriting / content for socials</span></p>
+            <p><b>Product design</b><span>UI / UX / web</span></p>
+            <p><b>Go-to-market</b><span>launches / channels / activations / partnerships</span></p>
+          </div>
         </div>
       </details>
       <details class="entry" id="fungi">
@@ -280,16 +238,21 @@
           <span class="when">Dec 2023 &ndash; Oct 2025</span>
         </summary>
         <div class="body">
-          <p class="role-line">Brand, film, comms and product.</p>
-          <p>Started as a natural language interface for DeFi, a ChatGPT for
-          crypto that executed onchain actions in plain English. The token
+          <p>Started as a natural language interface for DeFi, a ChatGPT for onchain finance that took plain English and executed it. The token
           launched as go-to-market reached $9M market cap on Solana, with a
           Telegram community of around 1,000.</p>
           <p>Pivoted to the yield agent and launched it with a 24-hour
-          livestream instead of an announcement, hitting $50k AUM in the first
+          livestream, hitting $50k AUM in the first
           week. I ran every surface it travelled on: brand, film, comms and
           product.</p>
           <div class="cases" data-cases="fungi"></div>
+          <div class="did">
+            <p class="did-lab">What we did</p>
+            <p><b>Branding</b><span>positioning / brand identity / logotype / typography / art direction</span></p>
+            <p><b>Generative media production</b><span>character systems / product films / copywriting / content for socials</span></p>
+            <p><b>Product design</b><span>UI / UX / web</span></p>
+            <p><b>Go-to-market</b><span>launches / channels / activations / partnerships</span></p>
+          </div>
         </div>
       </details>
       <div class="next" data-reveal>

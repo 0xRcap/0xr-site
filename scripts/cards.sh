@@ -15,19 +15,18 @@ CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 trap 'rm -rf "$TMP"' EXIT
 
 [ -x "$CHROME" ] || { echo "Chrome not found at $CHROME"; exit 1; }
-cp "$SITE/fonts/oliveira.otf" "$TMP/"
+cp "$SITE/fonts/oliveira.otf" "$SITE/media/mark-0xr.svg" "$TMP/"
 
-# slug | headline | footer-left
+# slug | line 1, the offer | line 2, the position
+# One card serves every page: they carried identical copy as four identical
+# files. An empty slug writes media/card.jpg. Add rows back if a page ever
+# earns its own.
 CARDS=(
-"index|I run a creative studio of (&nbsp;one&nbsp;) human + {&nbsp;many&nbsp;}&nbsp;agents.|We do direction + production for brands, at a fraction of the time and cost of a media department."
-"thesis|Every company becomes a media company.|Why the story is what is left to compete on."
-"crew|They produce. I direct.|Six agents: brand / film / art direction / copywriting / product design / gtm"
-"studio|The studio.|Brand / film / product / go-to-market, per company."
-"more|More.|Press, live appearances and the long pieces."
+"|Branding + generative media production.|One human, many agents."
 )
 
 for row in "${CARDS[@]}"; do
-  IFS='|' read -r slug head foot <<< "$row"
+  IFS='|' read -r slug line1 line2 <<< "$row"
   cat > "$TMP/$slug.html" <<EOF
 <meta charset="utf-8">
 <style>
@@ -36,29 +35,28 @@ for row in "${CARDS[@]}"; do
   body { width:1200px; height:630px; background:#FAF8F4; color:#0E0D0B;
          font-family:"Oliveira",Georgia,serif; display:flex; flex-direction:column;
          justify-content:space-between; padding:72px 80px; overflow:hidden; }
+  .say { display:flex; flex-direction:column; gap:26px; }
   h1 { font-size:78px; line-height:1.14; letter-spacing:-0.018em;
-       font-weight:normal; max-width:15em; text-wrap:balance; }
-  .top { font-family:"Oliveira",Georgia,serif; font-size:30px;
-           letter-spacing:0; color:#8A8781; }
-  /* Oliveira has no slashed zero, so 0xR set in it reads OxR. The zero comes
-     from the mono; the letters stay in the display face. */
-  .top i { font-family:ui-monospace,Menlo,monospace; font-style:normal;
-           font-size:0.84em; letter-spacing:-0.02em; }
-  .foot { display:flex; justify-content:space-between; align-items:baseline; gap:40px;
+       font-weight:normal; max-width:13em; text-wrap:balance; }
+  .pos { font-family:ui-monospace,Menlo,monospace; font-size:26px;
+         letter-spacing:0.12em; text-transform:uppercase; color:#8A8781; }
+  /* the mark is drawn, not set: Oliveira's zero and its capital O are the same
+     height and 6% apart in width, so 0xR set live in it reads OxR. */
+  .top { height:40px; width:auto; align-self:flex-start; }
+  .foot { display:flex; justify-content:flex-end; align-items:baseline;
           font-family:ui-monospace,Menlo,monospace; font-size:19px;
           letter-spacing:0.1em; text-transform:uppercase; color:#8A8781; }
   .foot b { font-family:ui-monospace,Menlo,monospace; font-size:19px;
               letter-spacing:0.1em; text-transform:none; color:#0E0D0B;
               font-weight:normal; white-space:nowrap; }
 </style>
-<div class="top"><i>0</i>xR</div>
-<h1>$head</h1>
-<div class="foot"><span>$foot</span><b>0xr.io</b></div>
+<img class="top" src="mark-0xr.svg" alt="0xR">
+<div class="say"><h1>$line1</h1><p class="pos">$line2</p></div>
 EOF
   ( cd "$TMP" && "$CHROME" --headless=new --disable-gpu --hide-scrollbars \
       --force-device-scale-factor=2 --virtual-time-budget=6000 \
       --window-size=1200,630 --screenshot="$slug.png" "$slug.html" >/dev/null 2>&1 )
   sips -s format jpeg -s formatOptions 86 -Z 1200 "$TMP/$slug.png" \
-      --out "$OUT/card-$slug.jpg" >/dev/null
-  printf "  card-%-6s %5.0f KB\n" "$slug.jpg" "$(($(stat -f%z "$OUT/card-$slug.jpg")/1024))"
+      --out "$OUT/card${slug:+-$slug}.jpg" >/dev/null
+  printf "  card%-8s %5.0f KB\n" "${slug:+-$slug}.jpg" "$(($(stat -f%z "$OUT/card${slug:+-$slug}.jpg")/1024))"
 done

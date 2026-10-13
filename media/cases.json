@@ -2,7 +2,7 @@
   "alle": [
     {
       "cat": "Film",
-      "note": "Both films for the capsule, made for the label and running on its own account.",
+      "note": "Every film for the capsule so far, made for the label and running on its own account.",
       "items": [
         {
           "poster": "alle/mid-90s.jpg",
@@ -15,6 +15,30 @@
           "src": "alle/sk8trs.mp4",
           "label": "THE SK8TRS",
           "href": "https://www.instagram.com/reel/DdHlLfyMOjA/"
+        },
+        {
+          "poster": "alle/devil-shirt.jpg",
+          "src": "alle/devil-shirt.mp4",
+          "label": "THE DEVIL SHIRT",
+          "href": "https://www.instagram.com/reel/Ddj-ycCMCQQ/"
+        },
+        {
+          "poster": "alle/hoodies-zipups.jpg",
+          "src": "alle/hoodies-zipups.mp4",
+          "label": "HOODIES AND ZIP UPS",
+          "href": "https://www.instagram.com/reel/Dd7CxeDMDGX/"
+        },
+        {
+          "poster": "alle/as-always-cooking.jpg",
+          "src": "alle/as-always-cooking.mp4",
+          "label": "AS ALWAYS COOKING",
+          "href": "https://www.instagram.com/reel/DeKYwSfMQ6Z/"
+        },
+        {
+          "poster": "alle/hoodie-season.jpg",
+          "src": "alle/hoodie-season.mp4",
+          "label": "HOODIE SEASON",
+          "href": "https://www.instagram.com/reel/DeZ9f4LM4ix/"
         }
       ],
       "links": []
