@@ -6,9 +6,9 @@
     "caption": "Alle Studios / MID 90'S",
     "client": "Alle Studios",
     "campaign": "MID 90'S",
-    "views": 83200,
+    "views": 83300,
     "amplifiedBy": [],
-    "viewsWithQuotes": 83200
+    "viewsWithQuotes": 83300
   },
   {
     "src": "sail/arbitrum-989344.mp4",
@@ -33,9 +33,9 @@
     "caption": "Alle Studios / MID 90'S",
     "client": "Alle Studios",
     "campaign": "MID 90'S",
-    "views": 38700,
+    "views": 38800,
     "amplifiedBy": [],
-    "viewsWithQuotes": 38700
+    "viewsWithQuotes": 38800
   },
   {
     "src": "sail/arbitrum-411947.mp4",
@@ -276,15 +276,26 @@
     "viewsWithQuotes": 1422
   },
   {
+    "src": "alle/as-always-cooking.mp4",
+    "poster": "alle/as-always-cooking.jpg",
+    "href": "https://www.instagram.com/reel/DeKYwSfMQ6Z/",
+    "caption": "Alle Studios / MID 90'S",
+    "client": "Alle Studios",
+    "campaign": "MID 90'S",
+    "views": 1419,
+    "amplifiedBy": [],
+    "viewsWithQuotes": 1419
+  },
+  {
     "src": "alle/devil-shirt.mp4",
     "poster": "alle/devil-shirt.jpg",
     "href": "https://www.instagram.com/reel/Ddj-ycCMCQQ/",
     "caption": "Alle Studios / MID 90'S",
     "client": "Alle Studios",
     "campaign": "MID 90'S",
-    "views": 1121,
+    "views": 1220,
     "amplifiedBy": [],
-    "viewsWithQuotes": 1121
+    "viewsWithQuotes": 1220
   },
   {
     "src": "sail/eurc-launch-752297.mp4",
@@ -300,6 +311,17 @@
     "viewsWithQuotes": 1036
   },
   {
+    "src": "alle/hoodies-zipups.mp4",
+    "poster": "alle/hoodies-zipups.jpg",
+    "href": "https://www.instagram.com/reel/Dd7CxeDMDGX/",
+    "caption": "Alle Studios / MID 90'S",
+    "client": "Alle Studios",
+    "campaign": "MID 90'S",
+    "views": 908,
+    "amplifiedBy": [],
+    "viewsWithQuotes": 908
+  },
+  {
     "src": "sail/protocol-launch-380660.mp4",
     "poster": "sail/protocol-launch-380660.jpg",
     "href": "https://x.com/SaildotMoney/status/2065448589363380660",
@@ -311,5 +333,16 @@
     "seconds": 4,
     "amplifiedBy": [],
     "viewsWithQuotes": 733
+  },
+  {
+    "src": "alle/hoodie-season.mp4",
+    "poster": "alle/hoodie-season.jpg",
+    "href": "https://www.instagram.com/reel/DeZ9f4LM4ix/",
+    "caption": "Alle Studios / MID 90'S",
+    "client": "Alle Studios",
+    "campaign": "MID 90'S",
+    "views": 429,
+    "amplifiedBy": [],
+    "viewsWithQuotes": 429
   }
 ]

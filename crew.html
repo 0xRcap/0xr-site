@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>0xR / the crew</title>
+<title>0xR / crew</title>
 <meta name="author" content="Rodrigo Rivas Yassin">
-<meta name="description" content="They produce. I direct. Six agents, one job each: YE brand, QUENT film, JEAN look, FRANK words, STEVE product design, and KIM go-to-market. Each one says what it does on your project.">
+<meta name="description" content="One agent per discipline: brand, film, art direction, copy, product design, go-to-market. They produce. I direct.">
 <link rel="canonical" href="https://0xr.io/crew.html">
 <link rel="icon" href="favicon.png" type="image/png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="0xR">
-<meta property="og:title" content="0xR / the crew">
-<meta property="og:description" content="They produce. I direct. Six agents, one job each: YE brand, QUENT film, JEAN look, FRANK words, STEVE product design, and KIM go-to-market. Each one says what it does on your project.">
+<meta property="og:title" content="0xR / crew">
+<meta property="og:description" content="One agent per discipline: brand, film, art direction, copy, product design, go-to-market. They produce. I direct.">
 <meta property="og:url" content="https://0xr.io/crew.html">
-<meta property="og:image" content="https://0xr.io/media/card-crew.jpg">
+<meta property="og:image" content="https://0xr.io/media/card.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="0xR / the crew">
-<meta name="twitter:description" content="They produce. I direct. Six agents, one job each: YE brand, QUENT film, JEAN look, FRANK words, STEVE product design, and KIM go-to-market. Each one says what it does on your project.">
-<meta name="twitter:image" content="https://0xr.io/media/card-crew.jpg">
+<meta name="twitter:title" content="0xR / crew">
+<meta name="twitter:description" content="One agent per discipline: brand, film, art direction, copy, product design, go-to-market. They produce. I direct.">
+<meta name="twitter:image" content="https://0xr.io/media/card.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -101,9 +101,31 @@
   .story p:last-child { margin-bottom: 0; }
   .him .lab { font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.18em;
              text-transform: uppercase; color: var(--tone); margin: 0 0 1.2rem; }
-  .story p a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px;
+  .story a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px;
                text-underline-offset: 2px; text-decoration-color: var(--tone); }
-  .story p a:hover { text-decoration-color: var(--ink); }
+  .story a:hover { text-decoration-color: var(--ink); }
+  .story .lab { margin-top: 2rem; }
+  /* the list markers are drawn in pixels, like the crew: a pixel arrow for
+     companies and products, a pixel chevron for the receipts under them.
+     Masks, so they take the ink and tone of whichever theme is on. */
+  .work { max-width: 34rem; margin: 0 0 1.1rem; padding-left: 1.6rem; color: var(--ink-soft);
+          list-style: none; }
+  .work ul { margin: 0.5rem 0 0; padding-left: 1.4rem; list-style: none; }
+  .work li { position: relative; }
+  .work > li { margin: 0 0 1rem; }
+  .work ul li { margin: 0 0 0.35rem; }
+  .work li::before {
+    content: ""; position: absolute; left: -1.5rem; top: 0.38em;
+    width: 15px; height: 15px; background: var(--ink);
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 5 5' shape-rendering='crispEdges'%3E%3Cpath d='M2 0h1v1H2zM3 1h1v1H3zM0 2h5v1H0zM3 3h1v1H3zM2 4h1v1H2z'/%3E%3C/svg%3E") no-repeat 0 0 / 100% 100%;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 5 5' shape-rendering='crispEdges'%3E%3Cpath d='M2 0h1v1H2zM3 1h1v1H3zM0 2h5v1H0zM3 3h1v1H3zM2 4h1v1H2z'/%3E%3C/svg%3E") no-repeat 0 0 / 100% 100%;
+  }
+  .work ul li::before { background: var(--tone); width: 10px; height: 10px; left: -1.2rem; top: 0.5em; }
+  .work ul ul li::before {
+    width: 6px; height: 10px; left: -1rem;
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 5' shape-rendering='crispEdges'%3E%3Cpath d='M0 0h1v1H0zM1 1h1v1H1zM2 2h1v1H2zM1 3h1v1H1zM0 4h1v1H0z'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 5' shape-rendering='crispEdges'%3E%3Cpath d='M0 0h1v1H0zM1 1h1v1H1zM2 2h1v1H2zM1 3h1v1H1zM0 4h1v1H0z'/%3E%3C/svg%3E");
+  }
+  .work .co { color: var(--ink); }
   .story p b { font-weight: 600; color: var(--ink); }
 
   /* ── the dialogue bubble: the figure speaks, the page does not go dark ──
@@ -163,9 +185,8 @@
     <div class="bar" id="bar">
       <a class="name" href="index.html"><i>0</i>xR</a>
       <nav>
-        <a href="studio.html">studio</a>
+        <a href="studio.html">work</a>
         <a href="crew.html" aria-current="page">crew</a>
-        <a href="thesis.html">thesis</a>
         <a href="more.html">more</a>
       </nav>
     </div>
@@ -179,42 +200,51 @@
       <div class="him" data-reveal>
         <p class="lab" data-scramble>The human</p>
       <div class="story">
-        <p>I cofounded Boveda in 2022. We sold decentralized storage on the
-        Filecoin network and stored 1.4 petabytes of client data, which had to
-        physically live somewhere. It lived in data centers in Madrid, Spain
-        and San Diego, California.</p>
-        <p>We exited the business and built Fungi, a ChatGPT for crypto that
-        executed onchain actions in plain English. The go-to-market was a
-        token, and it reached <a
-        href="https://dexscreener.com/solana/bkrvgxjsghfjw8vakhgbijpdxtr11etbo2gn7j26acbn"
-        target="_blank" rel="noopener">$9M market cap on Solana</a> with 1,000+
-        people in our community channels. When we pivoted to a yield agent I
-        launched it on <a
-        href="https://x.com/i/broadcasts/1LyxBWYlPMYKN"
-        target="_blank" rel="noopener">a 24 hour livestream</a> instead of an
-        announcement, building it while people watched. It had $50k in assets
-        under management in the first week.</p>
-        <p>We started managing more capital under our agents, so we rebranded
-        with a more serious look. Fungi became Sail. I ran product design at
-        both, and our UI and UX got copied across the category. My work then
-        expanded to ecosystem-led growth: the agent plugged into 56 yield
-        sources, and each one meant a team to launch with, co-marketing that
-        ran on both accounts.</p>
-        <p>It moved $700M autonomously and <a
-        href="https://x.com/SaildotMoney/status/2042315862229577747"
-        target="_blank" rel="noopener">beat the stablecoin yield market</a>,
-        and the products I cofounded passed $1.1M in assets under management.
-        Two world firsts: <b>the first agent to run swaps and bridges
-        autonomously and without custody, and the first open source permission
-        layer protocol for agents in DeFi</b>, with its harness Sailor on top.
-        Sail is <a href="https://github.com/sail-money" target="_blank"
-        rel="noopener">open source now</a>, so other agents can transact under it.</p>
-        <p>We never paid a PR agency, a design studio or an influencer. I
-        raised more than $1M as a cofounder and ran every surface the story
-        travelled on, brand, product design, film and comms, alone at first and
-        then with six agents whose work I edit all day. Not many people have run
-        all four for their own company. I did, and I can run them
-        for&nbsp;yours.</p>
+        <p>Born in Caracas, Venezuela. Based in&nbsp;Madrid.</p>
+        <p>I raised more than $1M as a cofounder and ran brand, product design,
+        film and comms for my own companies. We never paid a PR agency, a design
+        studio or an&nbsp;influencer.</p>
+        <p class="lab">Companies cofounded</p>
+        <ul class="work">
+          <li><span class="co"><a href="https://sail.money/" target="_blank" rel="noopener">Sail</a></span>. I ran every
+          surface our brand lived on, and go-to-market, which was mostly
+          ecosystem-led&nbsp;growth.
+            <ul>
+              <li>First, a stablecoin yield agent, the world&rsquo;s first to run swaps
+                and bridges autonomously and without&nbsp;custody.
+                <ul>
+                  <li>$700M moved autonomously, $1.1M in assets under management.</li>
+                  <li>56 yield sources, each one a team to launch with and
+                  co-marketing on both accounts.</li>
+                  <li><a href="https://x.com/SaildotMoney/status/2042315862229577747" target="_blank" rel="noopener">Beat the stablecoin yield market in Q1 2026</a>.</li>
+                </ul>
+              </li>
+              <li>Then the pivot to a protocol and a harness: <a href="https://github.com/sail-money/Protocol" target="_blank" rel="noopener">the first open source permission layer protocol</a>
+                for agents in DeFi.
+                <ul>
+                  <li><a href="https://github.com/sail-money/Sailor" target="_blank" rel="noopener">Sailor</a>, the harness on top, so other agents can
+                  transact under it.</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li><span class="co">Fungi</span>, a ChatGPT for onchain finance that took plain
+          English and executed it.
+            <ul>
+              <li>Its token reached <a href="https://dexscreener.com/solana/bkrvgxjsghfjw8vakhgbijpdxtr11etbo2gn7j26acbn" target="_blank" rel="noopener">$9M market cap on Solana</a>.</li>
+              <li>The yield agent launched on <a href="https://x.com/i/broadcasts/1LyxBWYlPMYKN" target="_blank" rel="noopener">a 24 hour livestream</a>,
+              built while people watched, and had $50k in assets under management
+              in the first week.</li>
+            </ul>
+          </li>
+          <li><span class="co">Boveda</span>, decentralized storage on Filecoin,
+          from&nbsp;2022.
+            <ul>
+              <li>1.4 petabytes of client data, stored in data centers in Madrid
+              and San&nbsp;Diego.</li>
+            </ul>
+          </li>
+        </ul>
       </div>
       <div class="director">
         <div class="mate" data-crew="rodrigo">
@@ -315,12 +345,12 @@
   addEventListener("DOMContentLoaded", () => {
     if (!window.crew3d || !window.crewModels) return;
     const SAY = {
-        "ye": "I do brand identity. I find the name, draw the mark, set the type and the colour, and write the guidelines other people build inside. I own what is allowed to change and what never does.",
-        "quent": "I do film. I write the script, build the shot list, shoot it and cut it, whether the piece is a launch film, an ad or a month of vertical cuts. I decide what the camera is on, how long you sit in a shot, and what never makes it in.",
-        "jean": "I do art direction. I write the look down before anything is made, in hex values, lens millimetres and a named film stock, and the same document governs the film, the photographs, the site and the clothes. Then I judge what comes back and throw out what drifted.",
-        "frank": "I do copywriting. I write the names and the taglines, the film scripts, the posts, the site pages, and the proposal with the price at the bottom. I choose what it says first, what it never says, and how long it is allowed to run.",
-        "steve": "I do product design. I lay out what the product does and in what order: the flows, the screens, the checkout, and the first run before anybody has any data. I decide what goes on the first screen and what waits.",
-        "kim": "I do go-to-market. I build the calendar, choose the channels, shape the launch as an event, and put the partners and the paid behind it. I set what goes out on which day, what gets held back, and what the numbers change next week."
+        "ye": "I do brand identity. I'm in charge of turning the positioning into a system the rest of the crew builds inside.",
+        "quent": "I do film. I write the scenes and the shot list, and I take them to the final cut.",
+        "jean": "I do art direction. I write the look down before anything is made, so every frame matches the last one.",
+        "frank": "I do copywriting. Every word the crew ships is mine to write, in the voice YE set.",
+        "steve": "I do product design. Everything a person clicks, on the site or in the product, goes through me.",
+        "kim": "I do go-to-market. Once the crew has made the story, I'm in charge of making it travel."
     };
     const cast   = document.querySelector(".cast");
     const mates  = [...document.querySelectorAll(".roster [data-crew]")];
