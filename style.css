@@ -353,3 +353,10 @@ a:hover > .tile-t { color: var(--ink); }
   .film-shot img { transition: none; }
   .film-go:hover .film-shot img { transform: none; }
 }
+
+/* ── the glitch organism (glitch.js): two fixed layers over every page ──
+   The residue holds what it has taken; the layer holds what it is doing.
+   Both sit over the THESEUS card (z 60) and never take a click. */
+canvas.organism { position: fixed; inset: 0; width: 100vw; height: 100vh;
+                  z-index: 61; pointer-events: none; image-rendering: pixelated; }
+canvas.organism.residue { z-index: 60; }
