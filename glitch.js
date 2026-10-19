@@ -238,9 +238,11 @@
     // ragged, not barred: thin columns, each dripping from its own height
     const hot = clusters(cols, rnd(0.14, 0.32), 1, 4).map((x) => x + c0);
     const drip = new Map(hot.map((x) => { const top = ri(0, Math.max(0, rows - 2)); return [x, [top, ri(top + 1, rows)]]; }));
-    const colours = filmColours();
+    const colours0 = filmColours();
+    const tint = new Map(colours0.length ? hot.filter(() => Math.random() < 0.45).map((x) => [x, pick(colours0)]) : []);
+    const colours = colours0;
     const spanW = sp.x1 - sp.x0;
-    const slivers = Array.from({ length: ri(1, 3) }, () => ({ x: sp.x0 + ri(0, Math.max(0, spanW - 120)), w: ri(60, Math.min(360, spanW)), y: y + ri(0, h - 6), h: ri(3, 8),
+    const slivers = Array.from({ length: ri(2, 5) }, () => ({ x: sp.x0 + ri(0, Math.max(0, spanW - 120)), w: ri(60, Math.min(420, spanW)), y: y + ri(0, h - 6), h: ri(4, 14),
                                                          from: rnd(0, 120), to: rnd(0.4, 0.8) * duration }));
     const shift = { from: rnd(60, 160), to: rnd(0.4, 0.7) * duration, off: ri(2, 8) * (Math.random() < 0.5 ? -1 : 1) };
     const resolve = new Map(hot.map((x) => [x, rnd(0.55, 0.98) * duration]));
@@ -253,8 +255,9 @@
         if (dx < c0 || dx >= c1) dx = x;
         const [r0, r1] = drip.get(x);
         const grow = Math.min(r1, r0 + 1 + Math.round(easeOut(Math.min(1, t / 260)) * (r1 - r0)));
-        lg.fillStyle = INK; lg.fillRect(dx * 9, y + r0 * 9, 9, (grow - r0) * 9);
-        lg.fillStyle = PAPER;
+        const fill = tint.get(x);
+        lg.fillStyle = fill || INK; lg.fillRect(dx * 9, y + r0 * 9, 9, (grow - r0) * 9);
+        lg.fillStyle = fill ? INK : PAPER;
         for (let r = r0; r < grow; r++)
           lg.fillText(Math.random() < 0.08 ? pick(CORRUPT) : pick(STREAK), dx * 9 + 4.5, y + r * 9 + 4.5);
       }
@@ -319,7 +322,8 @@
     for (;;) {
       if (document.hidden) { await wait(1000); continue; }
       const c = choose();
-      const pulses = ri(1, 3);
+      const e = entropy();
+      const pulses = ri(1, 3 + Math.round(e * 3));
       for (let p = 0; p < pulses; p++) {
         const duration = p === 0 ? rnd(700, 950) : rnd(380, 600);
         if (c.kind === "tear") await tear(c.y, duration, undefined, c.x);
@@ -328,14 +332,131 @@
         await wait(rnd(120, 320) * SLOW);
       }
       at = { x: c.x, y: c.y };
-      await wait(rnd(900, 2600) * SLOW);                   // rests, then moves on
+      await wait(rnd(900, 2600) * (1 - e * 0.85) * SLOW);  // rests, then moves on; less and less as it takes over
     }
   }
   if (!/freeze=/.test(location.search)) live();
 
+  /* ── entropy: the longer nobody touches the page, the more it takes ───────
+     Still for 8 s and it starts to escalate; by about 55 s the screen is all
+     glitch except the title. Smears of the films' own pixels grow across the
+     page and stay. Any movement heals it, column by column, never a fade. */
+  const QUIET = 8000 * SLOW, FULL = 55000 * SLOW;
+  const residue = document.createElement("canvas");
+  residue.className = "organism residue"; residue.setAttribute("aria-hidden", "true");
+  document.body.appendChild(residue);
+  const rg = residue.getContext("2d", { willReadFrequently: true });
+  let RW = 0, RH = 0, dirty = false, healing = false, lastTouch = performance.now();
+  function sizeResidue() {
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    if (innerWidth === RW && innerHeight === RH) return;
+    RW = innerWidth; RH = innerHeight;
+    residue.width = RW * dpr; residue.height = RH * dpr;
+    rg.setTransform(dpr, 0, 0, dpr, 0, 0); rg.imageSmoothingEnabled = false; dirty = false;
+  }
+  sizeResidue(); addEventListener("resize", sizeResidue);
+
+  const entropy = () => {
+    const x = Math.min(1, Math.max(0, (performance.now() - lastTouch - QUIET) / (FULL - QUIET)));
+    return x * x * (3 - 2 * x);
+  };
+  G.entropy = entropy;
+
+  /* the one thing it never takes: the title, or the nearest heading on screen */
+  function spared() {
+    const hs = [...document.querySelectorAll("h1, h2")].filter((h) => {
+      const r = h.getBoundingClientRect(); return r.width && r.bottom > 0 && r.top < innerHeight;
+    });
+    const h1 = hs.find((h) => h.tagName === "H1");
+    if (h1) return h1;
+    return hs.sort((a, b) => Math.abs(a.getBoundingClientRect().top - innerHeight / 2) - Math.abs(b.getBoundingClientRect().top - innerHeight / 2))[0];
+  }
+  function spareTitle() {
+    const t = spared(); if (!t) return;
+    // the title's own line boxes, so the cut follows the words and not the block
+    const range = document.createRange(); range.selectNodeContents(t);
+    for (const r of range.getClientRects()) { rg.clearRect(r.left - 10, r.top - 6, r.width + 20, r.height + 12); lg.clearRect(r.left - 10, r.top - 6, r.width + 20, r.height + 12); }
+  }
+
+  function sources() {
+    const out = [];
+    document.querySelectorAll("#reel .tile:not([hidden])").forEach((t) => { const s = filmSource(t); if (s) out.push(s); });
+    const card = readable(document.querySelector(".film-card .film-shot img")); if (card) out.push(card);
+    return out;
+  }
+  /* a spore: a vertical smear of a film's own pixels, sorted, laid on the page */
+  function spore(e) {
+    const srcs = sources(); if (!srcs.length) return;
+    const src = pick(srcs);
+    const w = ri(4, 14 + Math.round(e * 70)), h = Math.round(RH * rnd(0.2, 0.4 + e * 0.6));
+    const x = ri(-10, RW), y = ri(-Math.round(h * 0.2), RH - Math.round(h * 0.6));
+    const cols = Math.max(1, Math.ceil(w / PX)), rows = Math.max(2, Math.ceil(h / PX));
+    const c = document.createElement("canvas"); c.width = cols; c.height = rows;
+    const g = c.getContext("2d", { willReadFrequently: true });
+    const sw = src.videoWidth || src.naturalWidth || src.width, sh = src.videoHeight || src.naturalHeight || src.height;
+    const sx = rnd(0, Math.max(0, sw - sw * 0.06)), sWide = Math.max(1, sw * rnd(0.01, 0.06));
+    try { g.drawImage(src, sx, 0, sWide, sh, 0, 0, cols, rows); } catch (err) { return; }
+    const im = g.getImageData(0, 0, cols, rows), d = im.data;
+    for (let cx = 0; cx < cols; cx++) {
+      const run = [];
+      for (let cy = 0; cy < rows; cy++) { const i = (cy * cols + cx) * 4; run.push([d[i], d[i + 1], d[i + 2], lum(d, i)]); }
+      run.sort((p, q) => p[3] - q[3]);
+      const head = Math.random() < 0.5 ? run[0] : run[run.length - 1], cut = ri(Math.floor(rows * 0.2), rows);
+      for (let cy = 0; cy < rows; cy++) {
+        const p = cy < cut ? run[cy] : head, i = (cy * cols + cx) * 4;
+        d[i] = p[0]; d[i + 1] = p[1]; d[i + 2] = p[2]; d[i + 3] = 255;
+      }
+    }
+    g.putImageData(im, 0, 0);
+    rg.drawImage(c, x, y, w, h);
+    if (Math.random() < 0.3) {                                  // the 0xR accent, inside the takeover too
+      rg.font = "9px monospace"; rg.textAlign = "center"; rg.textBaseline = "middle";
+      const ax = x + ri(0, Math.max(0, w - 9)), ah = Math.round(h * rnd(0.3, 0.9));
+      rg.fillStyle = INK; rg.fillRect(ax, y, 9, ah); rg.fillStyle = PAPER;
+      for (let r = 0; r < ah / 9; r++) rg.fillText(Math.random() < 0.08 ? pick(CORRUPT) : pick(STREAK), ax + 4.5, y + r * 9 + 4.5);
+    }
+    if (Math.random() < e * 0.5) {                              // datamosh the residue itself
+      const bw = ri(60, 340), bh = ri(10, 60), bx = ri(0, RW - bw), by = ri(0, RH - bh), off = ri(-80, 80);
+      try { const dpr = residue.width / RW; const blk = rg.getImageData(bx * dpr, by * dpr, bw * dpr, bh * dpr); rg.putImageData(blk, (bx + off) * dpr, by * dpr); } catch (err) {}
+    }
+    dirty = true;
+  }
+
+  (function spread() {
+    setTimeout(() => {
+      if (!document.hidden && !healing) {
+        const e = entropy();
+        if (e > 0.02) {
+          const n = Math.round(e * e * 6 + e * 1.5);
+          for (let i = 0; i < n; i++) spore(e);
+          spareTitle();
+        }
+      }
+      spread();
+    }, 120 * SLOW);
+  })();
+
+  /* healing: any touch wipes it away, column by column */
+  function heal() {
+    if (!dirty || healing) return;
+    healing = true;
+    const strips = []; for (let x = 0; x < RW; x += 16) strips.push(x);
+    strips.sort(() => Math.random() - 0.5);
+    const per = Math.ceil(strips.length / 12);
+    let i = 0;
+    (function step() {
+      for (let k = 0; k < per && i < strips.length; k++, i++) rg.clearRect(strips[i], 0, 16, RH);
+      if (i < strips.length) setTimeout(step, 40 * SLOW);
+      else { rg.clearRect(0, 0, RW, RH); dirty = false; healing = false; }
+    })();
+  }
+  const wake = () => { lastTouch = performance.now(); heal(); };
+  ["pointermove", "pointerdown", "wheel", "keydown", "touchstart"].forEach((ev) => addEventListener(ev, wake, { passive: true }));
+
   /* a fast scroll tears the page where you are */
   let lastY = scrollY, lastT = performance.now(), lastTear = 0;
   addEventListener("scroll", () => {
+    wake();
     const now = performance.now(), v = Math.abs(scrollY - lastY) / Math.max(1, now - lastT);
     lastY = scrollY; lastT = now;
     if (v > 2.2 && now - lastTear > 1500) { lastTear = now; tear(innerHeight / 2, rnd(420, 620)); }
@@ -362,7 +483,8 @@
     });
   }
 
-  // PROTOTYPE ONLY: still frames for review
+  // PROTOTYPE ONLY: still frames for review; G.takeover(e) fakes how long the page has been still
+  G.takeover = (e = 1, ticks = 60) => { lastTouch = performance.now() - (QUIET + (FULL - QUIET) * e); for (let i = 0; i < ticks; i++) spore(entropy()); spareTitle(); };
   G.film = (i = 0, t = 300) => breakElement(document.querySelectorAll("#reel .tile:not([hidden])")[i], "film", 900, t);
   G.figure = (i = 0, t = 300) => breakElement(document.querySelectorAll("#stage canvas")[i], "figure", 900, t);
   G.tear = (y = innerHeight / 2, t = 300) => tear(y, 700, t);
