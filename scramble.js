@@ -109,6 +109,10 @@
       guard = setTimeout(teardown, 2500);
     };
 
+    /* anything on the page can ask a label to decode: the glitch organism does
+       when it passes (glitch.js). The label still only ever moves this way. */
+    el.addEventListener("0xr:scramble", start);
+
     if (trigger === "mount") {
       start();
     } else {
