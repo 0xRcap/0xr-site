@@ -70,6 +70,10 @@
   }
   const filmSource = (tile) =>
     readable(tile.querySelector("video")) || readable(tile.querySelector("img"));
+  /* every other picture on any page: case studies, press, writing covers */
+  const MEDIA = "main img, main video";
+  const isLoose = (el) => !el.closest("#reel, .film-card, nav, header.hero .stage") &&
+                          el.getBoundingClientRect().width >= 80;
 
   /* ── the break: a picture's own pixels, sorted, smeared and torn ────────── */
   function makeBreak(src, W, H, opts = {}) {
@@ -217,9 +221,8 @@
     return spots;
   }
   function filmColours() {
-    const tiles = [...document.querySelectorAll("#reel .tile:not([hidden])")];
-    const t = tiles[ri(0, Math.max(0, tiles.length - 1))];
-    const src = t && filmSource(t);
+    const all = sources();
+    const src = all.length ? pick(all) : null;
     if (!src) return [];
     const c = document.createElement("canvas"); c.width = 32; c.height = 4;
     const g = c.getContext("2d", { willReadFrequently: true });
@@ -295,8 +298,9 @@
       list.push({ el, kind, x: r.left + r.width / 2, y: r.top + r.height / 2 });
     };
     document.querySelectorAll("#reel .tile:not([hidden])").forEach((t) => add(t, "film"));
-    document.querySelectorAll("#stage canvas").forEach((c) => add(c, "figure"));
+    document.querySelectorAll("#stage canvas, canvas.fig").forEach((c) => add(c, "figure"));
     add(document.querySelector(".film-card .film-shot img"), "card");
+    document.querySelectorAll(MEDIA).forEach((m) => { if (isLoose(m)) add(m, "card"); });
     add(document.getElementById("ascii"), "footer");
     return list;
   }
@@ -378,10 +382,22 @@
     for (const r of range.getClientRects()) { rg.clearRect(r.left - 10, r.top - 6, r.width + 20, r.height + 12); lg.clearRect(r.left - 10, r.top - 6, r.width + 20, r.height + 12); }
   }
 
+  /* every page feeds on the films, even a page with none on it: a few posters
+     from the wall are loaded in the background as the organism's colour */
+  const pantry = [];
+  fetch("/media/manifest.json").then((r) => r.json()).then((list) => {
+    const posters = list.map((it) => it.poster || (/\.(jpe?g|png|webp)$/i.test(it.src) ? it.src : null)).filter(Boolean);
+    posters.sort(() => Math.random() - 0.5).slice(0, 8).forEach((p) => {
+      const im = new Image(); im.decoding = "async"; im.src = "/media/" + p;
+      im.onload = () => pantry.push(im);
+    });
+  }).catch(() => {});
+
   function sources() {
-    const out = [];
+    const out = pantry.slice();
     document.querySelectorAll("#reel .tile:not([hidden])").forEach((t) => { const s = filmSource(t); if (s) out.push(s); });
     const card = readable(document.querySelector(".film-card .film-shot img")); if (card) out.push(card);
+    document.querySelectorAll(MEDIA).forEach((m) => { const s = readable(m); if (s && !m.closest("#reel")) out.push(s); });
     return out;
   }
   /* a spore: a vertical smear of a film's own pixels, sorted, laid on the page */
@@ -471,8 +487,19 @@
     cool.set(tile, now + 1200 * SLOW);
     breakElement(tile, "film", rnd(700, 900));
   };
+  const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
+  if (fine) document.addEventListener("pointerover", (e) => {
+    if (reel && reel.contains(e.target)) return;
+    const box = e.target.closest("a, figure, .shot, .cover, .pcard") || e.target;
+    const m = box.matches && box.matches("img, video") ? box : box.querySelector && box.querySelector("img, video");
+    if (!m || !m.closest("main") || !isLoose(m) || box.contains(e.relatedTarget)) return;
+    const now = performance.now();
+    if ((cool.get(m) || 0) > now) return;
+    cool.set(m, now + 1200 * SLOW);
+    breakElement(m, "card", rnd(700, 900));
+  });
   if (reel) {
-    if (matchMedia("(hover: hover) and (pointer: fine)").matches)
+    if (fine)
       reel.addEventListener("pointerover", (e) => {
         const tile = e.target.closest(".tile");
         if (tile && !tile.contains(e.relatedTarget)) poke(tile);

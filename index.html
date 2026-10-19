@@ -142,10 +142,6 @@
   .reel .tile canvas.glitch { position: absolute; inset: 0; width: 100%; height: 100%;
                               z-index: 1; pointer-events: none; image-rendering: pixelated; }
   .reel .tile figcaption { z-index: 2; }
-  /* the organism's layer: over the page and the THESEUS card, never taking a click */
-  canvas.organism { position: fixed; inset: 0; width: 100vw; height: 100vh;
-                    z-index: 61; pointer-events: none; image-rendering: pixelated; }
-  canvas.organism.residue { z-index: 60; }
   .reel .tile video { opacity: 0; }
   .reel .tile video.ready { opacity: 1; }
   .reel .tile a { display: block; position: absolute; inset: 0; cursor: pointer; }
