@@ -1,20 +1,25 @@
 /* ── glitch: one organism that lives in the page ──
-   Round 3 (2026-10-19). His notes on round 2: "much better. not all videos
-   have this and i want it not only on the videos i want it like a living
-   organism inside my site".
+   0xR's glitchcore (2026-10-19, four rounds with Rodrigo; rules in
+   jean/projects/0xr-glitch/, colour in ye/clients/rodrigo/2026-10-19-glitch-colour.md).
 
-   So the glitch is now one creature, not a set of effects. It travels: its
-   next stop is always weighted toward its last one, so it can be watched
-   moving down the page. Where it lands it pulses one to three times, rests,
-   and moves on. It visits the films, the crew figures, the THESEUS card, the
-   ASCII footer, and the empty paper between sections, which it tears. It
-   asks labels it passes to decode (their own scramble, so type still only
-   moves the way it always has). It comes to a resting cursor, and a fast
-   scroll tears the page.
+   One creature, on every page. It travels from picture to picture (films,
+   crew figures, the THESEUS card, case-study and press images, the footer)
+   and across the empty paper, which it tears; its next stop is weighted
+   toward its last, so it can be watched moving. Where it lands it pulses
+   and rests. A picture breaks in its own pixels: sorted by brightness,
+   smeared down, blocks torn sideways, with a few strips of ASCII as the 0xR
+   mark. Labels it passes run their own scramble. It comes to a resting
+   cursor; a fast scroll tears the page.
 
-   Kept from JEAN's rules: type never glitches, nothing at rest, no RGB split,
-   scanlines or CSS transforms, reduced motion and hidden tabs stay still.
-   Colour is only ever the films' own (YE). */
+   The longer nobody touches the page, the more it takes: from 8 s still it
+   escalates, and by about 55 s the screen is smeared film pixels except the
+   title. Any touch heals it, column by column.
+
+   Rules: type never glitches (the title is cut out of the takeover by its
+   own line boxes), nothing moves at rest, no RGB split, scanlines or CSS
+   transforms. Colour is only ever the films' own, never boosted; pages
+   without films feed on posters from the wall. Reduced motion and Save-Data
+   switch it off; hidden tabs pause it; phones get a lighter takeover. */
 (() => {
   const still = matchMedia("(prefers-reduced-motion: reduce)").matches ||
                 (navigator.connection && navigator.connection.saveData);
@@ -33,11 +38,6 @@
   const lum = (d, i) => 0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2];
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
-  /* PROTOTYPE ONLY: ?glitch=slow plays everything 12x slower; window.__glitch
-     exposes still frames for review. Both come out before shipping. */
-  const SLOW = /glitch=slow/.test(location.search) ? 12 : 1;
-  const G = (window.__glitch = {});
-
   function clusters(cols, share, wMin, wMax) {
     const out = new Set(), target = Math.round(cols * share);
     let guard = 0;
@@ -53,7 +53,7 @@
       const t0 = performance.now(); let skip = 0;
       (function tick(now) {
         if (++skip & 1) return requestAnimationFrame(tick);   // stepped, 30fps
-        const t = (now - t0) / SLOW;
+        const t = now - t0;
         if (t >= duration || document.hidden) { done(); resolve(); return; }
         frame(t); requestAnimationFrame(tick);
       })(t0);
@@ -80,8 +80,9 @@
     const cols = Math.max(1, Math.ceil(W / PX)), rows = Math.max(1, Math.ceil(H / PX));
     const c = document.createElement("canvas"); c.width = cols; c.height = rows;
     const cg = c.getContext("2d", { willReadFrequently: true });
-    try { cg.drawImage(src, 0, 0, cols, rows); } catch (e) { return null; }
-    const B = cg.getImageData(0, 0, cols, rows).data;
+    let B;
+    try { cg.drawImage(src, 0, 0, cols, rows); B = cg.getImageData(0, 0, cols, rows).data; }
+    catch (e) { return null; }                                   // a picture from another site cannot be read
     const share = opts.share || [0.35, 0.55];
     const sorted = clusters(cols, rnd(share[0], share[1]), 3, 14).map((x) => {
       const s = ri(0, Math.floor(rows * 0.3)), run = [];
@@ -156,7 +157,7 @@
   const clearLayer = () => { if (layerUsers === 0) lg.clearRect(0, 0, LW, LH); };
 
   /* one visit on one element: a film, a figure, the card, the footer */
-  async function breakElement(el, kind, duration, freezeAt) {
+  async function breakElement(el, kind, duration) {
     const r = el.getBoundingClientRect();
     if (!r.width || !r.height || r.bottom < 0 || r.top > innerHeight) return;
     const src = kind === "film" ? filmSource(el) : readable(el);
@@ -173,7 +174,6 @@
       cv.width = W * dpr; cv.height = H * dpr;
       a.appendChild(cv);
       const g = cv.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0);
-      if (freezeAt != null) { draw(g, 0, 0, freezeAt); return; }
       await run(duration, (t) => { g.clearRect(0, 0, W, H); draw(g, 0, 0, t); }, () => cv.remove());
       return;
     }
@@ -191,7 +191,6 @@
       lg.clearRect(q.left - 2, q.top - 2, q.width + 4, q.height + 4);
       draw(lg, q.left, q.top, t);
     };
-    if (freezeAt != null) { paint(freezeAt); layerUsers--; return; }
     await run(duration, paint, () => {
       const q = el.getBoundingClientRect();
       lg.clearRect(q.left - 2, q.top - 2, q.width + 4, q.height + 4);
@@ -226,12 +225,12 @@
     if (!src) return [];
     const c = document.createElement("canvas"); c.width = 32; c.height = 4;
     const g = c.getContext("2d", { willReadFrequently: true });
-    try { g.drawImage(src, 0, 0, 32, 4); } catch (e) { return []; }
-    const d = g.getImageData(0, 0, 32, 4).data, out = [];
+    let d; const out = [];
+    try { g.drawImage(src, 0, 0, 32, 4); d = g.getImageData(0, 0, 32, 4).data; } catch (e) { return []; }
     for (let i = 0; i < d.length; i += 4) out.push(`rgb(${d[i]},${d[i + 1]},${d[i + 2]})`);
     return out;
   }
-  async function tear(nearY, duration, freezeAt, nearX = LW / 2) {
+  async function tear(nearY, duration, nearX = LW / 2) {
     const h = ri(30, 96), spots = freeSpots(h, 160);
     if (!spots.length) return false;
     spots.sort((a, b) => Math.hypot((a.x0 + a.x1) / 2 - nearX, a.y - nearY) - Math.hypot((b.x0 + b.x1) / 2 - nearX, b.y - nearY));
@@ -271,7 +270,6 @@
       }
     };
     layerUsers++;
-    if (freezeAt != null) { paint(freezeAt); layerUsers--; return true; }
     await run(duration, paint, () => { lg.clearRect(sp.x0, y - 1, spanW, h + 2); layerUsers--; clearLayer(); });
     return true;
   }
@@ -322,37 +320,46 @@
   }
 
   async function live() {
-    await wait(1800 * SLOW);
+    await wait(1800);
     for (;;) {
       if (document.hidden) { await wait(1000); continue; }
+      try { await visit(); } catch (err) { await wait(2000); }   // a failed visit never ends the organism
+    }
+  }
+  async function visit() {
+    {
       const c = choose();
       const e = entropy();
       const pulses = ri(1, 3 + Math.round(e * 3));
       for (let p = 0; p < pulses; p++) {
         const duration = p === 0 ? rnd(700, 950) : rnd(380, 600);
-        if (c.kind === "tear") await tear(c.y, duration, undefined, c.x);
+        if (c.kind === "tear") await tear(c.y, duration, c.x);
         else await breakElement(c.el, c.kind, duration);
         if (p === 0) touchLabels(c.x, c.y);
-        await wait(rnd(120, 320) * SLOW);
+        await wait(rnd(120, 320));
       }
       at = { x: c.x, y: c.y };
-      await wait(rnd(900, 2600) * (1 - e * 0.85) * SLOW);  // rests, then moves on; less and less as it takes over
+      await wait(rnd(900, 2600) * (1 - e * 0.85));          // rests, then moves on; less and less as it takes over
     }
   }
-  if (!/freeze=/.test(location.search)) live();
+  live();
 
   /* ── entropy: the longer nobody touches the page, the more it takes ───────
      Still for 8 s and it starts to escalate; by about 55 s the screen is all
      glitch except the title. Smears of the films' own pixels grow across the
      page and stay. Any movement heals it, column by column, never a fade. */
-  const QUIET = 8000 * SLOW, FULL = 55000 * SLOW;
+  const QUIET = 8000, FULL = 55000;
+  /* phones and small machines get half the spores and a 1x residue */
+  const LITE = matchMedia("(hover: none)").matches ||
+               (navigator.deviceMemory && navigator.deviceMemory <= 4) ||
+               (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
   const residue = document.createElement("canvas");
   residue.className = "organism residue"; residue.setAttribute("aria-hidden", "true");
   document.body.appendChild(residue);
-  const rg = residue.getContext("2d", { willReadFrequently: true });
+  const rg = residue.getContext("2d");
   let RW = 0, RH = 0, dirty = false, healing = false, lastTouch = performance.now();
   function sizeResidue() {
-    const dpr = Math.min(devicePixelRatio || 1, 2);
+    const dpr = LITE ? 1 : Math.min(devicePixelRatio || 1, 2);
     if (innerWidth === RW && innerHeight === RH) return;
     RW = innerWidth; RH = innerHeight;
     residue.width = RW * dpr; residue.height = RH * dpr;
@@ -364,7 +371,6 @@
     const x = Math.min(1, Math.max(0, (performance.now() - lastTouch - QUIET) / (FULL - QUIET)));
     return x * x * (3 - 2 * x);
   };
-  G.entropy = entropy;
 
   /* the one thing it never takes: the title, or the nearest heading on screen */
   function spared() {
@@ -401,8 +407,8 @@
     return out;
   }
   /* a spore: a vertical smear of a film's own pixels, sorted, laid on the page */
-  function spore(e) {
-    const srcs = sources(); if (!srcs.length) return;
+  function spore(e, srcs) {
+    if (!srcs.length) return;
     const src = pick(srcs);
     const w = ri(4, 14 + Math.round(e * 70)), h = Math.round(RH * rnd(0.2, 0.4 + e * 0.6));
     const x = ri(-10, RW), y = ri(-Math.round(h * 0.2), RH - Math.round(h * 0.6));
@@ -411,8 +417,9 @@
     const g = c.getContext("2d", { willReadFrequently: true });
     const sw = src.videoWidth || src.naturalWidth || src.width, sh = src.videoHeight || src.naturalHeight || src.height;
     const sx = rnd(0, Math.max(0, sw - sw * 0.06)), sWide = Math.max(1, sw * rnd(0.01, 0.06));
-    try { g.drawImage(src, sx, 0, sWide, sh, 0, 0, cols, rows); } catch (err) { return; }
-    const im = g.getImageData(0, 0, cols, rows), d = im.data;
+    let im;
+    try { g.drawImage(src, sx, 0, sWide, sh, 0, 0, cols, rows); im = g.getImageData(0, 0, cols, rows); } catch (err) { return; }
+    const d = im.data;
     for (let cx = 0; cx < cols; cx++) {
       const run = [];
       for (let cy = 0; cy < rows; cy++) { const i = (cy * cols + cx) * 4; run.push([d[i], d[i + 1], d[i + 2], lum(d, i)]); }
@@ -433,23 +440,27 @@
     }
     if (Math.random() < e * 0.5) {                              // datamosh the residue itself
       const bw = ri(60, 340), bh = ri(10, 60), bx = ri(0, RW - bw), by = ri(0, RH - bh), off = ri(-80, 80);
-      try { const dpr = residue.width / RW; const blk = rg.getImageData(bx * dpr, by * dpr, bw * dpr, bh * dpr); rg.putImageData(blk, (bx + off) * dpr, by * dpr); } catch (err) {}
+      const dpr = residue.width / RW;                            // the canvas copies itself: no read back
+      rg.drawImage(residue, bx * dpr, by * dpr, bw * dpr, bh * dpr, bx + off, by, bw, bh);
     }
     dirty = true;
   }
 
   (function spread() {
     setTimeout(() => {
-      if (!document.hidden && !healing) {
-        const e = entropy();
-        if (e > 0.02) {
-          const n = Math.round(e * e * 6 + e * 1.5);
-          for (let i = 0; i < n; i++) spore(e);
-          spareTitle();
+      try {
+        if (!document.hidden && !healing) {
+          const e = entropy();
+          if (e > 0.02) {
+            const n = Math.round((e * e * 6 + e * 1.5) * (LITE ? 0.5 : 1));
+            const srcs = sources();                             // read the page once per tick, not per spore
+            for (let i = 0; i < n; i++) spore(e, srcs);
+            spareTitle();
+          }
         }
-      }
+      } catch (err) { /* keep spreading */ }
       spread();
-    }, 120 * SLOW);
+    }, 120);
   })();
 
   /* healing: any touch wipes it away, column by column */
@@ -462,7 +473,7 @@
     let i = 0;
     (function step() {
       for (let k = 0; k < per && i < strips.length; k++, i++) rg.clearRect(strips[i], 0, 16, RH);
-      if (i < strips.length) setTimeout(step, 40 * SLOW);
+      if (i < strips.length) setTimeout(step, 40);
       else { rg.clearRect(0, 0, RW, RH); dirty = false; healing = false; }
     })();
   }
@@ -484,7 +495,7 @@
   const poke = (tile) => {
     const now = performance.now();
     if (!tile || (cool.get(tile) || 0) > now || tile.querySelector("canvas.glitch")) return;
-    cool.set(tile, now + 1200 * SLOW);
+    cool.set(tile, now + 1200);
     breakElement(tile, "film", rnd(700, 900));
   };
   const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -495,7 +506,7 @@
     if (!m || !m.closest("main") || !isLoose(m) || box.contains(e.relatedTarget)) return;
     const now = performance.now();
     if ((cool.get(m) || 0) > now) return;
-    cool.set(m, now + 1200 * SLOW);
+    cool.set(m, now + 1200);
     breakElement(m, "card", rnd(700, 900));
   });
   if (reel) {
@@ -510,23 +521,4 @@
     });
   }
 
-  // PROTOTYPE ONLY: still frames for review; G.takeover(e) fakes how long the page has been still
-  G.takeover = (e = 1, ticks = 60) => { lastTouch = performance.now() - (QUIET + (FULL - QUIET) * e); for (let i = 0; i < ticks; i++) spore(entropy()); spareTitle(); };
-  G.film = (i = 0, t = 300) => breakElement(document.querySelectorAll("#reel .tile:not([hidden])")[i], "film", 900, t);
-  G.figure = (i = 0, t = 300) => breakElement(document.querySelectorAll("#stage canvas")[i], "figure", 900, t);
-  G.tear = (y = innerHeight / 2, t = 300) => tear(y, 700, t);
-  G.footer = (t = 300) => breakElement(document.getElementById("ascii"), "footer", 900, t);
-  const FREEZE = new URLSearchParams(location.search).get("freeze");   // e.g. figure:2:300,tear:420:260
-  if (FREEZE) setTimeout(() => FREEZE.split(",").forEach((f) => {
-    const [k, a1, a2] = f.split(":"); const n1 = +a1, n2 = +a2;
-    if (k === "tear") G.tear(n1, n2); else if (k === "footer") G.footer(n1); else G[k] && G[k](n1, n2);
-  }) || setTimeout(() => {
-    const d = lg.getImageData(0, 0, layer.width, layer.height).data; let n = 0;
-    for (let i = 3; i < d.length; i += 4) if (d[i]) n++;
-    const f = document.querySelector("#stage canvas"), tg = document.createElement("canvas");
-    tg.width = f.width; tg.height = f.height; tg.getContext("2d").drawImage(f, 0, 0);
-    const fd = tg.getContext("2d").getImageData(0, 0, tg.width, tg.height).data; let m = 0;
-    for (let i = 3; i < fd.length; i += 4) if (fd[i]) m++;
-    document.documentElement.dataset.glitchDebug = JSON.stringify({ layerPx: n, figPx: m, spots: freeSpots(30, 160).length });
-  }, 400), 2600);
 })();
