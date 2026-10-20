@@ -41,7 +41,8 @@
   /* scrolling: the page stays practical. Anything breaking on a moving picture
      ends cleanly, and nothing new starts until the page has been still a moment */
   let lastScrollT = -1e9;
-  const scrolling = () => performance.now() - lastScrollT < 700;
+  const scrolling = () => performance.now() - lastScrollT < 140;   // moving right now: bursts end, hovers wait
+  const settling = () => performance.now() - lastScrollT < 700;    // just stopped: the organism waits to wander
   function hexAt(col, row, t) {
     const n = ((row + Math.floor(t / 90)) % 42 + 42) % 42;
     if (n === 0) return "0";
@@ -491,14 +492,14 @@
     return out;
   }
   async function tear(nearY, duration, nearX = LW / 2, fromScroll = false) {
-    const h = fromScroll ? ri(14, 30) : ri(30, 96), spots = freeSpots(h, 160);
+    const h = fromScroll ? ri(20, 46) : ri(30, 96), spots = freeSpots(h, 160);
     if (!spots.length) return false;
     spots.sort((a, b) => Math.hypot((a.x0 + a.x1) / 2 - nearX, a.y - nearY) - Math.hypot((b.x0 + b.x1) / 2 - nearX, b.y - nearY));
     const sp = spots[ri(0, Math.min(3, spots.length - 1))];
     const y = sp.y, c0 = Math.ceil(sp.x0 / 9), c1 = Math.floor(sp.x1 / 9);
     const cols = Math.max(1, c1 - c0), rows = Math.ceil(h / 9);
     // ragged, not barred: thin columns, each dripping from its own height
-    const hot = clusters(cols, fromScroll ? rnd(0.04, 0.09) : rnd(0.14, 0.32), 1, fromScroll ? 2 : 4).map((x) => x + c0);
+    const hot = clusters(cols, fromScroll ? rnd(0.07, 0.15) : rnd(0.14, 0.32), 1, fromScroll ? 3 : 4).map((x) => x + c0);
     const drip = new Map(hot.map((x) => { const top = ri(0, Math.max(0, rows - 2)); return [x, [top, ri(top + 1, rows)]]; }));
     const colours0 = Math.random() < 0.7 ? scene().map((q) => `rgb(${q[0]},${q[1]},${q[2]})`) : filmColours();
     const tint = new Map(colours0.length ? hot.filter(() => Math.random() < 0.45).map((x) => [x, pick(colours0)]) : []);
@@ -614,7 +615,7 @@
     await wait(1800);
     for (;;) {
       if (document.hidden) { await wait(1000); continue; }
-      if (scrolling()) { await wait(250); continue; }
+      if (settling()) { await wait(250); continue; }
       try { await visit(); } catch (err) { await wait(2000); }   // a failed visit never ends the organism
     }
   }
@@ -911,17 +912,27 @@
     const now = performance.now(), v = Math.abs(scrollY - lastY) / Math.max(1, now - lastT);
     lastY = scrollY; lastT = now;
     lastScrollT = now;
+    clearTimeout(settleTimer);
+    settleTimer = setTimeout(() => {
+      const h = pendingHover; pendingHover = null;
+      if (!h || !h.matches(":hover") && !(h.parentElement && h.parentElement.matches(":hover"))) return;
+      if (h.classList && h.classList.contains("tile")) poke(h); else breakElement(h, "card", rnd(700, 900));
+    }, 160);
     // only a real flick tears, rarely, thin and small, and only on empty paper
-    if (v > 3.5 && now - lastTear > 3000) { lastTear = now; tear(innerHeight / 2, rnd(260, 380), LW / 2, true); }
+    if (v > 2.6 && now - lastTear > 1800) { lastTear = now; tear(innerHeight * rnd(0.3, 0.7), rnd(300, 440), LW * rnd(0.25, 0.75), true); }
   }, { passive: true });
 
   /* poking a film always works, whatever the organism is doing */
   const reel = document.getElementById("reel");
   const cool = new WeakMap();
+  /* a hover that lands while the page is still moving is kept, and fires as
+     soon as it stops if the pointer is still on that film */
+  let pendingHover = null, settleTimer = 0;
   const poke = (tile) => {
     const now = performance.now();
-    if (!tile || scrolling() || (cool.get(tile) || 0) > now || tile.querySelector("canvas.glitch")) return;
-    cool.set(tile, now + 1200);
+    if (!tile || (cool.get(tile) || 0) > now || tile.querySelector("canvas.glitch")) return;
+    if (scrolling()) { pendingHover = tile; return; }
+    cool.set(tile, now + 600);
     breakElement(tile, "film", rnd(700, 900));
   };
   const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -929,10 +940,11 @@
     if (reel && reel.contains(e.target)) return;
     const box = e.target.closest("a, figure, .shot, .cover, .pcard") || e.target;
     const m = box.matches && box.matches("img, video") ? box : box.querySelector && box.querySelector("img, video");
-    if (!m || scrolling() || !m.closest("main") || !isLoose(m) || box.contains(e.relatedTarget)) return;
+    if (!m || !m.closest("main") || !isLoose(m) || box.contains(e.relatedTarget)) return;
+    if (scrolling()) { pendingHover = m; return; }
     const now = performance.now();
     if ((cool.get(m) || 0) > now) return;
-    cool.set(m, now + 1200);
+    cool.set(m, now + 600);
     breakElement(m, "card", rnd(700, 900));
   });
   if (reel) {
