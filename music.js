@@ -187,6 +187,8 @@
   let open = false;
   const show = () => {
     if (open) return; open = true;
+    const film = document.querySelector(".film-card .film-x");   // the THESEUS card shares the corner: it steps aside
+    if (film) film.click();
     if (loaded >= 0) view = "now";
     render(); pod.hidden = false; btn.setAttribute("aria-expanded", "true");
     requestAnimationFrame(() => requestAnimationFrame(() => pod.classList.add("up")));
