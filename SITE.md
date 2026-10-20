@@ -1,181 +1,218 @@
 # 0xR site
 
-*The public face. Handoff note, rewritten 2026-09-03.*
+*The public face. Handoff note, rewritten 2026-10-20. The version before this one,
+written 2026-09-03 for the what/work/who site, is in git history.*
 
 ---
 
 ## One repo, one site
 
 **This repo is the site.** Files at the root, edited here, deployed by Vercel to
-**0xr.io**. Run `npm run posts` at the root after touching `media/posts.json`.
+**0xr.io** on every merge to `main`. Run `npm run posts` at the root after touching
+`media/posts.json`.
 
-The old two-repo split (private workspace + public artefact + filter script) existed
-only to keep the CV pages' personal data out of a public repo. The CVs moved to
-`~/Desktop/My_Personal_Agents/cv/` on 2026-09-22, this repo's history was restarted
-clean, and the machinery went with the reason for it.
+The CVs moved to `~/Desktop/My_Personal_Agents/cv/` on 2026-09-22 and this repo's
+history was restarted clean after the move. No personal data lives here.
+
+## What the site says
+
+**Branding and generative media production**, ruled 2026-10-13 and carried in
+`studio/POSITIONING.md` and `studio/clients/0xr/positioning/services.md`.
+
+- Hero: "A crew of ( one ) human + { many } agents."
+- Meta description: "We do branding and generative media production at a fraction
+  of the time/cost of an agency."
+- Tab title on the home page: `0xR / branding + media`. The others are
+  `0xR / work`, `0xR / crew`, `0xR / more`.
+
+The word is always *crew*. Sail, Fungi and Boveda are described as onchain finance.
 
 ## The four pages
 
-| Page | Carries |
-|---|---|
-| `index.html` | The hero: three sentences over the six crew figures. Then 19 AI films, press and live, writing. The ASCII terrain is the footer's ground now |
-| `what.html` | The argument in three steps, then the offer: 01 Direction, 02 Production with the crew inside it, 03 Distribution as coming soon. Ends on the address |
-| `work.html` | Four positions as an accordion: 0xR, Sail, Fungi, Boveda. Fungi and Sail carry case studies |
-| `who.html` | The person, six receipts, the brands rows |
+Clean URLs through `vercel.json` (`cleanUrls`, no trailing slash).
 
-Nav order is **what / work / who**: the offer, the proof, the person.
+| URL | File | Carries |
+|---|---|---|
+| `/` | `index.html` | The hero over the crew figures, the AI films wall, the why block. The film card (`promo.js`) is on this page only |
+| `/work` | `work.html` | Three entries as an accordion: Allé Studios, Sail, Fungi |
+| `/crew` | `crew.html` | The seven figures, his bio and the companies he cofounded (Sail, Fungi, Boveda), open source |
+| `/more` | `more.html` | Writing, then press and live |
 
-## The argument on the what page
+Nav order is **work / crew / more**. Old paths redirect permanently: `/index`,
+`/home`, `/thesis` go to `/`; `/studio` goes to `/work`; `/who` goes to `/crew`.
+Add a redirect whenever a page is renamed, because shared links outlive the page.
 
-The page runs on one definition and one vocabulary. Media is **everything that
-carries your story to a person**; positioning is where the story comes from;
-production is the story made. The word is *story*, never *claim* — that
-matches `POSITIONING.md` §2, "Story, made, moved."
+**No total views on the site until the total passes 1M** (his ruling). The per-film
+numbers stay. The figures on the Sail entry are canonical and come from
+`studio/clients/sail/CLIENT.md`.
 
-Four surfaces, each with a definition and its disciplines: **Brand, Film,
-Comms, Product**. Launch was removed: it is how carriers get moved, not a
-carrier, and it already lives under go-to-market.
+## The look
 
-**Go-to-market is withdrawn from the public offer** (2026-08-30). a16z's GTM
-works because they own the platform under it; 0xR does not own one yet. The
-reasoning and the archived copy are in `_archive/gtm/OFFER.md`. The record of
-GTM shipped stays on the work page: receipts of the past, not promises.
+`studio/DESIGN.md` makes the 0xR system the only look the studio uses, and
+`style.css` here is its source of truth. Bone paper `#FAF8F4`, ink, Oliveira for
+display, Instrument Sans for body, IBM Plex Mono for labels. One fluid type scale,
+one padding token, grids on `auto-fit`/`minmax`, anything tappable at least 44px.
 
-## How the data works
-
-Everything measurable lives in `site/media/posts.json` and compiles by
-`npm run posts` into five files the pages fetch at runtime: `manifest.json`,
-`totals.json`, `press.json`, `product.json`, `cases.json`.
-
-Rules the script enforces: an asset not on disk is dropped with a warning, and
-a category with no surviving assets is dropped whole. It never ships a broken
-tile. `_archive/agent-factory/scripts/media.mjs` stays archived on purpose. It
-rebuilds the manifest from directory contents, which would erase every
-`href`, `views` and `amplifiedBy` field. Do not restore it.
-
-## The look is the studio's, not just the site's
-
-`DESIGN.md` (2026-09-04) makes the 0xR system the only look the studio uses,
-for client documents as well as pages. `style.css` is its source of truth, so a
-token changed here changes every document the studio ships. One thing to know
-when a document leaves this machine: **Oliveira must be inlined as a base64
+When a document leaves this machine, **Oliveira must be inlined as a base64
 `@font-face`**, because a relative font URL resolves to nothing once a page is
-published. `clients/alle/positioning/brand-audit.html` is the worked example.
+published.
+
+**Colour arrives as an event.** DESIGN.md rule 2 was amended twice:
+
+1. 2026-10-19: "i want colours but it needs to feel that black and white is the
+   core of it." Bone and ink are the identity at rest. Colour appears inside glitch
+   moments, transitions and the films.
+2. 2026-10-20: a fixed glitch set of its own, a step off Paradigm's Frontiers
+   stream. Mint, vermilion, orange, magenta, lavender, gold and cream, with paper
+   and ink. It lives in `glitch.js` as `GC` and `STAGES`, and it never touches type,
+   chips or fills at rest.
+
+The look rules and the rounds that got there are in
+`jean/projects/0xr-glitch/2026-10-19-rules.md`. The colour overrulings are in
+`ye/clients/rodrigo/2026-10-19-glitch-colour.md`.
+
+## The glitch organism
+
+`glitch.js` runs on every page. It paints on two fixed canvases: `canvas.organism`
+(z 61) for the live glitch and `.residue` (z 60) for what it leaves behind. Every
+loop steps at 30fps through `run()`, and a frame callback that returns `false`
+ends its loop early and clean.
+
+**Three triggers.**
+
+1. **Hover** on a film tile or an image glitches that element.
+2. **Scroll** fires short sudden bursts.
+3. **Idle.** After 8 seconds with no input the organism starts to take the page
+   over, and by 55 seconds it is at full strength. Any input hands the page back.
+
+**The scene composer.** The screen is one scene at a time: a small palette and a
+few kinds of shape over a fine stripe ground (grey, dark, or none), and the next
+scene paints over the last. Everything that glitches draws from the current
+scene, so the page reads as one composition. The stages play in a fixed order,
+green first, because the old gold stage was "too yellow":
+
+| Stage | Ground | Shapes |
+|---|---|---|
+| garden | none | strokes, moss, ribbon |
+| tide | grey | strokes, ribbon, bars, shard |
+| ember | grey | strokes, steps, bars, shard |
+| bloom | none | ribbon, strokes, moss, shard |
+| signal | grey | shard, steps, barcode, strokes |
+| moss | grey | moss, barcode, bars, ribbon |
+| night | dark | bars, barcode, shard, strokes |
+| dusk | grey | sparse |
+
+The letters inside the glitch are hex strips (`hexAt`), a character flipping now
+and then as it corrupts.
+
+**The spared title.** When the organism takes the page, the page title stays,
+floating on frosted glass (`.spared-glass`). Each word turns ink or paper by
+reading the residue behind it. The title is built from `settledText()`, which
+strips the scramble's `aria-hidden` layer; built mid-scramble, it came out garbled.
+
+**Scrolling stays practical.** `scrolling()` is true for 140ms after the last
+scroll event: bursts end and hovers wait. `settling()` is true for 700ms: the
+organism waits before it wanders again. A hover that lands during a scroll is
+queued as `pendingHover` and fires once the page stops, which took hovers right
+after a scroll from missing some of the time to 12 of 12.
+
+**Hard won.**
+
+1. A burst drawn on the overlay must clear its previous rectangle every frame
+   and end on scroll, or a moving page leaves copies behind.
+2. Large shapes use bigger cells. A big bloom at small cells cost a 133ms frame.
+3. `getImageData` on a cross-origin frame throws. It is wrapped, and the loops
+   recover instead of dying.
+
+Measured on the live site at merge: 60fps, no console errors, hovers 12 of 12,
+no leftover glitch pixels while scrolling. `_ref/` holds his reference recordings
+and the perf probes. It is untracked and never deploys.
+
+## The crew figure
+
+`frame.js` draws the hover frame on his figure, on the home page and on `/crew`: a
+mint frame with an X tag and a LinkedIn tag. The six agent figures carry no links.
 
 ## The front end
 
 | File | Does |
 |---|---|
-| `style.css` | tokens, reset, chrome, the shared media-tile system, `.creed` |
-| `player.js` | the video engine, shared by both walls |
-| `crew3d.js` | the six crew figures: voxel rig, turn, acts, decode |
+| `style.css` | tokens, reset, chrome, the shared media-tile system, `.creed`, `.spared-glass` |
+| `glitch.js` | the glitch organism, on every page |
+| `frame.js` | the hover frame on his crew figure |
+| `player.js` | the video engine, shared by the walls |
+| `promo.js` | the film card, home page only |
+| `crew3d.js` | the crew figures: voxel rig, turn, acts, decode |
 | `crew/*.model.js` | one figure each, the cell grid and its depth map |
-| `scramble.js` | the decode effect on headings, and reveal-on-scroll |
-| `ascii.js` | the terrain, in the footer since 2026-09-09 |
+| `scramble.js` | the decode effect on headings and reveal-on-scroll; listens for `0xr:scramble` to replay |
+| `ascii.js` | the terrain in the footer |
 | `nav.js` | the navbar that hides going down |
-
-**The crew's workshop stays in studio.** `crew/gen/`, the depth maps,
-`mkmodel.py` and every contact sheet are excluded by `publish.sh`; the site
-loads `crew3d.js` and the six models and nothing else there. A figure's PNG
-rebuilds from its model exactly, which is how the rejected QUENT was undone.
-
-Every figure renders pixel-identical to its source at rest, asserted 1792 of
-1792 cells, six times. Three things were measured rather than argued: a solid
-column projects `W*cos + D*sin` cells on a turn so every one-cell gap closes
-(thin cards fix it); a curved face plate shears a sunglasses bar in two by -20;
-the idle sweep caps at 12. QUENT is held near front on by temperament, because
-his eyes are scattered cells rather than a mass and a turn swallows them.
-
-Three rules hold the layout: one fluid type scale, one padding token, and
-grids on `auto-fit`/`minmax` so columns fall out of the width. Anything
-tappable is at least 44px. Paper is bone `#FAF8F4`, never white.
 
 **Do not re-inline these scripts.** The navbar and the terrain once shared a
 `<script>` block, and extracting one silently deleted the other.
 
+**The crew's workshop stays in studio.** `crew/gen/`, the depth maps, `mkmodel.py`
+and the contact sheets never come here. The site loads `crew3d.js` and the models
+and nothing else. Every figure renders pixel-identical to its source at rest,
+asserted 1792 of 1792 cells per figure.
+
+## How the data works
+
+Everything measurable lives in `media/posts.json`, and `npm run posts`
+(`scripts/posts.mjs`) compiles it into five files the pages fetch at runtime:
+`manifest.json`, `totals.json`, `press.json`, `product.json`, `cases.json`.
+
+An asset not on disk is dropped with a warning, and a category with no surviving
+assets is dropped whole, so a broken tile never ships.
+`_archive/agent-factory/scripts/media.mjs` stays archived on purpose. It rebuilds
+the manifest from directory contents, which would erase every `href`, `views` and
+`amplifiedBy` field. Do not restore it.
+
+## Share card
+
+One card for every page, `media/card.jpg`, 1200 by 630, rendered at 2x in the real
+display face by `scripts/cards.sh`. The pages carried identical copy, so four
+cards were four copies of one file. Regenerate after a headline change, or a
+shared link keeps showing the old words. If a page ever gets its own headline, add
+its row back to the script and point that page's `og:image` at it.
+
 ## Video, hard won
 
-1. **WebKit caps live decoders.** Sources attach only while a tile is on
-   screen, capped at 8 on WebKit and 32 elsewhere. Every clip has a real
-   poster underneath, so the worst case is a still.
-2. **Autoplay needs the properties**, not just the attributes, and `play()`
+1. **WebKit caps live decoders.** Sources attach only while a tile is on screen,
+   capped at 6 on iPhone and iPad and 32 elsewhere. Every clip has a real poster
+   underneath, so the worst case is a still.
+2. **Autoplay needs the properties** as well as the attributes, and `play()`
    rejects before anything is decoded. Try now, try again on `canplay`.
 3. **Events alone are not enough.** A missed observer batch or a rejected
-   `play()` would leave a tile frozen, which is why only part of the wall
-   used to come alive. A sweep every 1.2s is the guarantee.
+   `play()` leaves a tile frozen. A sweep every 1.2s is the guarantee.
+4. **MID 90'S plays in Safari.** It is VP9 and AVFoundation reports it
+   undecodable, but Safari has had its own VP9 decoder since 2020. Do not
+   re-raise this.
 
-Anything touching video gets checked in Safari, not only Chrome.
+Anything touching video gets checked in Safari as well as Chrome.
 
-## Share cards
+## Testing
 
-One card per page, `media/card-{index,what,work,who}.jpg`, rendered in the
-real display face at 2x by `scripts/cards.sh`. Regenerate after a headline
-change, or the link keeps showing the old words.
+**When the browser is the only witness, instrument it.** The dev pane throttles
+timers, kills rAF and reports `document.hidden: true`, so it cannot see the glitch,
+the decode or the terrain. Headless `--screenshot` caught the organism at random
+moments. What worked: Chrome over the DevTools protocol, driven by Node 22's
+built-in WebSocket, running in real time, with `Page.captureScreenshot` for frames
+and the performance timeline for frame times. A mobile browser fires `resize` on
+every scroll as its URL bar hides, so anything rebuilt on resize gets tested on a
+device.
 
 ## Open, needs Rodrigo
 
-1. **Three primacy claims carry no receipt** (see below), and the Fungi case
-   shows `$9M MC` against a Dexscreener chart reading 8.76M. Rodrigo's ruling
-   2026-09-09: $9M stands.
-2. **Allé: no case study until he says so** (2026-09-03). The work is in
-   progress and cannot be shown as a case yet. It does not need to be: the
-   MID 90'S film is rank 1 of 20 on the wall at 83,200 impressions, the
-   best-performing work on the site, and it is the culture work. Allé also
-   appears in the brands row and on the 0xR entry. The "12:1 crypto to
-   culture" line in the 2026-09-01 audit counted brands, not weight of
-   evidence, and overstated the gap.
-3. The three claims: first autonomous non-custodial swaps and bridges, first
-   open-source permission-layer protocol, among the first 100% AI films.
-4. **`$1.1M+ AUM` and `2,000+ unique users`** are the only unsourced numbers.
-5. **PiKNiK spelling**, dictated as "pknik", still unconfirmed, live on work.
-6. **Boveda title.** The site says cofounder. LinkedIn still says CMO.
-7. **The second outperformance article** never arrived. One is linked.
+1. **Two primacy claims on `/work` carry no receipt:** Sail as the first agent to
+   run swaps and bridges autonomously without custody, and the first open source
+   permission layer.
+2. **The profile fields on GitHub.** The bio and website fields need the `user`
+   scope, which this machine's `gh` login lacks. Either run
+   `gh auth refresh -h github.com -s user` or paste them at
+   github.com/settings/profile: bio "A crew of ( one ) human + { many } agents.
+   Branding and generative media production.", website `https://0xr.io`.
+3. **The second outperformance article** never arrived. One is linked.
 
-Settled 2026-09-09: the crew live on the hero and the terrain is the footer's
-ground. The market comes off the line, which reads "for brands". Positioning is
-a discipline under Direction, not a function beside Production. The what page
-ends on the address; before that it argued for four screens and offered no way
-to reach him. Phone captions are on under `(hover: none)`. The mono is named
-(IBM Plex Mono) rather than left to the reader's OS. The gold $500M card is off
-the wall via `wall: false`, which keeps its reach in the topline. The receipts
-no longer decode. The phone replay is fixed and **confirmed on device**: a
-mobile browser fires `resize` on every scroll as its URL bar hides, and the
-hero was rebuilding its figures on it.
-
-**Corrected 2026-09-09: MID 90'S plays in Safari.** It is VP9, and AVFoundation
-reports it undecodable, but Safari does not use AVFoundation and has had its own
-VP9 decoder since 2020. Rodrigo had watched it play. Do not re-raise this.
-
-Settled earlier: the market is **tech and culture brands**, named
-in the hero and carried through work.html and the meta descriptions. 56 yield
-sources (pinned in `TIMELINE.md`). 0xr.io with a zero. Sail case study built.
-The ASCII animation restored. Safari autoplay fixed: the cap was ours, not the
-browser's, and it now keys off the device (6 on iPhone and iPad, 32 elsewhere).
-
-**When the browser is the only witness, instrument rather than theorise.** The
-Safari bug took two wrong fixes reasoned from theory and one `?debug` readout
-to solve. The same applies to the hover decode and the ASCII terrain: this
-dev pane throttles timers, kills rAF, and reports `document.hidden: true`, so
-it cannot see any of them.
-
-## 2026-09-18 — the turned faces, dispatched
-
-Six attempts at deriving a turned face from the front grid were rejected. The
-front faces were never drawn: `crew/gen/prompts.md` records that QUENT
-generated them and `proc.py` quantized them. So the turned faces go the same
-way, and the studio stopped hand drawing pixel art it cannot see.
-
-Two bridges out, parallel, non-overlapping:
-
-- **QUENT** — the turned BASE prompt block and seven three-quarter takes,
-  validating on rodrigo before spending on the rest. Lands as
-  `site/crew/gen/<name>-turn.png` plus a dated section in `gen/prompts.md`.
-- **JEAN** — the identity ruling: the anchor per figure, what a 20 to 25
-  degree turn threatens, an unambiguous drift checklist, and the pale-head
-  problem that QUENT and KIM both fail on. Lands in her own workspace.
-
-The studio owns the plumbing between them. `vox.py turn <name>` fits a
-generated take onto the front view's row spans and writes `<name>.turn.txt`;
-`round` paints it pre-rotated and mirrors it; `crew3d.js` swaps it in past 16
-degrees of head yaw and back under 10. Chain proven with a synthetic map
-before any take existed. Nothing of this is committed or pushed.
+Settled and closed: the Fungi `$9M` market cap stands (2026-09-09). Allé has its
+entry on `/work`. Total views come back once they pass 1M.
