@@ -85,57 +85,114 @@
         cent = sum.map((t, k) => (t[3] ? [t[0] / t[3], t[1] / t[3], t[2] / t[3]] : cent[k]));
       }
       const chroma = (q) => Math.max(...q) - Math.min(...q);
-      const vivid = cent.map((q) => q.map(Math.round)).sort((a, b) => chroma(b) - chroma(a));
-      // the reference reads because vivid bands sit against cream and dark ones;
-      // here those are 0xR's own paper and ink, so black and white stays the core
-      out = [vivid[0], [250, 248, 244], vivid[1], vivid[2], [14, 13, 11], vivid[0]];
+      out = cent.map((q) => q.map(Math.round)).sort((a, b) => chroma(b) - chroma(a)).slice(0, 4);
     } catch (e) { out = []; }
     palettes.set(src, out);
     return out;
   }
 
-  function makeBloom(cx, cy, R, pal, cell) {
-    // big blooms take bigger cells: the field costs n squared, and nobody reads 4px on a 400px shape
-    const CELL = cell || (R > 200 ? (LITE_EARLY ? 8 : 6) : (LITE_EARLY ? 6 : 4));
-    const ox = Math.random() * 100, oy = Math.random() * 100, sc = rnd(0.0035, 0.0075) * CELL;
-    const bands = rnd(1.1, 1.9);
-    const n = Math.ceil(R * 2.7 / CELL), x0 = cx - (n * CELL) / 2, y0 = cy - (n * CELL) / 2;
-    // the field, once: how far each cell is from the rim, and which band of colour it is
-    const dist = new Float32Array(n * n), band = new Uint8Array(n * n);
-    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
-      const k = j * n + i, px = i - n / 2, py = j - n / 2;
-      dist[k] = Math.hypot(px, py) / (n / 2.7) + (soft(i * 0.06 + ox, j * 0.06 + oy) - 0.5) * 1.3;
-      const v = marble(i * sc + ox, j * sc + oy);
-      band[k] = Math.min(pal.length - 1, Math.floor(((((v - 0.2) * bands * 2.2) % 1) + 1) % 1 * pal.length));
+  /* ── the glitch set: 0xR's own colours, near the reference, never at rest ──
+     His call, 2026-10-20: "i love the paradigm green, orange". A fixed set,
+     tuned a step off Paradigm's, that appears only inside bursts and the
+     takeover. Paired in scenes the way the reference pairs them. */
+  const GC = { mint: [92, 211, 146], vermilion: [250, 86, 52], orange: [244, 146, 64], magenta: [226, 108, 198],
+               lavender: [170, 156, 232], gold: [210, 160, 86], cream: [244, 235, 216], paper: [250, 248, 244],
+               ink: [14, 13, 11], grey: [164, 164, 156] };
+  const SCENES = [
+    [GC.orange, GC.mint, GC.cream],
+    [GC.mint, GC.magenta, GC.paper],
+    [GC.vermilion, GC.gold, GC.magenta, GC.cream],
+    [GC.mint, GC.grey, GC.paper, GC.lavender],
+    [GC.orange, GC.vermilion, GC.cream, GC.ink],
+    [GC.lavender, GC.mint, GC.orange, GC.paper],
+  ];
+  const scene = () => SCENES[ri(0, SCENES.length - 1)];
+
+  /* a polygon test at cell resolution: shards come out stair-stepped, like the reference */
+  function inPoly(x, y, P) {
+    let c = false;
+    for (let i = 0, j = P.length - 1; i < P.length; j = i++)
+      if ((P[i][1] > y) !== (P[j][1] > y) && x < (P[j][0] - P[i][0]) * (y - P[i][1]) / (P[j][1] - P[i][1]) + P[i][0]) c = !c;
+    return c;
+  }
+  function shardPoly(nw, nh) {
+    const k = ri(3, 5), cx = nw / 2, cy = nh / 2, P = [];
+    const a0 = Math.random() * Math.PI * 2;
+    for (let i = 0; i < k; i++) {
+      const a = a0 + (i / k) * Math.PI * 2 + rnd(-0.5, 0.5);
+      P.push([cx + Math.cos(a) * nw * rnd(0.3, 0.52), cy + Math.sin(a) * nh * rnd(0.3, 0.52)]);
     }
-    const drips = [];
-    for (let i = 0; i < n; i++) if (Math.random() < 0.22) drips.push({ i, len: rnd(0.25, 1.8) * R, col: pal[[0, 2, 3][ri(0, 2)]], w: Math.random() < 0.3 ? CELL * 2 : CELL });
-    const im = new ImageData(n, n), D = im.data;
-    const tile = document.createElement("canvas"); tile.width = n; tile.height = n;
+    return P;
+  }
+
+  /* a patch: one of the reference's shapes, computed once, revealed like a glitch */
+  function makePatch(x0, y0, W, H, kind, pal, filmPal) {
+    const CELL = W * H > 300000 ? (LITE_EARLY ? 8 : 6) : (LITE_EARLY ? 6 : 4);
+    const nw = Math.max(2, Math.ceil(W / CELL)), nh = Math.max(2, Math.ceil(H / CELL));
+    const cols = pal.concat(filmPal || []);
+    const idx = new Int16Array(nw * nh).fill(-1);
+    const ox = Math.random() * 100, oy = Math.random() * 100;
+    const k4 = CELL / 4;
+    if (kind === "ribbon") {
+      // flowing bands, stretched along one axis: brushstrokes, not islands
+      const horiz = Math.random() < 0.6;
+      // wide and smooth: low frequency, a gentle stretch, few bands
+      const s0 = rnd(0.005, 0.010) * k4, sa = horiz ? s0 : s0 * rnd(1.4, 2.1), sb = horiz ? s0 * rnd(1.4, 2.1) : s0;
+      const bands = rnd(0.8, 1.4), thr = rnd(0.28, 0.38);
+      for (let j = 0; j < nh; j++) for (let i = 0; i < nw; i++) {
+        const edge = Math.min(i, nw - 1 - i, j, nh - 1 - j) / Math.min(nw, nh);
+        const m = soft(i * 0.03 * k4 + ox + 40, j * 0.03 * k4 + oy) * smooth(Math.min(1, edge * 5));
+        if (m < thr) continue;
+        const v = marble(i * sa + ox, j * sb + oy);
+        idx[j * nw + i] = Math.min(pal.length - 1, Math.floor(((((v - 0.2) * bands * 2.2) % 1) + 1) % 1 * pal.length));
+      }
+    } else if (kind === "shard") {
+      // angular datamosh chunks: flat or striped, sometimes doubled with an offset
+      const P = shardPoly(nw, nh), striped = Math.random() < 0.5, sw = ri(1, 4);
+      const flat = ri(0, pal.length - 1), dup = Math.random() < 0.5 ? ri(3, Math.max(4, Math.round(nw * 0.25))) : 0;
+      for (let j = 0; j < nh; j++) for (let i = 0; i < nw; i++) {
+        const hit = inPoly(i + 0.5, j + 0.5, P) || (dup && inPoly(i + 0.5 - dup, j + 0.5 + dup * 0.3, P));
+        if (!hit) continue;
+        idx[j * nw + i] = striped ? Math.floor(i / sw) % pal.length : flat;
+      }
+    } else {
+      // a curtain: vertical sorted stripes, from the set and from a film
+      let run = 0, c = 0, top = 0, split = 0;
+      for (let i = 0; i < nw; i++) {
+        if (run-- <= 0) {
+          run = ri(0, 3);
+          c = Math.random() < 0.25 ? -1 : ri(0, cols.length - 1);
+          top = ri(0, Math.floor(nh * 0.35)); split = ri(top, nh);
+        }
+        if (c < 0) continue;
+        const c2 = (c + 1) % cols.length;
+        for (let j = top; j < nh; j++) idx[j * nw + i] = j < split ? c : c2;
+      }
+    }
+    const delay = new Float32Array(nw).map(() => rnd(0, 0.45));
+    const sweep = kind === "shard" ? new Float32Array(nw).map(() => rnd(0, 0.6)) : null;
+    const im = new ImageData(nw, nh), D = im.data;
+    const tile = document.createElement("canvas"); tile.width = nw; tile.height = nh;
     const tg = tile.getContext("2d");
-    const lowest = new Int16Array(n);
-    const bounds = { x: x0 - CELL, y: y0 - CELL, w: n * CELL + CELL * 3, h: n * CELL + R * 2 + CELL * 3 };
-    const paint = (g, grow) => {
-      lowest.fill(-1); D.fill(0);
-      for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
-        const k = j * n + i;
-        if (dist[k] > grow) continue;
-        const c = pal[band[k]], o = k * 4;
-        D[o] = c[0]; D[o + 1] = c[1]; D[o + 2] = c[2]; D[o + 3] = 255;
-        lowest[i] = j;
+    const paint = (g, prog) => {
+      D.fill(0);
+      for (let i = 0; i < nw; i++) {
+        // curtains and ribbons drip in from the top; shards flicker in across
+        const vis = sweep ? (prog > sweep[i] ? nh : 0) : Math.floor(Math.max(0, (prog - delay[i]) / 0.55) * nh);
+        for (let j = 0; j < Math.min(nh, vis); j++) {
+          const k = idx[j * nw + i]; if (k < 0) continue;
+          const q = cols[k], o = (j * nw + i) * 4;
+          D[o] = q[0]; D[o + 1] = q[1]; D[o + 2] = q[2]; D[o + 3] = 255;
+        }
       }
       tg.putImageData(im, 0, 0);
       g.imageSmoothingEnabled = false;
-      g.drawImage(tile, x0, y0, n * CELL, n * CELL);
-      for (const d of drips) {
-        if (lowest[d.i] < 0) continue;
-        g.fillStyle = `rgb(${d.col[0]},${d.col[1]},${d.col[2]})`;
-        g.fillRect(x0 + d.i * CELL, y0 + (lowest[d.i] + 1) * CELL, d.w, d.len * grow);
-      }
+      g.drawImage(tile, x0, y0, nw * CELL, nh * CELL);
     };
-    paint.bounds = bounds;
+    paint.bounds = { x: x0, y: y0, w: nw * CELL, h: nh * CELL };
     return paint;
   }
+  const pickKind = (w) => { let r = Math.random() * (w.ribbon + w.shard + w.curtain); for (const k of ["ribbon", "shard", "curtain"]) if ((r -= w[k]) <= 0) return k; return "ribbon"; };
 
   function clusters(cols, share, wMin, wMax) {
     const out = new Set(), target = Math.round(cols * share);
@@ -197,6 +254,16 @@
                from: rnd(60, 220), to: rnd(0.45, 0.78) * opts.duration };
     });
     const asciiCols = opts.ascii === false ? [] : clusters(Math.ceil(W / 9), rnd(0.03, 0.07), 1, 3);
+    // a shard of the glitch set torn into the frame, on most breaks
+    const shard = [];
+    if (opts.shard !== false && Math.random() < 0.7) {
+      const sw = Math.round(cols * rnd(0.2, 0.45)), sh = Math.round(rows * rnd(0.25, 0.6));
+      const sx = ri(0, Math.max(0, cols - sw)), sy = ri(0, Math.max(0, rows - sh)), P = shardPoly(sw, sh);
+      const pal = scene(), striped = Math.random() < 0.5;
+      for (let y = 0; y < sh; y++) for (let x = 0; x < sw; x++)
+        if (inPoly(x + 0.5, y + 0.5, P)) shard.push([(sy + y) * cols + sx + x, pal[striped ? Math.floor(x / 2) % pal.length : 0]]);
+      shard.from = rnd(120, 260); shard.to = rnd(0.5, 0.8) * opts.duration;
+    }
     const out = document.createElement("canvas"); out.width = cols; out.height = rows;
     const og = out.getContext("2d");
     const img = og.createImageData(cols, rows), F = img.data;
@@ -230,6 +297,8 @@
           F[di] = F[si]; F[di + 1] = F[si + 1]; F[di + 2] = F[si + 2]; F[di + 3] = F[si + 3];
         }
       }
+      if (shard.length && t >= shard.from && t < shard.to)
+        for (const [k, q] of shard) { const o = k * 4; F[o] = q[0]; F[o + 1] = q[1]; F[o + 2] = q[2]; F[o + 3] = 255; }
       og.putImageData(img, 0, 0);
       g.imageSmoothingEnabled = false;
       g.drawImage(out, x0, y0, W, H);
@@ -287,7 +356,7 @@
     }
 
     // figures and the footer get a lighter break: they are smaller or quieter things
-    const opts = kind === "figure" ? { duration, share: [0.4, 0.7], blocks: [1, 2], ascii: false }
+    const opts = kind === "figure" ? { duration, share: [0.4, 0.7], blocks: [1, 2], ascii: false, shard: false }
                : kind === "footer" ? { duration, share: [0.2, 0.35], blocks: [2, 3] }
                : { duration };
     const draw = makeBreak(src, r.width, r.height, opts);
@@ -348,7 +417,7 @@
     // ragged, not barred: thin columns, each dripping from its own height
     const hot = clusters(cols, rnd(0.14, 0.32), 1, 4).map((x) => x + c0);
     const drip = new Map(hot.map((x) => { const top = ri(0, Math.max(0, rows - 2)); return [x, [top, ri(top + 1, rows)]]; }));
-    const colours0 = filmColours();
+    const colours0 = Math.random() < 0.7 ? scene().map((q) => `rgb(${q[0]},${q[1]},${q[2]})`) : filmColours();
     const tint = new Map(colours0.length ? hot.filter(() => Math.random() < 0.45).map((x) => [x, pick(colours0)]) : []);
     const colours = colours0;
     const spanW = sp.x1 - sp.x0;
@@ -384,14 +453,14 @@
 
   /* a blot: a small marbled bloom on the empty paper, grown, held, cut away */
   async function blot(nearY, duration, nearX = LW / 2) {
-    const R = ri(34, LITE_EARLY ? 80 : 120), spots = freeSpots(Math.round(R * 2), Math.round(R * 2.2));
+    const R = ri(30, LITE_EARLY ? 70 : 110), spots = freeSpots(Math.round(R * 2), Math.round(R * 2.6));
     if (!spots.length) return tear(nearY, duration, nearX);
     spots.sort((a, b) => Math.hypot((a.x0 + a.x1) / 2 - nearX, a.y - nearY) - Math.hypot((b.x0 + b.x1) / 2 - nearX, b.y - nearY));
     const sp = spots[ri(0, Math.min(3, spots.length - 1))];
     const srcs = sources(); if (!srcs.length) return tear(nearY, duration, nearX);
-    const pal = paletteOf(pick(srcs)); if (pal.length < 2) return tear(nearY, duration, nearX);
-    const cx = ri(Math.round(sp.x0 + R * 1.1), Math.round(Math.max(sp.x0 + R * 1.1, sp.x1 - R * 1.1))), cy = sp.y + R;
-    const paint = makeBloom(cx, cy, R, pal), b = paint.bounds;
+    const W = Math.min(sp.x1 - sp.x0 - 8, R * rnd(2.2, 4.2)), H = R * 2;
+    const x = ri(Math.round(sp.x0 + 4), Math.round(Math.max(sp.x0 + 4, sp.x1 - W - 4)));
+    const paint = makePatch(x, sp.y, W, H, pickKind({ ribbon: 1, shard: 1.3, curtain: 1 }), scene(), paletteOf(pick(srcs))), b = paint.bounds;
     const cuts = []; for (let x = b.x; x < b.x + b.w; x += 8) cuts.push(x);
     cuts.sort(() => Math.random() - 0.5);
     const grownAt = duration * 0.45, cutFrom = duration * 0.7;
@@ -648,11 +717,14 @@
   /* the takeover's blooms: marbled shapes that grow on the residue and stay */
   let blooming = 0;
   function grow(e, srcs) {
-    if (!srcs.length) return;
-    const pal = paletteOf(pick(srcs)); if (pal.length < 2) return;
-    const R = rnd(50, 110 + e * (LITE ? 160 : 300));
-    const cx = Math.random() < 0.5 ? at.x + rnd(-RW * 0.4, RW * 0.4) : rnd(0, RW), cy = rnd(-R * 0.3, RH * 0.9);
-    const paint = makeBloom(cx, cy, R, pal), dur = rnd(900, 1800);
+    if (!srcs.length) srcs = [];
+    const kind = pickKind({ ribbon: 1.5, shard: 0.9, curtain: 1 });
+    const big = LITE ? 0.7 : 1;
+    const W = kind === "curtain" ? rnd(60, 380) * big : kind === "shard" ? rnd(90, 260 + e * 320) * big : rnd(0.35, 0.9 + e * 0.5) * RW;
+    const H = kind === "curtain" ? rnd(0.35, 1) * RH : kind === "shard" ? W * rnd(0.6, 1.4) : rnd(120, 260 + e * 420) * big;
+    const x = Math.random() < 0.5 ? at.x - W / 2 + rnd(-RW * 0.3, RW * 0.3) : rnd(-W * 0.2, RW - W * 0.8);
+    const y = kind === "curtain" ? rnd(-H * 0.2, RH - H * 0.6) : rnd(-H * 0.3, RH - H * 0.5);
+    const paint = makePatch(x, y, W, H, kind, scene(), paletteOf(pick(srcs))), dur = rnd(900, 1800);
     blooming++;
     run(dur, (t) => { if (!healing) { paint(rg, easeOut(t / dur)); dirty = true; } },
         () => { if (!healing) paint(rg, 1); blooming--; });
