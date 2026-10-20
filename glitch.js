@@ -115,20 +115,23 @@
      scene at a time, a small palette and one kind of shape over a fine stripe
      ground, and the next scene paints over it. Everything that glitches on the
      page draws from the current scene, so the page reads as one composition. */
+  /* the stages play in order, green first (his call, 2026-10-20: the gold
+     stage was "too yellow"; no stage is built on tones of one colour now) */
   const STAGES = [
-    { name: "ember",  ground: "grey", curl: 0.3,
-      pal: [[244, 146, 64], [214, 108, 42], [250, 192, 124], [246, 236, 220]], forms: { strokes: 3, steps: 1, bars: 1, shard: 0.7 } },
     { name: "garden", ground: null, curl: 0.38, dense: true,
-      pal: [[92, 188, 86], [216, 136, 206], [134, 206, 110], [242, 178, 228]], forms: { strokes: 3, moss: 1, ribbon: 1 } },
-    { name: "brass",  ground: "gold", curl: 0.25,
-      pal: [GC.vermilion, GC.magenta, GC.cream, [230, 170, 90]], forms: { shard: 2, steps: 1.5, barcode: 1, strokes: 1 } },
+      pal: [[92, 188, 86], [216, 136, 206], [134, 206, 110], [246, 244, 236]], forms: { strokes: 3, moss: 1, ribbon: 1 } },
     { name: "moss",   ground: "grey", curl: 0.3,
-      pal: [GC.mint, [128, 220, 170], GC.lavender, [246, 244, 236]], forms: { moss: 2, barcode: 1, bars: 1, ribbon: 0.8 } },
+      pal: [GC.mint, [64, 168, 120], GC.lavender, [246, 244, 236]], forms: { moss: 2, barcode: 1, bars: 1, ribbon: 0.8 } },
+    { name: "ember",  ground: "grey", curl: 0.3,
+      pal: [[244, 122, 50], [232, 72, 40], [246, 236, 220], [14, 13, 11]], forms: { strokes: 3, steps: 1, bars: 1, shard: 0.7 } },
+    { name: "signal", ground: "grey", curl: 0.25,
+      pal: [GC.vermilion, GC.magenta, GC.cream, [58, 56, 66]], forms: { shard: 2, steps: 1.5, barcode: 1, strokes: 1 } },
     { name: "dusk",   ground: "grey", curl: 0.1, sparse: true,
       pal: [[126, 112, 232], [94, 188, 124], [40, 40, 52], [170, 160, 240]], forms: { strokes: 1.5, shard: 0.8, bars: 1 } },
   ];
 
-  let stageIdx = ri(0, STAGES.length - 1);
+
+  let stageIdx = 0;
   const stage = () => STAGES[stageIdx];
   const scene = () => stage().pal;
 
@@ -746,11 +749,10 @@
     document.querySelectorAll(MEDIA).forEach((m) => { const s = readable(m); if (s && !m.closest("#reel")) out.push(s); });
     return out;
   }
-  /* the stripe ground: very fine vertical stripes, tonal, like a photograph
-     pixel-sorted into a barcode. Grey or gold, by scene. */
+  /* the stripe ground: very fine vertical stripes in greys, like a photograph
+     pixel-sorted into a barcode */
   const TONES = {
     grey: [[22, 22, 24], [58, 58, 62], [96, 96, 100], [132, 132, 134], [168, 168, 168], [200, 200, 198], [232, 232, 228], [248, 248, 244]],
-    gold: [[110, 80, 40], [150, 112, 60], [186, 146, 88], [212, 176, 116], [232, 204, 150], [244, 226, 186], [92, 62, 28]],
   };
   function groundBatch(kind, n) {
     const T = TONES[kind];
@@ -835,7 +837,7 @@
   const SCENE_LEN = 11000;
   let sceneClock = 0, groundLeft = 0;
   function nextScene() {
-    stageIdx = (stageIdx + ri(1, STAGES.length - 1)) % STAGES.length;
+    stageIdx = (stageIdx + 1) % STAGES.length;
     sceneClock = 0;
     groundLeft = stage().ground ? Math.round(RW / 1.6) : 0;        // stripes needed to cover the screen
   }
@@ -846,7 +848,7 @@
         if (!document.hidden && !healing) {
           const e = entropy();
           if (e > 0.02) {
-            if (!dirty) { sceneClock = 0; groundLeft = stage().ground ? Math.round(RW / 1.6) : 0; }
+            if (!dirty) { stageIdx = 0; sceneClock = 0; groundLeft = stage().ground ? Math.round(RW / 1.6) : 0; }   // every takeover opens green
             sceneClock += 120 * (0.6 + e);
             if (sceneClock > SCENE_LEN) nextScene();
             const st = stage(), lite = LITE ? 0.5 : 1;
