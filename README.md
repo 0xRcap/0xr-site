@@ -6,8 +6,8 @@ this repo directly.
 
 - `npm run posts` compiles `media/posts.json` into the data files the pages fetch.
 - `scripts/cards.sh` renders the share card, `media/card.jpg`, in the display face.
-- `glitch.js` is the glitch organism that runs on every page; `frame.js` is the
-  hover frame on the crew figure.
+- `glitch.js` is the glitch organism that runs on every page; `frame.js` draws the
+  hover frames on the figures.
 - `SITE.md` is the handoff note: pages, the look, what is settled, what needs a ruling.
 
 No personal data lives here. The CV pages moved to the private personal repo on
