@@ -360,3 +360,34 @@ a:hover > .tile-t { color: var(--ink); }
 canvas.organism { position: fixed; inset: 0; width: 100vw; height: 100vh;
                   z-index: 61; pointer-events: none; image-rendering: pixelated; }
 canvas.organism.residue { z-index: 60; }
+/* the title it spares floats on glass above both layers: the pane blurs
+   the takeover behind it, and each word turns ink or paper by what it sits on */
+.spared-glass { position: fixed; z-index: 62; pointer-events: none; isolation: isolate; }
+.spared-glass::before {
+  content: ""; position: absolute; inset: -12px -20px; z-index: -1; border-radius: 10px;
+  background: rgba(250, 248, 244, 0.12); border: 1px solid rgba(250, 248, 244, 0.38);
+  -webkit-backdrop-filter: blur(16px) saturate(1.6); backdrop-filter: blur(16px) saturate(1.6);
+}
+.spared-glass .glass-text { margin: 0; color: var(--ink); }
+.spared-glass .glass-text span { transition: none; }
+
+/* ── his frame (frame.js): a square snaps around his figure, his handles above it ──
+   In the glitch set's mint: a hover is an event, so colour is allowed (DESIGN rule 2). */
+.his-frame { --mint: rgb(92, 211, 146); }
+.his-frame { position: absolute; z-index: 3; pointer-events: auto; cursor: pointer; }
+.his-frame::before { content: ""; position: absolute; inset: -10px; border: 2px solid var(--mint); opacity: 0; }
+.his-tags {
+  position: absolute; left: -10px; bottom: calc(100% + 10px); padding-bottom: 8px;
+  display: flex; gap: 6px; opacity: 0; pointer-events: none;
+}
+.his-frame:hover::before, .his-frame:focus-within::before, .his-frame.open::before { opacity: 1; }
+.his-frame:hover .his-tags, .his-frame:focus-within .his-tags, .his-frame.open .his-tags { opacity: 1; pointer-events: auto; }
+.his-tags a {
+  position: relative; font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.06em;
+  color: var(--ink); background: var(--paper); border: 1.5px solid var(--mint);
+  padding: 0.25em 0.55em; text-decoration: none; white-space: nowrap; text-transform: none;
+}
+.his-tags a::before { content: ""; position: absolute; inset: -12px -3px; }   /* a 44px tap, drawn small */
+.his-tags a:hover, .his-tags a:focus-visible { background: var(--mint); color: var(--ink); outline: none; }
+.director .mate[data-crew="rodrigo"] { position: relative; }
+
