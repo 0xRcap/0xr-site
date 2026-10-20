@@ -81,7 +81,7 @@ ends its loop early and clean.
 
 **Three triggers.**
 
-1. **Hover** on a film tile or an image glitches that element.
+1. **Hover** on a film tile or an image glitches that element. Touch has no hover, so on a phone the film crossing the middle of the screen glitches while the page scrolls, one at a time, drawn inside the film so it moves with the page (his call, 2026-10-20).
 2. **Scroll** fires short sudden bursts.
 3. **Idle.** After 8 seconds with no input the organism starts to take the page
    over, and by 55 seconds it is at full strength. Any input hands the page back.
@@ -139,7 +139,8 @@ on `/who`. His is mint, with a filled `human` tag and his X and LinkedIn handles
 links. The six agents' are orange, with a filled `agent` tag and what each one
 does: YE brand, QUENT films, JEAN art direction, FRANK words, STEVE design, KIM go
 to market. Past 60% of the stage the tags hang from the frame's right edge so they
-stay on screen. Both colours come from the glitch set and appear only on hover.
+stay on screen. The hero clips at its foot, where the figures stand on a phone, so
+the square's lower edge comes up to stay whole. Both colours come from the glitch set and appear only on hover.
 
 ## The front end
 

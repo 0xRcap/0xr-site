@@ -51,6 +51,10 @@
       const k = inked() || { x0: 0, y0: 0, x1: 1, y1: 1 };
       Object.assign(box.style, { left: f.left - h.left + f.width * k.x0 + "px", top: f.top - h.top + f.height * k.y0 + "px",
                                  width: f.width * (k.x1 - k.x0) + "px", height: f.height * (k.y1 - k.y0) + "px" });
+      // the hero clips at its foot, and on a phone the figures stand right on it:
+      // the square's lower edge comes up to stay inside instead of being cut off
+      const below = h.height - (f.top - h.top + f.height * k.y1);
+      box.style.setProperty("--below", Math.max(0, Math.min(10, Math.floor(below) - 2)) + "px");
       // past the middle of the stage the tags hang from the frame's right edge, so they stay on screen
       box.classList.toggle("end", f.left + f.width / 2 - h.left > h.width * 0.6);
     };
