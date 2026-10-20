@@ -120,15 +120,22 @@
   const STAGES = [
     { name: "garden", ground: null, curl: 0.38, dense: true,
       pal: [[92, 188, 86], [216, 136, 206], [134, 206, 110], [246, 244, 236]], forms: { strokes: 3, moss: 1, ribbon: 1 } },
-    { name: "moss",   ground: "grey", curl: 0.3,
-      pal: [GC.mint, [64, 168, 120], GC.lavender, [246, 244, 236]], forms: { moss: 2, barcode: 1, bars: 1, ribbon: 0.8 } },
+    { name: "tide",   ground: "grey", curl: 0.28,
+      pal: [[56, 186, 196], [36, 72, 160], [250, 122, 100], [246, 244, 236]], forms: { strokes: 2, ribbon: 1.5, bars: 1, shard: 0.6 } },
     { name: "ember",  ground: "grey", curl: 0.3,
       pal: [[244, 122, 50], [232, 72, 40], [246, 236, 220], [14, 13, 11]], forms: { strokes: 3, steps: 1, bars: 1, shard: 0.7 } },
+    { name: "bloom",  ground: null, curl: 0.35,
+      pal: [GC.magenta, GC.lavender, GC.mint, [250, 248, 244]], forms: { ribbon: 1.5, strokes: 1.5, moss: 1, shard: 0.6 } },
     { name: "signal", ground: "grey", curl: 0.25,
       pal: [GC.vermilion, GC.magenta, GC.cream, [58, 56, 66]], forms: { shard: 2, steps: 1.5, barcode: 1, strokes: 1 } },
+    { name: "moss",   ground: "grey", curl: 0.3,
+      pal: [GC.mint, [64, 168, 120], GC.lavender, [246, 244, 236]], forms: { moss: 2, barcode: 1, bars: 1, ribbon: 0.8 } },
+    { name: "night",  ground: "dark", curl: 0.2,
+      pal: [[14, 13, 11], [120, 238, 120], [126, 112, 232], [58, 56, 66]], forms: { bars: 1.5, barcode: 1, shard: 1, strokes: 1 } },
     { name: "dusk",   ground: "grey", curl: 0.1, sparse: true,
       pal: [[126, 112, 232], [94, 188, 124], [40, 40, 52], [170, 160, 240]], forms: { strokes: 1.5, shard: 0.8, bars: 1 } },
   ];
+
 
 
   let stageIdx = 0;
@@ -685,6 +692,13 @@
   glass.className = "spared-glass"; glass.setAttribute("aria-hidden", "true"); glass.hidden = true;
   document.body.appendChild(glass);
   let glassFor = null;
+  /* the heading's real words, even mid-decode: the scramble draws its noise in
+     an aria-hidden layer beside a copy of the final text, so drop that layer */
+  function settledText(el) {
+    const c = el.cloneNode(true);
+    c.querySelectorAll("[aria-hidden]").forEach((n) => n.remove());
+    return c.textContent.replace(/[ \t\n\r]+/g, " ").trim();
+  }
   function spareTitle() {
     const t = spared();
     if (t !== glassFor) {
@@ -696,7 +710,7 @@
       for (const k of ["fontFamily", "fontSize", "fontWeight", "fontStyle", "lineHeight", "letterSpacing",
                        "wordSpacing", "textWrap", "textAlign", "fontFeatureSettings", "textTransform"]) c.style[k] = cs[k];
       c.className = "glass-text";
-      t.textContent.split(/(\s+)/).forEach((w) => {
+      settledText(t).split(/(\s+)/).forEach((w) => {
         if (/^\s+$/.test(w) || !w) { c.appendChild(document.createTextNode(w)); return; }
         const sp = document.createElement("span"); sp.textContent = w; c.appendChild(sp);
       });
@@ -752,6 +766,7 @@
   /* the stripe ground: very fine vertical stripes in greys, like a photograph
      pixel-sorted into a barcode */
   const TONES = {
+    dark: [[10, 10, 9], [18, 18, 20], [28, 28, 32], [40, 40, 46], [56, 56, 64], [78, 78, 88]],
     grey: [[22, 22, 24], [58, 58, 62], [96, 96, 100], [132, 132, 134], [168, 168, 168], [200, 200, 198], [232, 232, 228], [248, 248, 244]],
   };
   function groundBatch(kind, n) {
