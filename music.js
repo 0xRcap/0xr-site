@@ -1,4 +1,4 @@
-/* ── the player: a classic iPod that rises from the bottom when "music" is pressed ──
+/* ── the player: a classic iPod that rises from the bottom when "wav" is pressed ──
    0xR is the artist. The screen has two views, as the real thing did: the track
    list and Now Playing. The click wheel works the same way: MENU goes back, the
    centre selects or plays, the sides skip, and turning the ring sets the volume.
@@ -16,7 +16,8 @@
   const btn = document.createElement("button");
   btn.type = "button"; btn.className = "music-btn";
   btn.setAttribute("aria-expanded", "false"); btn.setAttribute("aria-controls", "ipod");
-  btn.innerHTML = 'music<span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>';
+  btn.setAttribute("aria-label", "wav, the 0xR music player");   // the label is a file format; the name says what it opens
+  btn.innerHTML = 'wav<span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>';
   nav.appendChild(btn);
 
   /* ── the device ── */
