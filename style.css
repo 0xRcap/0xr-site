@@ -371,9 +371,11 @@ canvas.organism.residue { z-index: 60; }
 .spared-glass .glass-text { margin: 0; color: var(--ink); }
 .spared-glass .glass-text span { transition: none; }
 
-/* ── his frame (frame.js): a square snaps around his figure, his handles above it ── */
+/* ── his frame (frame.js): a square snaps around his figure, his handles above it ──
+   In the glitch set's mint: a hover is an event, so colour is allowed (DESIGN rule 2). */
+.his-frame { --mint: rgb(92, 211, 146); }
 .his-frame { position: absolute; z-index: 3; pointer-events: auto; cursor: pointer; }
-.his-frame::before { content: ""; position: absolute; inset: -10px; border: 1.5px solid var(--ink); opacity: 0; }
+.his-frame::before { content: ""; position: absolute; inset: -10px; border: 2px solid var(--mint); opacity: 0; }
 .his-tags {
   position: absolute; left: -10px; bottom: calc(100% + 10px); padding-bottom: 8px;
   display: flex; gap: 6px; opacity: 0; pointer-events: none;
@@ -382,10 +384,10 @@ canvas.organism.residue { z-index: 60; }
 .his-frame:hover .his-tags, .his-frame:focus-within .his-tags, .his-frame.open .his-tags { opacity: 1; pointer-events: auto; }
 .his-tags a {
   position: relative; font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.06em;
-  color: var(--ink); background: var(--paper); border: 1.5px solid var(--ink);
+  color: var(--ink); background: var(--paper); border: 1.5px solid var(--mint);
   padding: 0.25em 0.55em; text-decoration: none; white-space: nowrap; text-transform: none;
 }
 .his-tags a::before { content: ""; position: absolute; inset: -12px -3px; }   /* a 44px tap, drawn small */
-.his-tags a:hover, .his-tags a:focus-visible { background: var(--ink); color: var(--paper); outline: none; }
+.his-tags a:hover, .his-tags a:focus-visible { background: var(--mint); color: var(--ink); outline: none; }
 .director .mate[data-crew="rodrigo"] { position: relative; }
 

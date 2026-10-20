@@ -25,8 +25,9 @@
                 (navigator.connection && navigator.connection.saveData);
   if (still) return;
 
-  const STREAK = "':;|!lI1";
-  const CORRUPT = "!<>-_\\/[]{}=+*^?#%:;";
+  /* the strips read like an Ethereum address running down a column: 0x, then
+     hex, scrolling, a character flipping now and then as it corrupts */
+  const HEX = "0123456789abcdef";
   const DENSITY = " .'`^,:;Il!i><~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$";
   const INK = "#0E0D0B", PAPER = "#FAF8F4";
   const PX = 4;
@@ -37,6 +38,13 @@
   const easeOut = (t) => 1 - Math.pow(1 - t, 3);
   const lum = (d, i) => 0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2];
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+  function hexAt(col, row, t) {
+    const n = ((row + Math.floor(t / 90)) % 42 + 42) % 42;
+    if (n === 0) return "0";
+    if (n === 1) return "x";
+    const h = (Math.imul(col + 101, 2654435761) ^ Math.imul(n + 7, 40503)) >>> 0;
+    return HEX[(h + (Math.random() < 0.06 ? ri(1, 15) : 0)) & 15];
+  }
   const LITE_EARLY = matchMedia("(hover: none)").matches ||
                      (navigator.deviceMemory && navigator.deviceMemory <= 4) ||
                      (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
@@ -155,6 +163,56 @@
         if (!hit) continue;
         idx[j * nw + i] = striped ? Math.floor(i / sw) % pal.length : flat;
       }
+    } else if (kind === "steps") {
+      // a staircase mass: an angular V or wedge built from stepped bars
+      const down = Math.random() < 0.6, g = ri(2, 5), c0 = ri(0, pal.length - 1), c1 = (c0 + 1) % pal.length;
+      const lean = rnd(-0.25, 0.25), inner = Math.random() < 0.45;
+      for (let j = 0; j < nh; j++) {
+        const step = Math.floor(j / g) * g / nh, f = down ? 1 - step : step;
+        const hw = Math.round((nw / 2) * (0.12 + 0.88 * f) * rnd(0.92, 1));
+        const mid = Math.round(nw / 2 + lean * (j - nh / 2));
+        for (let i = Math.max(0, mid - hw); i < Math.min(nw, mid + hw); i++)
+          idx[j * nw + i] = inner && Math.abs(i - mid) < hw * 0.45 ? c1 : c0;
+      }
+    } else if (kind === "barcode") {
+      // dense thin stripes over a colour field: the pixel-sorted curtain over green
+      const base = ri(0, pal.length - 1), stripes = [GC.ink, GC.grey, GC.paper, ...pal].map((q) => cols.push(q) - 1);
+      const top0 = Math.floor(nh * rnd(0, 0.3));
+      for (let i = 0; i < nw; i++) {
+        const top = top0 + ri(0, Math.floor(nh * 0.15));
+        for (let j = top; j < nh; j++) idx[j * nw + i] = base;
+        if (Math.random() < 0.55) {
+          const c = pick(stripes), a = ri(top, nh - 1), b = ri(a, nh);
+          for (let j = a; j < b; j++) idx[j * nw + i] = c;
+        }
+      }
+    } else if (kind === "moss") {
+      // chunky clusters of square blocks with ragged edges
+      const B = ri(2, 4), thr = rnd(0.5, 0.6), c0 = ri(0, pal.length - 1), c1 = (c0 + ri(1, pal.length - 1)) % pal.length;
+      for (let bj = 0; bj < Math.ceil(nh / B); bj++) for (let bi = 0; bi < Math.ceil(nw / B); bi++) {
+        const edge = Math.min(bi * B, nw - bi * B, bj * B, nh - bj * B) / Math.min(nw, nh);
+        const v = soft(bi * 0.22 + ox, bj * 0.22 + oy) * smooth(Math.min(1, edge * 4)) + rnd(-0.06, 0.06);
+        if (v < thr) continue;
+        const c = v > thr + 0.12 ? c1 : c0;
+        for (let j = bj * B; j < Math.min(nh, bj * B + B); j++) for (let i = bi * B; i < Math.min(nw, bi * B + B); i++) idx[j * nw + i] = c;
+      }
+    } else if (kind === "streaks") {
+      // a field of thin columns, each a smooth sorted gradient between two colours
+      const pair = () => { const a = pick(cols), b = pick(cols); return [a, b]; };
+      for (let i = 0; i < nw; i++) {
+        if (Math.random() < 0.18) continue;
+        const [a, b] = pair(), top = ri(0, Math.floor(nh * 0.4)), steps = 8, base = cols.length;
+        for (let k = 0; k < steps; k++) { const f = k / (steps - 1); cols.push([0, 1, 2].map((c) => Math.round(a[c] + (b[c] - a[c]) * f))); }
+        for (let j = top; j < nh; j++) idx[j * nw + i] = base + Math.min(steps - 1, Math.floor((j - top) / (nh - top) * steps));
+      }
+    } else if (kind === "bars") {
+      // horizontal strips, displaced sideways: the datamosh rows
+      let j = 0;
+      while (j < nh) {
+        const h = ri(1, 4), c = ri(0, pal.length - 1), a = ri(0, Math.floor(nw * 0.5)), w = ri(Math.floor(nw * 0.2), nw - a);
+        if (Math.random() < 0.75) for (let y = j; y < Math.min(nh, j + h); y++) for (let i = a; i < a + w; i++) idx[y * nw + i] = c;
+        j += h + (Math.random() < 0.4 ? ri(1, 3) : 0);
+      }
     } else {
       // a curtain: vertical sorted stripes, from the set and from a film
       let run = 0, c = 0, top = 0, split = 0;
@@ -170,7 +228,7 @@
       }
     }
     const delay = new Float32Array(nw).map(() => rnd(0, 0.45));
-    const sweep = kind === "shard" ? new Float32Array(nw).map(() => rnd(0, 0.6)) : null;
+    const sweep = /^(shard|steps|moss|bars)$/.test(kind) ? new Float32Array(nw).map(() => rnd(0, 0.6)) : null;
     const im = new ImageData(nw, nh), D = im.data;
     const tile = document.createElement("canvas"); tile.width = nw; tile.height = nh;
     const tg = tile.getContext("2d");
@@ -192,7 +250,11 @@
     paint.bounds = { x: x0, y: y0, w: nw * CELL, h: nh * CELL };
     return paint;
   }
-  const pickKind = (w) => { let r = Math.random() * (w.ribbon + w.shard + w.curtain); for (const k of ["ribbon", "shard", "curtain"]) if ((r -= w[k]) <= 0) return k; return "ribbon"; };
+  const pickKind = (w) => {
+    let r = Math.random() * Object.values(w).reduce((a, b) => a + b, 0);
+    for (const k in w) if ((r -= w[k]) <= 0) return k;
+    return "ribbon";
+  };
 
   function clusters(cols, share, wMin, wMax) {
     const out = new Set(), target = Math.round(cols * share);
@@ -308,7 +370,7 @@
           g.fillStyle = INK; g.fillRect(x0 + x * 9, y0, 9, H);
           g.fillStyle = PAPER;
           for (let y = 0; y < Math.ceil(H / 9); y++)
-            g.fillText(Math.random() < 0.06 ? pick(CORRUPT) : pick(STREAK), x0 + x * 9 + 4.5, y0 + y * 9 + 4.5);
+            g.fillText(hexAt(x, y, t), x0 + x * 9 + 4.5, y0 + y * 9 + 4.5);
         }
       }
     };
@@ -438,7 +500,7 @@
         lg.fillStyle = fill || INK; lg.fillRect(dx * 9, y + r0 * 9, 9, (grow - r0) * 9);
         lg.fillStyle = fill ? INK : PAPER;
         for (let r = r0; r < grow; r++)
-          lg.fillText(Math.random() < 0.08 ? pick(CORRUPT) : pick(STREAK), dx * 9 + 4.5, y + r * 9 + 4.5);
+          lg.fillText(hexAt(x, r, t), dx * 9 + 4.5, y + r * 9 + 4.5);
       }
       if (colours.length) for (const s of slivers) {
         if (t < s.from || t >= s.to) continue;
@@ -460,7 +522,7 @@
     const srcs = sources(); if (!srcs.length) return tear(nearY, duration, nearX);
     const W = Math.min(sp.x1 - sp.x0 - 8, R * rnd(2.2, 4.2)), H = R * 2;
     const x = ri(Math.round(sp.x0 + 4), Math.round(Math.max(sp.x0 + 4, sp.x1 - W - 4)));
-    const paint = makePatch(x, sp.y, W, H, pickKind({ ribbon: 1, shard: 1.3, curtain: 1 }), scene(), paletteOf(pick(srcs))), b = paint.bounds;
+    const paint = makePatch(x, sp.y, W, H, pickKind({ ribbon: 0.6, shard: 1, curtain: 0.5, steps: 0.8, barcode: 0.6, moss: 1, bars: 0.6, streaks: 0.5 }), scene(), paletteOf(pick(srcs))), b = paint.bounds;
     const cuts = []; for (let x = b.x; x < b.x + b.w; x += 8) cuts.push(x);
     cuts.sort(() => Math.random() - 0.5);
     const grownAt = duration * 0.45, cutFrom = duration * 0.7;
@@ -686,7 +748,8 @@
       rg.font = "9px monospace"; rg.textAlign = "center"; rg.textBaseline = "middle";
       const ax = x + ri(0, Math.max(0, w - 9)), ah = Math.round(h * rnd(0.3, 0.9));
       rg.fillStyle = INK; rg.fillRect(ax, y, 9, ah); rg.fillStyle = PAPER;
-      for (let r = 0; r < ah / 9; r++) rg.fillText(Math.random() < 0.08 ? pick(CORRUPT) : pick(STREAK), ax + 4.5, y + r * 9 + 4.5);
+      const col = ri(0, 9999);
+      for (let r = 0; r < ah / 9; r++) rg.fillText(hexAt(col, r, 0), ax + 4.5, y + r * 9 + 4.5);
     }
     if (Math.random() < e * 0.5) {                              // datamosh the residue itself
       const bw = ri(60, 340), bh = ri(10, 60), bx = ri(0, RW - bw), by = ri(0, RH - bh), off = ri(-80, 80);
@@ -718,12 +781,21 @@
   let blooming = 0;
   function grow(e, srcs) {
     if (!srcs.length) srcs = [];
-    const kind = pickKind({ ribbon: 1.5, shard: 0.9, curtain: 1 });
+    const kind = pickKind({ ribbon: 1.2, shard: 0.7, curtain: 0.6, steps: 0.9, barcode: 0.7, moss: 0.8, streaks: 1, bars: 0.6 });
     const big = LITE ? 0.7 : 1;
-    const W = kind === "curtain" ? rnd(60, 380) * big : kind === "shard" ? rnd(90, 260 + e * 320) * big : rnd(0.35, 0.9 + e * 0.5) * RW;
-    const H = kind === "curtain" ? rnd(0.35, 1) * RH : kind === "shard" ? W * rnd(0.6, 1.4) : rnd(120, 260 + e * 420) * big;
+    const SIZE = {
+      ribbon:  () => [rnd(0.35, 0.9 + e * 0.5) * RW, rnd(120, 260 + e * 420) * big],
+      streaks: () => [rnd(0.3, 0.6 + e * 0.3) * RW, rnd(0.4, 1) * RH],
+      curtain: () => [rnd(60, 380) * big, rnd(0.35, 1) * RH],
+      barcode: () => [rnd(80, 360) * big, rnd(0.35, 1) * RH],
+      steps:   () => [rnd(200, 500 + e * 300) * big, rnd(120, 300 + e * 200) * big],
+      moss:    () => [rnd(160, 380 + e * 200) * big, rnd(120, 280 + e * 160) * big],
+      shard:   () => { const w = rnd(90, 260 + e * 320) * big; return [w, w * rnd(0.6, 1.4)]; },
+      bars:    () => [rnd(0.3, 1) * RW, rnd(60, 240) * big],
+    };
+    const [W, H] = SIZE[kind]();
     const x = Math.random() < 0.5 ? at.x - W / 2 + rnd(-RW * 0.3, RW * 0.3) : rnd(-W * 0.2, RW - W * 0.8);
-    const y = kind === "curtain" ? rnd(-H * 0.2, RH - H * 0.6) : rnd(-H * 0.3, RH - H * 0.5);
+    const y = /curtain|barcode|streaks/.test(kind) ? rnd(-H * 0.2, RH - H * 0.6) : rnd(-H * 0.3, RH - H * 0.5);
     const paint = makePatch(x, y, W, H, kind, scene(), paletteOf(pick(srcs))), dur = rnd(900, 1800);
     blooming++;
     run(dur, (t) => { if (!healing) { paint(rg, easeOut(t / dur)); dirty = true; } },
