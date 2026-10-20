@@ -485,3 +485,8 @@ canvas.organism.residue { z-index: 60; }
 }
 .ipod-wheel .w-center:focus-visible { box-shadow: 0 0 0 2px var(--ink); }
 .ipod-wheel .w-center:active { background: radial-gradient(circle at 50% 70%, var(--paper), #E4E1DA); }
+
+/* ── wav follows you (music.js): while it plays, pages open in a frame under the player ── */
+.wav-frame { position: fixed; inset: 0; width: 100%; height: 100%; border: 0; z-index: 63; background: var(--paper); }
+body.wav-shell { overflow: hidden; }
+body.wav-shell > :not(.ipod):not(.wav-frame) { display: none !important; }
