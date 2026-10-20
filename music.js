@@ -19,6 +19,20 @@
   btn.setAttribute("aria-label", "wav, the 0xR music player");   // the label is a file format; the name says what it opens
   btn.innerHTML = 'wav<span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>';
   nav.appendChild(btn);
+  const RAF = window.requestAnimationFrame.bind(window);   // kept: the frozen page underneath loses its own
+
+  /* ── a page shown inside the player's frame has no player of its own: its button drives the host's ── */
+  let host = null;
+  try { host = window.top !== window && window.top.__0xrPlayer; } catch (e) {}
+  if (host) {
+    btn.addEventListener("click", (e) => { e.stopPropagation(); host.toggle(); });
+    host.watch(document, (st) => { btn.classList.toggle("playing", st.playing); btn.setAttribute("aria-expanded", String(st.open)); });
+    document.addEventListener("pointerdown", (e) => { if (!btn.contains(e.target)) host.close(); });
+    addEventListener("keydown", (e) => { if (!e.target.closest("input, textarea, [contenteditable]") && host.key(e.key, e.target === document.body)) e.preventDefault(); });
+    return;
+  }
+  const guests = [];                                        // the frame's current page, told when anything changes
+  let frame = null;
 
   /* ── the device ── */
   const ICON = {
@@ -71,6 +85,11 @@
     const playing = !audio.paused;
     state.innerHTML = loaded >= 0 ? (playing ? ICON.play : ICON.pause) : "";
     btn.classList.toggle("playing", playing);
+    for (let i = guests.length - 1; i >= 0; i--) {
+      const g = guests[i];
+      if (!frame || g.doc !== frame.contentDocument) { guests.splice(i, 1); continue; }
+      try { g.fn({ playing, open }); } catch (e) { guests.splice(i, 1); }
+    }
     if (view === "list") {
       head.textContent = "Music";
       body.innerHTML = '<ul class="lcd-list" role="listbox" aria-label="Tracks">' + TRACKS.map((t, i) =>
@@ -187,31 +206,85 @@
   let open = false;
   const show = () => {
     if (open) return; open = true;
-    const film = document.querySelector(".film-card .film-x");   // the THESEUS card shares the corner: it steps aside
+    let film = null;                                          // the THESEUS card shares the corner: it steps aside
+    try { film = (frame ? frame.contentDocument : document).querySelector(".film-card .film-x"); } catch (e) {}
     if (film) film.click();
     if (loaded >= 0) view = "now";
     render(); pod.hidden = false; btn.setAttribute("aria-expanded", "true");
-    requestAnimationFrame(() => requestAnimationFrame(() => pod.classList.add("up")));
+    RAF(() => RAF(() => pod.classList.add("up")));
     $(".w-center").focus({ preventScroll: true });
   };
   const hide = () => {
     if (!open) return; open = false;
-    pod.classList.remove("up"); btn.setAttribute("aria-expanded", "false");
+    pod.classList.remove("up"); btn.setAttribute("aria-expanded", "false"); render();
     setTimeout(() => { if (!open) pod.hidden = true; }, REDUCED ? 0 : 380);
   };
   btn.addEventListener("click", (e) => { e.stopPropagation(); open ? hide() : show(); });
   document.addEventListener("pointerdown", (e) => { if (open && !pod.contains(e.target) && !btn.contains(e.target)) hide(); });
-  addEventListener("keydown", (e) => {
-    if (!open || e.target.closest("input, textarea, [contenteditable]")) return;
-    const k = e.key;
+  const key = (k, onBody) => {
+    if (!open) return false;
     if (k === "Escape") { hide(); btn.focus(); }
-    else if (k === " " || k === "k") { e.preventDefault(); toggle(); }
+    else if (k === " " || k === "k") toggle();
     else if (k === "ArrowRight") next();
     else if (k === "ArrowLeft") prev();
-    else if (k === "ArrowUp") { e.preventDefault(); turn(1); }
-    else if (k === "ArrowDown") { e.preventDefault(); turn(-1); }
-    else if (k === "Enter" && e.target === document.body) select();
-    else return;
+    else if (k === "ArrowUp") turn(1);
+    else if (k === "ArrowDown") turn(-1);
+    else if (k === "Enter" && onBody) select();
+    else return false;
+    return true;
+  };
+  addEventListener("keydown", (e) => {
+    if (e.target.closest("input, textarea, [contenteditable]")) return;
+    if (key(e.key, e.target === document.body) && e.key !== "Escape") e.preventDefault();
+  });
+
+  /* ── the music follows you: while it plays, the next page opens in a frame over this one ──
+     The frame is the page; this document keeps only the player. The address bar, the tab
+     title and the back button follow the frame. The page underneath is frozen so it costs
+     nothing. A reload, or any visit while nothing plays, is the ordinary site. */
+  window.__0xrPlayer = {
+    toggle: () => (open ? hide() : show()), close: () => hide(),
+    key: (k, onBody) => key(k, onBody),
+    watch: (doc, fn) => { guests.push({ doc, fn }); try { fn({ playing: !audio.paused, open }); } catch (e) {} },
+  };
+  const inside = (a) => {
+    if (!a || a.target === "_blank" || a.hasAttribute("download")) return null;
+    const u = new URL(a.href, location.href);
+    if (u.origin !== location.origin || !/^https?:$/.test(u.protocol)) return null;
+    if (u.pathname === location.pathname && u.hash) return null;          // an anchor on this page
+    if (/\.(mp3|mp4|jpe?g|png|pdf|zip|json)$/i.test(u.pathname)) return null;
+    return u;
+  };
+  const freeze = () => {
+    document.body.classList.add("wav-shell");
+    document.querySelectorAll("video").forEach((v) => { try { v.pause(); v.removeAttribute("src"); v.load(); } catch (e) {} });
+    window.requestAnimationFrame = () => 0;                  // every loop on the old page stops at its next frame
+    const top = setTimeout(() => {}, 0);
+    for (let i = 0; i <= top; i++) { clearTimeout(i); clearInterval(i); }
+  };
+  const follow = () => {                                     // the frame moved: the address bar and title follow
+    try {
+      const w = frame.contentWindow;
+      history.replaceState(history.state, "", w.location.pathname + w.location.search + w.location.hash);
+      document.title = w.document.title;
+    } catch (e) {}
+    render();
+  };
+  document.addEventListener("click", (e) => {
+    if (frame || !want || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    const u = inside(e.target.closest && e.target.closest("a[href]"));
+    if (!u) return;
+    e.preventDefault();
+    frame = document.createElement("iframe");
+    frame.className = "wav-frame"; frame.title = "0xR"; frame.src = u.href;
+    frame.addEventListener("load", follow);
+    frame.addEventListener("load", freeze, { once: true });
+    document.body.appendChild(frame);
+    history.pushState({ wav: 1 }, "", u.pathname + u.search + u.hash);
+    hide();
+  }, true);
+  addEventListener("popstate", () => {                        // back to where the frame began
+    if (frame) try { frame.contentWindow.location.replace(location.href); } catch (e) {}
   });
 
   /* ── a visit that was playing picks up where it was; the browser may ask for a press first ── */

@@ -150,7 +150,7 @@ the square's lower edge comes up to stay whole. Both colours come from the glitc
 - **Click wheel.** MENU goes back; the centre selects or plays; the bottom button plays or pauses; the sides restart. Turning the ring sets the volume.
 - **Keys.** Space plays and pauses, the arrows skip and set volume, Esc closes.
 - **Layers.** It sits at z 64, above the organism and the spared title, so it stays reachable through a takeover. Opening it closes the THESEUS card.
-- **Across pages.** Position, volume and the wish to play are kept in `sessionStorage`. A browser won't let a new page play sound before a press, so the music resumes on the first click or key on the next page.
+- **Across pages.** While music plays, an internal link opens the next page in a full-screen frame (`.wav-frame`), and the player and the audio stay in the outer document, so the music never stops. The address bar, the tab title and the back button follow the frame. The page underneath is frozen: its videos are unloaded, its timers cleared, its animation frames stopped. Each framed page's own wav button drives the host player. A reload, or any visit while nothing plays, is the ordinary site. Position, volume and the wish to play are also kept in `sessionStorage`; after a reload the music resumes on the first press, because browsers block sound before one.
 - **Media Session.** Fills the phone lock screen with the cover, title and artist.
 - **Loading.** Nothing loads until play. A single track loops.
 - **Adding a track.** Add a row to `TRACKS` in `music.js`. The list, skip and the lock screen pick it up.
