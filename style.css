@@ -288,8 +288,8 @@ a:hover > .tile-t { color: var(--ink); }
 .next a:hover, .next a:focus-visible { text-decoration-color: var(--ink); }
 .next .what { margin: 0.7rem 0 0; font-size: var(--t-small); color: var(--ink-soft); max-width: 30rem; }
 
-/* ── the film card: one announcement, bottom right, in the card language the
-   crew bubble already speaks. Not a modal: the page behind it stays live. ── */
+/* ── the film card: one announcement, bottom right, in the dark ink
+   ground the nav bar already uses. Not a modal: the page behind it stays live. ── */
 .film-card {
   position: fixed; z-index: 60; right: var(--pad); bottom: var(--pad);
   width: min(21rem, calc(100vw - 2 * var(--pad)));
@@ -371,23 +371,25 @@ canvas.organism.residue { z-index: 60; }
 .spared-glass .glass-text { margin: 0; color: var(--ink); }
 .spared-glass .glass-text span { transition: none; }
 
-/* ── his frame (frame.js): a square snaps around his figure, his handles above it ──
-   In the glitch set's mint: a hover is an event, so colour is allowed (DESIGN rule 2). */
-.his-frame { --mint: rgb(92, 211, 146); }
-.his-frame { position: absolute; z-index: 3; pointer-events: auto; cursor: pointer; }
-.his-frame::before { content: ""; position: absolute; inset: -10px; border: 2px solid var(--mint); opacity: 0; }
-.his-tags {
+/* ── the frames (frame.js): a square snaps around a figure, its tags above it ──
+   His in the glitch set's mint, the agents' in its orange: a hover is an event,
+   so colour is allowed (DESIGN rule 2). */
+.crew-frame { --edge: rgb(92, 211, 146); position: absolute; z-index: 3; pointer-events: auto; cursor: pointer; }
+.crew-frame.agent { --edge: rgb(244, 146, 64); }
+.crew-frame::before { content: ""; position: absolute; inset: -10px; border: 2px solid var(--edge); opacity: 0; }
+.crew-tags {
   position: absolute; left: -10px; bottom: calc(100% + 10px); padding-bottom: 8px;
   display: flex; gap: 6px; opacity: 0; pointer-events: none;
 }
-.his-frame:hover::before, .his-frame:focus-within::before, .his-frame.open::before { opacity: 1; }
-.his-frame:hover .his-tags, .his-frame:focus-within .his-tags, .his-frame.open .his-tags { opacity: 1; pointer-events: auto; }
-.his-tags a {
+.crew-frame.end .crew-tags { left: auto; right: -10px; }
+.crew-frame:hover::before, .crew-frame:focus-within::before, .crew-frame.open::before { opacity: 1; }
+.crew-frame:hover .crew-tags, .crew-frame:focus-within .crew-tags, .crew-frame.open .crew-tags { opacity: 1; pointer-events: auto; }
+.crew-tags > * {
   position: relative; font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.06em;
-  color: var(--ink); background: var(--paper); border: 1.5px solid var(--mint);
+  color: var(--ink); background: var(--paper); border: 1.5px solid var(--edge);
   padding: 0.25em 0.55em; text-decoration: none; white-space: nowrap; text-transform: none;
 }
-.his-tags a::before { content: ""; position: absolute; inset: -12px -3px; }   /* a 44px tap, drawn small */
-.his-tags a:hover, .his-tags a:focus-visible { background: var(--mint); color: var(--ink); outline: none; }
-.director .mate[data-crew="rodrigo"] { position: relative; }
+.crew-tags .kind { background: var(--edge); }
+.crew-tags a::before { content: ""; position: absolute; inset: -12px -3px; }   /* a 44px tap, drawn small */
+.crew-tags a:hover, .crew-tags a:focus-visible { background: var(--edge); color: var(--ink); outline: none; }
 

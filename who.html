@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>0xR / who</title>
+<meta name="author" content="Rodrigo Rivas Yassin">
+<meta name="description" content="Rodrigo Rivas Yassin. Born in Caracas, based in Madrid. Branding and generative media production. Cofounder of Sail, Fungi and Boveda.">
+<link rel="canonical" href="https://0xr.io/who">
+<link rel="icon" href="favicon.png" type="image/png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="0xR">
+<meta property="og:title" content="0xR / who">
+<meta property="og:description" content="Rodrigo Rivas Yassin. Born in Caracas, based in Madrid. Branding and generative media production. Cofounder of Sail, Fungi and Boveda.">
+<meta property="og:url" content="https://0xr.io/who">
+<meta property="og:image" content="https://0xr.io/media/card.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="0xR / who">
+<meta name="twitter:description" content="Rodrigo Rivas Yassin. Born in Caracas, based in Madrid. Branding and generative media production. Cofounder of Sail, Fungi and Boveda.">
+<meta name="twitter:image" content="https://0xr.io/media/card.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  /* ── him: the story on the left rail, his figure on the right ──
+     Both edges of the page are used, so nothing reads cut off. */
+  .him {
+    display: grid; grid-template-columns: minmax(0, 34rem) auto;
+    justify-content: start; gap: 0 clamp(3rem, 9vw, 8rem); align-items: start;
+  }
+  .story p { max-width: 34rem; margin: 0 0 1.1rem; color: var(--ink-soft); }
+  .director { justify-self: start; }
+  .director .mate { position: relative; display: block; cursor: default; }
+  .director .mate b {
+    display: block; font-family: var(--mono); font-weight: normal;
+    font-size: var(--t-mono); letter-spacing: 0.1em; color: var(--ink); margin: 0.6rem 0 0.3rem;
+  }
+  .director .mate em {
+    display: block; font-style: normal; font-family: var(--display);
+    font-size: clamp(1.05rem, 3.2vw, 1.3rem); line-height: 1.2; color: var(--ink);
+  }
+  /* load-bearing: the shared img/video/canvas cap would scale his bitmap to a
+     fractional ratio, which is what makes a pixelated figure go ragged. */
+  .director .fig { display: block; max-width: none; image-rendering: pixelated; }
+  /* 680: 34rem of text plus the gap plus his ink is 733px, which still fits an
+     820 viewport. Below it he follows his story rather than standing beside it. */
+  @media (max-width: 680px) {
+    .him { grid-template-columns: 1fr; gap: clamp(1.4rem, 5vw, 2rem); }
+    .director { order: 1; }
+    .story { order: 2; }
+  }
+
+  /* ── the record: four short lists under the story, on the same rail ── */
+  .story .lab { font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.18em;
+                text-transform: uppercase; color: var(--tone); margin: 2.4rem 0 1.1rem; }
+  .story a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px;
+             text-underline-offset: 2px; text-decoration-color: var(--tone); }
+  .story a:hover { text-decoration-color: var(--ink); }
+  /* the list markers are drawn in pixels, like the figures: a pixel arrow */
+  .work { max-width: 34rem; margin: 0; padding-left: 1.6rem; color: var(--ink-soft); list-style: none; }
+  .work li { position: relative; margin: 0 0 1rem; }
+  .work li:last-child { margin-bottom: 0; }
+  .work li::before {
+    content: ""; position: absolute; left: -1.5rem; top: 0.38em;
+    width: 15px; height: 15px; background: var(--ink);
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 5 5' shape-rendering='crispEdges'%3E%3Cpath d='M2 0h1v1H2zM3 1h1v1H3zM0 2h5v1H0zM3 3h1v1H3zM2 4h1v1H2z'/%3E%3C/svg%3E") no-repeat 0 0 / 100% 100%;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 5 5' shape-rendering='crispEdges'%3E%3Cpath d='M2 0h1v1H2zM3 1h1v1H3zM0 2h5v1H0zM3 3h1v1H3zM2 4h1v1H2z'/%3E%3C/svg%3E") no-repeat 0 0 / 100% 100%;
+  }
+  .work .co { color: var(--ink); }
+  .work .meta { display: block; margin-top: 0.2rem; font-family: var(--mono); font-size: var(--t-micro);
+                letter-spacing: 0.06em; text-transform: uppercase; color: var(--tone); }
+
+  /* ── the peek: hover an item and its picture or clip rides beside the pointer ──
+     One element for the whole page, moved and refilled. It snaps on and off. */
+  .peek {
+    position: fixed; left: 0; top: 0; z-index: 50; pointer-events: none;
+    width: min(22rem, 38vw); aspect-ratio: 16 / 10; overflow: hidden;
+    background: var(--ink); border-radius: 2px; visibility: hidden;
+  }
+  .peek.on { visibility: visible; }
+  .peek img, .peek video { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; }
+
+  /* on touch there is no hover: each item carries its picture at the end of its row */
+  .work .thumb { display: none; }
+  @media (hover: none) {
+    .work li[data-poster] { display: grid; grid-template-columns: 1fr 5.5rem; gap: 0 1rem; align-items: start; }
+    .work .thumb { display: block; width: 100%; aspect-ratio: 16 / 10;
+                   object-fit: cover; border-radius: 2px; background: var(--ink); }
+    .peek { display: none; }
+  }
+</style>
+</head>
+<body>
+
+    <div class="bar" id="bar">
+      <a class="name" href="/"><i>0</i>xR</a>
+      <nav>
+        <a href="/work">work</a>
+        <a href="/who" aria-current="page">who</a>
+      </nav>
+    </div>
+
+    <main class="page">
+      <div class="wrap">
+      <h1 data-scramble="mount" data-delay="60">Who.</h1>
+
+      <div class="him" data-reveal>
+        <div class="story">
+          <p>Born in Caracas, Venezuela. Based in&nbsp;Madrid.</p>
+          <p>I do branding and generative media production for companies, with my
+          crew of&nbsp;agents.</p>
+          <p>Multiple-time founder, and raised more than $1M for my previous company,
+          Sail. I ran every surface the brand lived in at each one of them, and we
+          never paid a PR agency, a design studio or an&nbsp;influencer.</p>
+
+          <p class="lab">open source</p>
+          <ul class="work">
+            <li data-poster="sail/landing.jpg"><span class="co"><a href="https://github.com/sail-money/Sailor" target="_blank" rel="noopener">Sailor</a></span>, the harness that money agents run&nbsp;on.</li>
+            <li data-poster="sail/protocol-launch-380660.jpg" data-clip="sail/protocol-launch-380660.mp4"><span class="co"><a href="https://github.com/sail-money/Protocol" target="_blank" rel="noopener">Sail Protocol</a></span>, the permission layer they transact&nbsp;under.</li>
+          </ul>
+
+          <p class="lab">companies cofounded</p>
+          <ul class="work">
+            <li data-poster="sail/product-110441.jpg" data-clip="sail/product-110441.mp4"><span class="co"><a href="https://sail.money/" target="_blank" rel="noopener">Sail</a></span>, agents that manage your money onchain without ever holding it. $700M in autonomous volume in one year, and it <a href="https://x.com/SaildotMoney/status/2042315862229577747" target="_blank" rel="noopener">outperformed the stablecoin yield market</a> every&nbsp;quarter.</li>
+            <li data-poster="fungi/ui-openbeta.jpg" data-clip="fungi/ui-openbeta.mp4"><span class="co">Fungi</span>, a ChatGPT for onchain&nbsp;finance.</li>
+            <li><span class="co">Boveda</span>, decentralized&nbsp;storage.</li>
+          </ul>
+
+          <p class="lab">writing</p>
+          <ul class="work" id="write-list"></ul>
+
+          <p class="lab">press &amp; live</p>
+          <ul class="work" id="press-list"></ul>
+        </div>
+        <div class="director">
+          <div class="mate" data-crew="rodrigo">
+            <canvas class="fig" aria-hidden="true"></canvas>
+            <b>(&nbsp;RODRIGO&nbsp;)</b>
+            <em>direction</em>
+          </div>
+        </div>
+      </div>
+
+      <div class="peek" id="peek" aria-hidden="true"></div>
+
+      <div class="next" data-reveal>
+        <p class="label" data-scramble>Start here</p>
+        <p class="addr"><a href="mailto:rodrigo@0xr.io?subject=A%20project">rodrigo@0xr.io</a></p>
+        <p class="what">Tell me what you are making and I&rsquo;ll get my crew on&nbsp;it.</p>
+      </div>
+
+      </div>
+    </main>
+
+    <footer class="foot">
+      <canvas id="ascii" aria-hidden="true"></canvas>
+      <div class="foot-row"><span>&copy; 2026 0xR</span><nav>
+      <a href="mailto:rodrigo@0xr.io">rodrigo@0xr.io</a>
+      <a href="https://x.com/0xRcap" target="_blank" rel="noopener">x</a>
+      <a href="https://www.youtube.com/@0xrcap" target="_blank" rel="noopener">youtube</a>
+    </nav></div></footer>
+
+  <script src="crew/rodrigo.model.js" defer></script>
+  <script src="crew3d.js" defer></script>
+  <script src="nav.js" defer></script>
+  <script src="ascii.js" defer></script>
+  <script src="scramble.js" defer></script>
+  <script src="glitch.js" defer></script>
+  <script src="frame.js" defer></script>
+  <script defer>
+  /* ── his figure: half again as tall as the crew on the home stage, and his
+     paper trimmed on both sides so the ink, not the canvas, meets the rails ── */
+  addEventListener("DOMContentLoaded", () => {
+    if (!window.crew3d || !window.crewModels) return;
+    const m = window.crewModels.rodrigo;
+    if (!m) return;
+    const rows = m.value.split("\n");
+    const inkLeft = Math.min(...rows.map((r) => r.search(/[-+#]/)).filter((i) => i >= 0));
+    const inkRight = Math.max(...rows.map((r) => r.replace(/[^-+#]+$/, "").length));
+    const cols = Math.max(...rows.map((r) => r.length));
+    const px = matchMedia("(max-width: 680px)").matches ? 5 : 7;
+    const c = document.querySelector('.director [data-crew="rodrigo"] canvas');
+    c.style.marginLeft = -(inkLeft * px) + "px";
+    c.style.marginRight = -((cols - inkRight) * px) + "px";
+    crew3d.neighbours([crew3d.register(c, m, { scale: px })]);
+  });
+  </script>
+  <script>
+  /* ── writing, press and live, from media/press.json (npm run posts) ── */
+  const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const ready = (async () => {
+    try {
+      const pr = await fetch("media/press.json", { cache: "no-store" });
+      if (!pr.ok) return;
+      const p = await pr.json();
+      const month = (d) => new Date(d + "T00:00:00Z").toLocaleDateString("en-GB", { year: "numeric", month: "short", timeZone: "UTC" });
+      document.getElementById("write-list").innerHTML = (p.writings || []).map((w) =>
+        `<li${w.cover ? ` data-poster="${esc(w.cover)}"` : ""}><span class="co"><a href="${esc(w.href)}" target="_blank" rel="noopener">${esc(w.title)}</a></span>`
+        + `<span class="meta">${esc([w.outlet, w.date && month(w.date)].filter(Boolean).join(" / "))}</span></li>`).join("");
+      document.getElementById("press-list").innerHTML = p.tiles.map((t) =>
+        `<li data-poster="${esc(t.poster)}"${t.src ? ` data-clip="${esc(t.src)}"` : ""}><span class="co"><a href="${esc(t.href)}" target="_blank" rel="noopener">${esc(t.title.replace(/\s+\u2014\s+/g, ", "))}</a></span>`
+        + `<span class="meta">${t.src ? "clip" : "live"} / ${esc(t.client)} / ${t.views.toLocaleString()} impressions</span></li>`).join("");
+    } catch (e) { /* file://: the lists just stay empty */ }
+  })();
+
+  /* ── the peek ── */
+  ready.then(() => {
+    const items = [...document.querySelectorAll(".work li[data-poster]")];
+    for (const li of items) {                                   // touch: a still at the end of the row
+      const text = document.createElement("span");              // the words stay one cell beside it
+      text.className = "text"; text.append(...li.childNodes); li.appendChild(text);
+      const img = document.createElement("img");
+      img.className = "thumb"; img.alt = ""; img.loading = "lazy"; img.src = "media/" + li.dataset.poster;
+      li.appendChild(img);
+    }
+    if (!matchMedia("(hover: hover)").matches) return;
+    const peek = document.getElementById("peek");
+    let x = 0, y = 0, on = null;
+    /* it stands in the open column right of the list, never over the words,
+       and follows the pointer up and down */
+    const rail = document.querySelector(".story");
+    const place = () => {
+      const w = peek.offsetWidth, h = peek.offsetHeight, r = rail.getBoundingClientRect();
+      let left = r.left + Math.min(r.width, 34 * 16) + 48, top = y - h / 2;
+      if (left + w > innerWidth - 16) left = Math.max(16, x + 28);
+      if (left + w > innerWidth - 16) left = x - 28 - w;
+      top = Math.max(16, Math.min(top, innerHeight - h - 16));
+      peek.style.transform = `translate(${left}px, ${top}px)`;
+    };
+    const open = (li) => {
+      on = li;
+      const still = `<img src="media/${li.dataset.poster}" alt="">`;
+      peek.innerHTML = li.dataset.clip
+        ? still + `<video src="media/${li.dataset.clip}" poster="media/${li.dataset.poster}" autoplay muted loop playsinline></video>`
+        : still;
+      const v = peek.querySelector("video");
+      if (v) { v.muted = true; v.play().catch(() => {}); }
+      place(); peek.classList.add("on");
+    };
+    const close = () => { on = null; peek.classList.remove("on"); peek.innerHTML = ""; };
+    for (const li of items) {
+      li.addEventListener("pointerenter", (e) => { x = e.clientX; y = e.clientY; open(li); });
+      li.addEventListener("pointerleave", close);
+    }
+    addEventListener("pointermove", (e) => { x = e.clientX; y = e.clientY; if (on) place(); }, { passive: true });
+    addEventListener("scroll", () => { if (on) close(); }, { passive: true });
+  });
+  </script>
+
+</body>
+</html>

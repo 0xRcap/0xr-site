@@ -23,23 +23,24 @@ history was restarted clean after the move. No personal data lives here.
 - Meta description: "We do branding and generative media production at a fraction
   of the time/cost of an agency."
 - Tab title on the home page: `0xR / branding + media`. The others are
-  `0xR / work`, `0xR / crew`, `0xR / more`.
+  `0xR / work` and `0xR / who`.
 
 The word is always *crew*. Sail, Fungi and Boveda are described as onchain finance.
 
-## The four pages
+## The three pages
 
 Clean URLs through `vercel.json` (`cleanUrls`, no trailing slash).
 
 | URL | File | Carries |
 |---|---|---|
-| `/` | `index.html` | The hero over the crew figures, the AI films wall, the why block. The film card (`promo.js`) is on this page only |
+| `/` | `index.html` | The hero over the crew figures, the AI films wall, the why block. The film card (`promo.js`) is on this page only. The crew lives here and only here |
 | `/work` | `work.html` | Three entries as an accordion: Allé Studios, Sail, Fungi |
-| `/crew` | `crew.html` | The seven figures, his bio and the companies he cofounded (Sail, Fungi, Boveda), open source |
-| `/more` | `more.html` | Writing, then press and live |
+| `/who` | `who.html` | Him alone: the bio beside his figure, then four short lists on the same rail: open source (Sailor, Sail Protocol), companies cofounded (Sail, Fungi, Boveda), writing, press and live. Hover an item and its picture or clip appears in the open column to the right; on touch each item carries a still at the end of its row. Writing and press come from `media/press.json` |
 
-Nav order is **work / crew / more**. Old paths redirect permanently: `/index`,
-`/home`, `/thesis` go to `/`; `/studio` goes to `/work`; `/who` goes to `/crew`.
+Nav order is **work / who**. The crew page and the more page were folded into
+`/who` on 2026-10-20 (his call): the agents left it, and the writing and press
+moved under him. Old paths redirect permanently: `/index`, `/home`, `/thesis`
+go to `/`; `/studio` goes to `/work`; `/crew` and `/more` go to `/who`.
 Add a redirect whenever a page is renamed, because shared links outlive the page.
 
 **No total views on the site until the total passes 1M** (his ruling). The per-film
@@ -105,10 +106,13 @@ green first, because the old gold stage was "too yellow":
 The letters inside the glitch are hex strips (`hexAt`), a character flipping now
 and then as it corrupts.
 
-**The spared title.** When the organism takes the page, the page title stays,
-floating on frosted glass (`.spared-glass`). Each word turns ink or paper by
-reading the residue behind it. The title is built from `settledText()`, which
-strips the scramble's `aria-hidden` layer; built mid-scramble, it came out garbled.
+**The spared title.** When the organism takes the page, the page's `h1` stays,
+floating on frosted glass (`.spared-glass`) as wide as its words. With the title
+in view the glass lies exactly over it; scrolled away from it, the glass floats
+at the middle of the screen on the same rail, so the title appears wherever the
+reader is (his call, 2026-10-20). Each word turns ink or paper by reading the
+residue behind it. The title is built from `settledText()`, which strips the
+scramble's `aria-hidden` layer; built mid-scramble, it came out garbled.
 
 **Scrolling stays practical.** `scrolling()` is true for 140ms after the last
 scroll event: bursts end and hovers wait. `settling()` is true for 700ms: the
@@ -128,10 +132,14 @@ Measured on the live site at merge: 60fps, no console errors, hovers 12 of 12,
 no leftover glitch pixels while scrolling. `_ref/` holds his reference recordings
 and the perf probes. It is untracked and never deploys.
 
-## The crew figure
+## The frames on the figures
 
-`frame.js` draws the hover frame on his figure, on the home page and on `/crew`: a
-mint frame with an X tag and a LinkedIn tag. The six agent figures carry no links.
+`frame.js` draws a hover frame on every figure on the home stage and on his figure
+on `/who`. His is mint, with a filled `human` tag and his X and LinkedIn handles as
+links. The six agents' are orange, with a filled `agent` tag and what each one
+does: YE brand, QUENT films, JEAN art direction, FRANK words, STEVE design, KIM go
+to market. Past 60% of the stage the tags hang from the frame's right edge so they
+stay on screen. Both colours come from the glitch set and appear only on hover.
 
 ## The front end
 
@@ -139,7 +147,7 @@ mint frame with an X tag and a LinkedIn tag. The six agent figures carry no link
 |---|---|
 | `style.css` | tokens, reset, chrome, the shared media-tile system, `.creed`, `.spared-glass` |
 | `glitch.js` | the glitch organism, on every page |
-| `frame.js` | the hover frame on his crew figure |
+| `frame.js` | the hover frames on the figures |
 | `player.js` | the video engine, shared by the walls |
 | `promo.js` | the film card, home page only |
 | `crew3d.js` | the crew figures: voxel rig, turn, acts, decode |

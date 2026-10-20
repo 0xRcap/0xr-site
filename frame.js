@@ -1,28 +1,37 @@
-/* ── his frame: hover his figure and a square closes around it, with his handles ──
-   On the home stage and the crew page. The frame snaps (no fade), like the
-   rest of the site's motion. On touch the first tap opens it and the handles
-   then work as links; a tap anywhere else closes it. */
+/* ── the frames: hover a figure and a square closes around it, with its tags ──
+   On the home stage and the who page. He is the one human and his frame is mint,
+   with his handles; the six are agents and theirs is orange, with what each one
+   does. The frame snaps (no fade), like the rest of the site's motion. On touch
+   the first tap opens it and his handles then work as links; a tap anywhere else
+   closes it. */
 (() => {
-  const HANDLES = [
+  const HUMAN = [
+    ["human"],
     ["@0xRcap", "https://x.com/0xRcap", "Rodrigo on X"],
     ["in/rodrigo-rivas-yassin", "https://www.linkedin.com/in/rodrigo-rivas-yassin/", "Rodrigo on LinkedIn"],
   ];
-  const figs = document.querySelectorAll('#stage canvas[data-crew="rodrigo"], .director [data-crew="rodrigo"] canvas.fig');
+  const ROLE = { ye: "brand", quent: "films", jean: "art direction", frank: "words", steve: "design", kim: "go to market" };
+  const tagsFor = (who) => (who === "rodrigo" ? HUMAN : [["agent"], [ROLE[who]]]);
+
+  const figs = document.querySelectorAll('#stage canvas[data-crew], .director [data-crew="rodrigo"] canvas.fig');
   for (const fig of figs) {
+    const who = fig.dataset.crew || fig.closest("[data-crew]").dataset.crew;
+    if (who !== "rodrigo" && !ROLE[who]) continue;
     const host = fig.parentElement;
     const box = document.createElement("div");
-    box.className = "his-frame";
+    box.className = "crew-frame " + (who === "rodrigo" ? "human" : "agent");
     const tags = document.createElement("span");
-    tags.className = "his-tags";
-    for (const [text, href, label] of HANDLES) {
-      const a = document.createElement("a");
-      a.href = href; a.target = "_blank"; a.rel = "noopener"; a.textContent = text; a.setAttribute("aria-label", label);
-      tags.appendChild(a);
+    tags.className = "crew-tags";
+    for (const [text, href, label] of tagsFor(who)) {
+      const t = document.createElement(href ? "a" : "span");
+      if (href) { t.href = href; t.target = "_blank"; t.rel = "noopener"; t.setAttribute("aria-label", label); }
+      if (text === "human" || text === "agent") t.className = "kind";
+      t.textContent = text;
+      tags.appendChild(t);
     }
     box.appendChild(tags);
     host.appendChild(box);
 
-    // measured where the figure is drawn, so a CSS shift or scale on it is followed
     // the frame hugs the drawn figure, not its canvas: read where the pixels are
     const inked = () => {
       try {
@@ -34,11 +43,16 @@
         return x1 < 0 ? null : { x0: x0 / w, y0: y0 / h, x1: (x1 + 1) / w, y1: (y1 + 1) / h };
       } catch (e) { return null; }
     };
+    // measured where the figure is drawn, so a CSS shift or scale on it is followed
     const place = () => {
+      box.hidden = fig.offsetParent === null;                    // he leaves the stage under 600px
+      if (box.hidden) return;
       const f = fig.getBoundingClientRect(), h = host.getBoundingClientRect();
       const k = inked() || { x0: 0, y0: 0, x1: 1, y1: 1 };
       Object.assign(box.style, { left: f.left - h.left + f.width * k.x0 + "px", top: f.top - h.top + f.height * k.y0 + "px",
                                  width: f.width * (k.x1 - k.x0) + "px", height: f.height * (k.y1 - k.y0) + "px" });
+      // past the middle of the stage the tags hang from the frame's right edge, so they stay on screen
+      box.classList.toggle("end", f.left + f.width / 2 - h.left > h.width * 0.6);
     };
     place();
     new ResizeObserver(place).observe(fig);

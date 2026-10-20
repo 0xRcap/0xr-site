@@ -1,6 +1,6 @@
 /* ── the film card ──
    One thing to announce, on the home page only, in the site's own card
-   language: the dark ink ground the crew bubble already uses. It is a card,
+   language: the dark ink ground the nav bar already uses. It is a card,
    not a modal: nothing is blocked, nothing is dimmed, and the page behind it
    stays usable.
 
