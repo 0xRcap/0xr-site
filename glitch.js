@@ -675,15 +675,9 @@
     return x * x * (3 - 2 * x);
   };
 
-  /* the one thing it never takes: the title, or the nearest heading on screen */
-  function spared() {
-    const hs = [...document.querySelectorAll("h1, h2")].filter((h) => {
-      const r = h.getBoundingClientRect(); return r.width && r.bottom > 0 && r.top < innerHeight;
-    });
-    const h1 = hs.find((h) => h.tagName === "H1");
-    if (h1) return h1;
-    return hs.sort((a, b) => Math.abs(a.getBoundingClientRect().top - innerHeight / 2) - Math.abs(b.getBoundingClientRect().top - innerHeight / 2))[0];
-  }
+  /* the one thing it never takes: the page's title, wherever the reader is
+     (his call, 2026-10-20: "not depending on what place of each page you are in") */
+  const spared = () => document.querySelector("main h1") || document.querySelector("h1");
   /* the title is not cut out: it floats on glass over the takeover. The glass
      is a copy laid exactly over the real heading (which stays in place for
      screen readers and copying, its ink made transparent); the glass blurs
@@ -717,10 +711,18 @@
       glass.appendChild(c);
     }
     if (!t) return;
+    /* in view, the glass lies exactly over the real title. Scrolled away from
+       it, the glass floats at the middle of the screen on the same rail. */
     const r = t.getBoundingClientRect();
-    Object.assign(glass.style, { left: r.left + "px", top: r.top + "px", width: r.width + "px", height: r.height + "px" });
+    const inView = r.top >= 0 && r.bottom <= innerHeight;
+    const top = inView ? r.top : Math.round((innerHeight - r.height) / 2);
+    /* the glass is as wide as the words, not the heading's block: a short
+       title like "Work." gets a short pane */
+    const words = document.createRange(); words.selectNodeContents(t);
+    const w = Math.min(r.width, Math.ceil(words.getBoundingClientRect().width) + 2);
+    Object.assign(glass.style, { left: r.left + "px", top: top + "px", width: w + "px", height: r.height + "px" });
     glass.hidden = false;
-    t.style.color = "transparent";
+    t.style.color = inView ? "transparent" : "";
     if (++readTick % 3 === 0) readBehind();
   }
   /* what is behind each word, read off the residue: light behind it means ink, dark means paper */
@@ -955,7 +957,7 @@
   const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
   if (fine) document.addEventListener("pointerover", (e) => {
     if (reel && reel.contains(e.target)) return;
-    const box = e.target.closest("a, figure, .shot, .cover, .pcard") || e.target;
+    const box = e.target.closest("a, figure, .shot, .cover") || e.target;
     const m = box.matches && box.matches("img, video") ? box : box.querySelector && box.querySelector("img, video");
     if (!m || !m.closest("main") || !isLoose(m) || box.contains(e.relatedTarget)) return;
     if (scrolling()) { pendingHover = m; return; }

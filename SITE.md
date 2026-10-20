@@ -106,10 +106,13 @@ green first, because the old gold stage was "too yellow":
 The letters inside the glitch are hex strips (`hexAt`), a character flipping now
 and then as it corrupts.
 
-**The spared title.** When the organism takes the page, the page title stays,
-floating on frosted glass (`.spared-glass`). Each word turns ink or paper by
-reading the residue behind it. The title is built from `settledText()`, which
-strips the scramble's `aria-hidden` layer; built mid-scramble, it came out garbled.
+**The spared title.** When the organism takes the page, the page's `h1` stays,
+floating on frosted glass (`.spared-glass`) as wide as its words. With the title
+in view the glass lies exactly over it; scrolled away from it, the glass floats
+at the middle of the screen on the same rail, so the title appears wherever the
+reader is (his call, 2026-10-20). Each word turns ink or paper by reading the
+residue behind it. The title is built from `settledText()`, which strips the
+scramble's `aria-hidden` layer; built mid-scramble, it came out garbled.
 
 **Scrolling stays practical.** `scrolling()` is true for 140ms after the last
 scroll event: bursts end and hovers wait. `settling()` is true for 700ms: the

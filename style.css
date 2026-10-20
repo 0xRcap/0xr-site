@@ -288,8 +288,8 @@ a:hover > .tile-t { color: var(--ink); }
 .next a:hover, .next a:focus-visible { text-decoration-color: var(--ink); }
 .next .what { margin: 0.7rem 0 0; font-size: var(--t-small); color: var(--ink-soft); max-width: 30rem; }
 
-/* ── the film card: one announcement, bottom right, in the card language the
-   crew bubble already speaks. Not a modal: the page behind it stays live. ── */
+/* ── the film card: one announcement, bottom right, in the dark ink
+   ground the nav bar already uses. Not a modal: the page behind it stays live. ── */
 .film-card {
   position: fixed; z-index: 60; right: var(--pad); bottom: var(--pad);
   width: min(21rem, calc(100vw - 2 * var(--pad)));
@@ -392,5 +392,4 @@ canvas.organism.residue { z-index: 60; }
 .crew-tags .kind { background: var(--edge); }
 .crew-tags a::before { content: ""; position: absolute; inset: -12px -3px; }   /* a 44px tap, drawn small */
 .crew-tags a:hover, .crew-tags a:focus-visible { background: var(--edge); color: var(--ink); outline: none; }
-.director .mate[data-crew="rodrigo"] { position: relative; }
 

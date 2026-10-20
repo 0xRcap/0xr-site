@@ -32,7 +32,6 @@
     justify-content: start; gap: 0 clamp(3rem, 9vw, 8rem); align-items: start;
   }
   .story p { max-width: 34rem; margin: 0 0 1.1rem; color: var(--ink-soft); }
-  .story p:last-child { margin-bottom: 0; }
   .director { justify-self: start; }
   .director .mate { position: relative; display: block; cursor: default; }
   .director .mate b {
@@ -73,7 +72,6 @@
   .work .co { color: var(--ink); }
   .work .meta { display: block; margin-top: 0.2rem; font-family: var(--mono); font-size: var(--t-micro);
                 letter-spacing: 0.06em; text-transform: uppercase; color: var(--tone); }
-  .work li[data-poster] { cursor: default; }
 
   /* ── the peek: hover an item and its picture or clip rides beside the pointer ──
      One element for the whole page, moved and refilled. It snaps on and off. */
@@ -89,7 +87,7 @@
   .work .thumb { display: none; }
   @media (hover: none) {
     .work li[data-poster] { display: grid; grid-template-columns: 1fr 5.5rem; gap: 0 1rem; align-items: start; }
-    .work .thumb { display: block; grid-column: 2; grid-row: 1 / span 2; width: 100%; aspect-ratio: 16 / 10;
+    .work .thumb { display: block; width: 100%; aspect-ratio: 16 / 10;
                    object-fit: cover; border-radius: 2px; background: var(--ink); }
     .peek { display: none; }
   }
@@ -212,6 +210,8 @@
   ready.then(() => {
     const items = [...document.querySelectorAll(".work li[data-poster]")];
     for (const li of items) {                                   // touch: a still at the end of the row
+      const text = document.createElement("span");              // the words stay one cell beside it
+      text.className = "text"; text.append(...li.childNodes); li.appendChild(text);
       const img = document.createElement("img");
       img.className = "thumb"; img.alt = ""; img.loading = "lazy"; img.src = "media/" + li.dataset.poster;
       li.appendChild(img);
