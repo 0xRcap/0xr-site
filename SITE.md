@@ -142,6 +142,21 @@ to market. Past 60% of the stage the tags hang from the frame's right edge so th
 stay on screen. The hero clips at its foot, where the figures stand on a phone, so
 the square's lower edge comes up to stay whole. Both colours come from the glitch set and appear only on hover.
 
+## The player (wav)
+
+`music.js` adds **wav** to the nav on every page. It opens a white classic iPod that rises from the bottom right. On it, 0xR is the artist and **Residue** is the one track (`media/music/residue.mp3`, 128 kbps, 2.9 MB, made with ElevenLabs plus the local glitch orchestra; source and audit in `My_Agents/projects/residue/`). The cover is a frame of the glitch takeover.
+
+- **Screens.** The track list, and Now Playing with a progress bar, elapsed and remaining time. "made with AI" sits on both.
+- **Click wheel.** MENU goes back; the centre selects or plays; the bottom button plays or pauses; the sides restart. Turning the ring sets the volume.
+- **Keys.** Space plays and pauses, the arrows skip and set volume, Esc closes.
+- **Layers.** It sits at z 64, above the organism and the spared title, so it stays reachable through a takeover. Opening it closes the THESEUS card.
+- **Across pages.** Position, volume and the wish to play are kept in `sessionStorage`. A browser won't let a new page play sound before a press, so the music resumes on the first click or key on the next page.
+- **Media Session.** Fills the phone lock screen with the cover, title and artist.
+- **Loading.** Nothing loads until play. A single track loops.
+- **Adding a track.** Add a row to `TRACKS` in `music.js`. The list, skip and the lock screen pick it up.
+
+Licence: paid ElevenLabs plans, Starter included, carry a commercial licence. Check the Music Terms for the plan before using a track anywhere beyond the site.
+
 ## The front end
 
 | File | Does |
@@ -149,6 +164,7 @@ the square's lower edge comes up to stay whole. Both colours come from the glitc
 | `style.css` | tokens, reset, chrome, the shared media-tile system, `.creed`, `.spared-glass` |
 | `glitch.js` | the glitch organism, on every page |
 | `frame.js` | the hover frames on the figures |
+| `music.js` | wav: the iPod player and its one track |
 | `player.js` | the video engine, shared by the walls |
 | `promo.js` | the film card, home page only |
 | `crew3d.js` | the crew figures: voxel rig, turn, acts, decode |
