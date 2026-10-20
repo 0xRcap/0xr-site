@@ -422,7 +422,7 @@
   const clearLayer = () => { if (layerUsers === 0) lg.clearRect(0, 0, LW, LH); };
 
   /* one visit on one element: a film, a figure, the card, the footer */
-  async function breakElement(el, kind, duration) {
+  async function breakElement(el, kind, duration, live = false) {
     const r = el.getBoundingClientRect();
     if (!r.width || !r.height || r.bottom < 0 || r.top > innerHeight) return;
     const src = kind === "film" ? filmSource(el) : readable(el);
@@ -439,7 +439,8 @@
       cv.width = W * dpr; cv.height = H * dpr;
       a.appendChild(cv);
       const g = cv.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0);
-      await run(duration, (t) => { if (scrolling()) return false; g.clearRect(0, 0, W, H); draw(g, 0, 0, t); }, () => cv.remove());
+      /* live: drawn inside the film, so it rides the scroll and does not have to stop for it */
+      await run(duration, (t) => { if (!live && scrolling()) return false; g.clearRect(0, 0, W, H); draw(g, 0, 0, t); }, () => cv.remove());
       return;
     }
 
@@ -976,6 +977,30 @@
       const tile = e.target.closest(".tile");
       if (tile && e.target.matches(":focus-visible")) poke(tile);
     });
+  }
+
+  /* touch has no hover (his call, 2026-10-20): while the page scrolls, the film
+     crossing the middle of the screen glitches as if it were hovered. The break
+     is drawn inside the film, so it moves with the page; one at a time. */
+  if (!fine) {
+    let liveOne = false, lastScan = 0;
+    addEventListener("scroll", () => {
+      const now = performance.now();
+      if (liveOne || now - lastScan < 120) return;
+      lastScan = now;
+      const mid = innerHeight / 2, band = innerHeight * 0.18;
+      let best = null, bestD = band;
+      for (const el of document.querySelectorAll("#reel .tile:not([hidden]), main .shot")) {
+        const r = el.getBoundingClientRect();
+        if (!r.width || r.bottom < 0 || r.top > innerHeight) continue;
+        const d = Math.abs(r.top + r.height / 2 - mid);
+        if (d < bestD && (cool.get(el) || 0) < now && !el.querySelector("canvas.glitch") && filmSource(el)) { best = el; bestD = d; }
+      }
+      if (!best) return;
+      cool.set(best, now + 2500);
+      liveOne = true;
+      breakElement(best, "film", rnd(700, 900), true).finally(() => { liveOne = false; });
+    }, { passive: true });
   }
 
 })();
