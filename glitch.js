@@ -37,6 +37,105 @@
   const easeOut = (t) => 1 - Math.pow(1 - t, 3);
   const lum = (d, i) => 0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2];
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+  const LITE_EARLY = matchMedia("(hover: none)").matches ||
+                     (navigator.deviceMemory && navigator.deviceMemory <= 4) ||
+                     (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
+
+  /* ── marble: the liquid shapes of the reference, in the films' own colours ──
+     A domain-warped noise field (noise fed back into its own coordinates) makes
+     the swirl; banding it into a film's palette makes the flat marbled fields.
+     Blooms are organic outlines filled with that marble, chunky at the rim,
+     with sorted streaks dripping out of their lower edge. */
+  const PERM = new Uint8Array(512);
+  { const p = [...Array(256).keys()].sort(() => Math.random() - 0.5); for (let i = 0; i < 512; i++) PERM[i] = p[i & 255]; }
+  const smooth = (t) => t * t * (3 - 2 * t);
+  function vnoise(x, y) {
+    const xi = Math.floor(x), yi = Math.floor(y), u = smooth(x - xi), v = smooth(y - yi);
+    const h = (a, b) => PERM[(PERM[a & 255] + (b & 255)) & 511] / 255;
+    const a = h(xi, yi), b = h(xi + 1, yi), c = h(xi, yi + 1), d = h(xi + 1, yi + 1);
+    return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
+  }
+  const fbm = (x, y) => vnoise(x, y) * 0.5 + vnoise(x * 2.1, y * 2.1) * 0.3 + vnoise(x * 4.3, y * 4.3) * 0.2;
+  const soft = (x, y) => vnoise(x, y) * 0.7 + vnoise(x * 1.9, y * 1.9) * 0.3;   // two octaves: smooth, no grain
+  function marble(x, y) {
+    const qx = soft(x, y), qy = soft(x + 5.2, y + 1.3);
+    const rx = soft(x + 2.6 * qx + 1.7, y + 2.6 * qy + 9.2), ry = soft(x + 2.6 * qx + 8.3, y + 2.6 * qy + 2.8);
+    return soft(x + 2.2 * rx, y + 2.2 * ry);
+  }
+
+  /* a film's palette: its six main colours, most vivid first, never boosted */
+  const palettes = new WeakMap();
+  function paletteOf(src) {
+    if (palettes.has(src)) return palettes.get(src);
+    let out = [];
+    try {
+      const c = document.createElement("canvas"); c.width = 24; c.height = 14;
+      const g = c.getContext("2d", { willReadFrequently: true });
+      g.drawImage(src, 0, 0, 24, 14);
+      const d = g.getImageData(0, 0, 24, 14).data, px = [];
+      for (let i = 0; i < d.length; i += 4) px.push([d[i], d[i + 1], d[i + 2]]);
+      let cent = Array.from({ length: 6 }, (_, k) => px[Math.floor((k + 0.5) * px.length / 6)].slice());
+      for (let it = 0; it < 6; it++) {
+        const sum = cent.map(() => [0, 0, 0, 0]);
+        for (const p of px) {
+          let b = 0, bd = 1e9;
+          cent.forEach((q, k) => { const dd = (p[0] - q[0]) ** 2 + (p[1] - q[1]) ** 2 + (p[2] - q[2]) ** 2; if (dd < bd) { bd = dd; b = k; } });
+          const t = sum[b]; t[0] += p[0]; t[1] += p[1]; t[2] += p[2]; t[3]++;
+        }
+        cent = sum.map((t, k) => (t[3] ? [t[0] / t[3], t[1] / t[3], t[2] / t[3]] : cent[k]));
+      }
+      const chroma = (q) => Math.max(...q) - Math.min(...q);
+      const vivid = cent.map((q) => q.map(Math.round)).sort((a, b) => chroma(b) - chroma(a));
+      // the reference reads because vivid bands sit against cream and dark ones;
+      // here those are 0xR's own paper and ink, so black and white stays the core
+      out = [vivid[0], [250, 248, 244], vivid[1], vivid[2], [14, 13, 11], vivid[0]];
+    } catch (e) { out = []; }
+    palettes.set(src, out);
+    return out;
+  }
+
+  function makeBloom(cx, cy, R, pal, cell) {
+    // big blooms take bigger cells: the field costs n squared, and nobody reads 4px on a 400px shape
+    const CELL = cell || (R > 200 ? (LITE_EARLY ? 8 : 6) : (LITE_EARLY ? 6 : 4));
+    const ox = Math.random() * 100, oy = Math.random() * 100, sc = rnd(0.0035, 0.0075) * CELL;
+    const bands = rnd(1.1, 1.9);
+    const n = Math.ceil(R * 2.7 / CELL), x0 = cx - (n * CELL) / 2, y0 = cy - (n * CELL) / 2;
+    // the field, once: how far each cell is from the rim, and which band of colour it is
+    const dist = new Float32Array(n * n), band = new Uint8Array(n * n);
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
+      const k = j * n + i, px = i - n / 2, py = j - n / 2;
+      dist[k] = Math.hypot(px, py) / (n / 2.7) + (soft(i * 0.06 + ox, j * 0.06 + oy) - 0.5) * 1.3;
+      const v = marble(i * sc + ox, j * sc + oy);
+      band[k] = Math.min(pal.length - 1, Math.floor(((((v - 0.2) * bands * 2.2) % 1) + 1) % 1 * pal.length));
+    }
+    const drips = [];
+    for (let i = 0; i < n; i++) if (Math.random() < 0.22) drips.push({ i, len: rnd(0.25, 1.8) * R, col: pal[[0, 2, 3][ri(0, 2)]], w: Math.random() < 0.3 ? CELL * 2 : CELL });
+    const im = new ImageData(n, n), D = im.data;
+    const tile = document.createElement("canvas"); tile.width = n; tile.height = n;
+    const tg = tile.getContext("2d");
+    const lowest = new Int16Array(n);
+    const bounds = { x: x0 - CELL, y: y0 - CELL, w: n * CELL + CELL * 3, h: n * CELL + R * 2 + CELL * 3 };
+    const paint = (g, grow) => {
+      lowest.fill(-1); D.fill(0);
+      for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
+        const k = j * n + i;
+        if (dist[k] > grow) continue;
+        const c = pal[band[k]], o = k * 4;
+        D[o] = c[0]; D[o + 1] = c[1]; D[o + 2] = c[2]; D[o + 3] = 255;
+        lowest[i] = j;
+      }
+      tg.putImageData(im, 0, 0);
+      g.imageSmoothingEnabled = false;
+      g.drawImage(tile, x0, y0, n * CELL, n * CELL);
+      for (const d of drips) {
+        if (lowest[d.i] < 0) continue;
+        g.fillStyle = `rgb(${d.col[0]},${d.col[1]},${d.col[2]})`;
+        g.fillRect(x0 + d.i * CELL, y0 + (lowest[d.i] + 1) * CELL, d.w, d.len * grow);
+      }
+    };
+    paint.bounds = bounds;
+    return paint;
+  }
 
   function clusters(cols, share, wMin, wMax) {
     const out = new Set(), target = Math.round(cols * share);
@@ -89,7 +188,7 @@
       for (let y = s; y < rows; y++) { const i = (y * cols + x) * 4; run.push([B[i], B[i + 1], B[i + 2], B[i + 3], lum(B, i)]); }
       const up = Math.random() < 0.5;
       run.sort((p, q) => (up ? p[4] - q[4] : q[4] - p[4]));
-      return { x, s, run, at: rnd(0, 90), resolveAt: rnd(0.62, 0.98) * opts.duration };
+      return { x, s, run, at: rnd(180, 300), resolveAt: rnd(0.66, 0.98) * opts.duration };
     });
     const blocks = Array.from({ length: ri(opts.blocks ? opts.blocks[0] : 2, opts.blocks ? opts.blocks[1] : 4) }, () => {
       const w = Math.round(cols * rnd(0.2, 0.5)), h = Math.max(2, Math.round(rows * rnd(0.05, 0.16)));
@@ -102,8 +201,17 @@
     const og = out.getContext("2d");
     const img = og.createImageData(cols, rows), F = img.data;
 
+    const wo = Math.random() * 50, LIQ = 300;
     return (g, x0, y0, t) => {
-      F.set(B);
+      if (t < LIQ) {                                             // the liquid moment
+        const amp = Math.sin(Math.PI * t / LIQ) * cols * 0.09;
+        for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) {
+          const sx = Math.min(cols - 1, Math.max(0, Math.round(x + (fbm(x * 0.07 + wo, y * 0.07) - 0.5) * amp * 2)));
+          const sy = Math.min(rows - 1, Math.max(0, Math.round(y + (fbm(x * 0.07, y * 0.07 + wo) - 0.5) * amp * 2)));
+          const si = (sy * cols + sx) * 4, di = (y * cols + x) * 4;
+          F[di] = B[si]; F[di + 1] = B[si + 1]; F[di + 2] = B[si + 2]; F[di + 3] = B[si + 3];
+        }
+      } else F.set(B);
       for (const k of sorted) {
         if (t < k.at || t >= k.resolveAt) continue;
         const len = Math.round(easeOut(Math.min(1, (t - k.at) / 360)) * (rows - k.s));
@@ -274,9 +382,35 @@
     return true;
   }
 
+  /* a blot: a small marbled bloom on the empty paper, grown, held, cut away */
+  async function blot(nearY, duration, nearX = LW / 2) {
+    const R = ri(34, LITE_EARLY ? 80 : 120), spots = freeSpots(Math.round(R * 2), Math.round(R * 2.2));
+    if (!spots.length) return tear(nearY, duration, nearX);
+    spots.sort((a, b) => Math.hypot((a.x0 + a.x1) / 2 - nearX, a.y - nearY) - Math.hypot((b.x0 + b.x1) / 2 - nearX, b.y - nearY));
+    const sp = spots[ri(0, Math.min(3, spots.length - 1))];
+    const srcs = sources(); if (!srcs.length) return tear(nearY, duration, nearX);
+    const pal = paletteOf(pick(srcs)); if (pal.length < 2) return tear(nearY, duration, nearX);
+    const cx = ri(Math.round(sp.x0 + R * 1.1), Math.round(Math.max(sp.x0 + R * 1.1, sp.x1 - R * 1.1))), cy = sp.y + R;
+    const paint = makeBloom(cx, cy, R, pal), b = paint.bounds;
+    const cuts = []; for (let x = b.x; x < b.x + b.w; x += 8) cuts.push(x);
+    cuts.sort(() => Math.random() - 0.5);
+    const grownAt = duration * 0.45, cutFrom = duration * 0.7;
+    layerUsers++;
+    await run(duration, (t) => {
+      lg.clearRect(b.x, b.y, b.w, b.h);
+      paint(lg, easeOut(Math.min(1, t / grownAt)));
+      if (t > cutFrom) {                                         // dissolves in vertical cuts, never a fade
+        const k = Math.floor((t - cutFrom) / (duration - cutFrom) * cuts.length);
+        for (let i = 0; i < k; i++) lg.clearRect(cuts[i], b.y, 8, b.h);
+      }
+    }, () => { lg.clearRect(b.x, b.y, b.w, b.h); layerUsers--; clearLayer(); });
+    return true;
+  }
+
   /* labels near where the organism is ask to decode: their own effect */
   function touchLabels(cx, cy) {
     for (const el of document.querySelectorAll("[data-scramble]")) {
+      if (el === glassFor || el.contains(glassFor)) continue;
       const r = el.getBoundingClientRect();
       if (!r.width || r.bottom < 0 || r.top > innerHeight) continue;
       const d = Math.hypot(r.left + r.width / 2 - cx, r.top + r.height / 2 - cy);
@@ -333,7 +467,7 @@
       const pulses = ri(1, 3 + Math.round(e * 3));
       for (let p = 0; p < pulses; p++) {
         const duration = p === 0 ? rnd(700, 950) : rnd(380, 600);
-        if (c.kind === "tear") await tear(c.y, duration, c.x);
+        if (c.kind === "tear") await (Math.random() < 0.7 ? blot(c.y, duration * 1.6, c.x) : tear(c.y, duration, c.x));
         else await breakElement(c.el, c.kind, duration);
         if (p === 0) touchLabels(c.x, c.y);
         await wait(rnd(120, 320));
@@ -381,11 +515,58 @@
     if (h1) return h1;
     return hs.sort((a, b) => Math.abs(a.getBoundingClientRect().top - innerHeight / 2) - Math.abs(b.getBoundingClientRect().top - innerHeight / 2))[0];
   }
+  /* the title is not cut out: it floats on glass over the takeover. The glass
+     is a copy laid exactly over the real heading (which stays in place for
+     screen readers and copying, its ink made transparent); the glass blurs
+     what is behind it and the letters invert whatever colour they sit on. */
+  const glass = document.createElement("div");
+  glass.className = "spared-glass"; glass.setAttribute("aria-hidden", "true"); glass.hidden = true;
+  document.body.appendChild(glass);
+  let glassFor = null;
   function spareTitle() {
-    const t = spared(); if (!t) return;
-    // the title's own line boxes, so the cut follows the words and not the block
-    const range = document.createRange(); range.selectNodeContents(t);
-    for (const r of range.getClientRects()) { rg.clearRect(r.left - 10, r.top - 6, r.width + 20, r.height + 12); lg.clearRect(r.left - 10, r.top - 6, r.width + 20, r.height + 12); }
+    const t = spared();
+    if (t !== glassFor) {
+      if (glassFor) glassFor.style.color = "";
+      glass.textContent = ""; glassFor = t || null;
+      if (!t) { glass.hidden = true; return; }
+      const c = document.createElement(t.tagName);
+      const cs = getComputedStyle(t);
+      for (const k of ["fontFamily", "fontSize", "fontWeight", "fontStyle", "lineHeight", "letterSpacing",
+                       "wordSpacing", "textWrap", "textAlign", "fontFeatureSettings", "textTransform"]) c.style[k] = cs[k];
+      c.className = "glass-text";
+      t.textContent.split(/(\s+)/).forEach((w) => {
+        if (/^\s+$/.test(w) || !w) { c.appendChild(document.createTextNode(w)); return; }
+        const sp = document.createElement("span"); sp.textContent = w; c.appendChild(sp);
+      });
+      glass.appendChild(c);
+    }
+    if (!t) return;
+    const r = t.getBoundingClientRect();
+    Object.assign(glass.style, { left: r.left + "px", top: r.top + "px", width: r.width + "px", height: r.height + "px" });
+    glass.hidden = false;
+    t.style.color = "transparent";
+    if (++readTick % 3 === 0) readBehind();
+  }
+  /* what is behind each word, read off the residue: light behind it means ink, dark means paper */
+  let readTick = 0;
+  const probe = document.createElement("canvas"); probe.width = 6; probe.height = 3;
+  const pg = probe.getContext("2d", { willReadFrequently: true });
+  function readBehind() {
+    const dpr = residue.width / RW;
+    for (const sp of glass.querySelectorAll("span")) {
+      const r = sp.getBoundingClientRect(); if (!r.width) continue;
+      pg.clearRect(0, 0, 6, 3);
+      try { pg.drawImage(residue, r.left * dpr, r.top * dpr, r.width * dpr, r.height * dpr, 0, 0, 6, 3); } catch (e) { continue; }
+      const d = pg.getImageData(0, 0, 6, 3).data; let L = 0;
+      for (let i = 0; i < d.length; i += 4) { const a = d[i + 3] / 255; L += a * lum(d, i) / 255 + (1 - a) * 0.97; }
+      L /= d.length / 4;
+      sp.style.color = L > 0.56 ? INK : PAPER;
+    }
+  }
+  function unspare() {
+    glass.hidden = true;
+    if (glassFor) glassFor.style.color = "";
+    glassFor = null;
   }
 
   /* every page feeds on the films, even a page with none on it: a few posters
@@ -452,9 +633,10 @@
         if (!document.hidden && !healing) {
           const e = entropy();
           if (e > 0.02) {
-            const n = Math.round((e * e * 6 + e * 1.5) * (LITE ? 0.5 : 1));
             const srcs = sources();                             // read the page once per tick, not per spore
+            const n = Math.round((e * e * 3 + e) * (LITE ? 0.5 : 1));
             for (let i = 0; i < n; i++) spore(e, srcs);
+            if (blooming < (LITE ? 2 : 4) && Math.random() < 0.15 + e * 0.6) grow(e, srcs);
             spareTitle();
           }
         }
@@ -462,6 +644,19 @@
       spread();
     }, 120);
   })();
+
+  /* the takeover's blooms: marbled shapes that grow on the residue and stay */
+  let blooming = 0;
+  function grow(e, srcs) {
+    if (!srcs.length) return;
+    const pal = paletteOf(pick(srcs)); if (pal.length < 2) return;
+    const R = rnd(50, 110 + e * (LITE ? 160 : 300));
+    const cx = Math.random() < 0.5 ? at.x + rnd(-RW * 0.4, RW * 0.4) : rnd(0, RW), cy = rnd(-R * 0.3, RH * 0.9);
+    const paint = makeBloom(cx, cy, R, pal), dur = rnd(900, 1800);
+    blooming++;
+    run(dur, (t) => { if (!healing) { paint(rg, easeOut(t / dur)); dirty = true; } },
+        () => { if (!healing) paint(rg, 1); blooming--; });
+  }
 
   /* healing: any touch wipes it away, column by column */
   function heal() {
@@ -474,7 +669,7 @@
     (function step() {
       for (let k = 0; k < per && i < strips.length; k++, i++) rg.clearRect(strips[i], 0, 16, RH);
       if (i < strips.length) setTimeout(step, 40);
-      else { rg.clearRect(0, 0, RW, RH); dirty = false; healing = false; }
+      else { rg.clearRect(0, 0, RW, RH); dirty = false; healing = false; unspare(); }
     })();
   }
   const wake = () => { lastTouch = performance.now(); heal(); };
