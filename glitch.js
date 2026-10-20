@@ -106,15 +106,20 @@
   const GC = { mint: [92, 211, 146], vermilion: [250, 86, 52], orange: [244, 146, 64], magenta: [226, 108, 198],
                lavender: [170, 156, 232], gold: [210, 160, 86], cream: [244, 235, 216], paper: [250, 248, 244],
                ink: [14, 13, 11], grey: [164, 164, 156] };
-  const SCENES = [
-    [GC.orange, GC.mint, GC.cream],
-    [GC.mint, GC.magenta, GC.paper],
-    [GC.vermilion, GC.gold, GC.magenta, GC.cream],
-    [GC.mint, GC.grey, GC.paper, GC.lavender],
-    [GC.orange, GC.vermilion, GC.cream, GC.ink],
-    [GC.lavender, GC.mint, GC.orange, GC.paper],
+  /* harmony, from his second pair of references (2026-10-20): the screen is one
+     scene at a time, a small palette and one kind of shape over a fine stripe
+     ground, and the next scene paints over it. Everything that glitches on the
+     page draws from the current scene, so the page reads as one composition. */
+  const STAGES = [
+    { name: "ember",  ground: "grey", strokes: [[244, 146, 64], [214, 108, 42], [250, 192, 124], [236, 126, 54]], curl: 0.3, shapes: null },
+    { name: "garden", ground: null,   strokes: [[92, 188, 86], [216, 136, 206], [134, 206, 110], [242, 178, 228], [70, 160, 72]], curl: 0.38, shapes: null, dense: true },
+    { name: "brass",  ground: "gold", strokes: null, shapes: ["shard", "steps"], pal: [GC.vermilion, GC.magenta, GC.cream] },
+    { name: "moss",   ground: "grey", strokes: null, shapes: ["moss"], pal: [GC.mint, [128, 220, 170], GC.lavender] },
+    { name: "dusk",   ground: "grey", strokes: [[126, 112, 232], [94, 188, 124], [40, 40, 52], [170, 160, 240]], curl: 0.1, shapes: null, sparse: true },
   ];
-  const scene = () => SCENES[ri(0, SCENES.length - 1)];
+  let stageIdx = ri(0, STAGES.length - 1);
+  const stage = () => STAGES[stageIdx];
+  const scene = () => { const st = stage(); return st.pal || st.strokes.slice(0, 3); };
 
   /* a polygon test at cell resolution: shards come out stair-stepped, like the reference */
   function inPoly(x, y, P) {
@@ -522,7 +527,9 @@
     const srcs = sources(); if (!srcs.length) return tear(nearY, duration, nearX);
     const W = Math.min(sp.x1 - sp.x0 - 8, R * rnd(2.2, 4.2)), H = R * 2;
     const x = ri(Math.round(sp.x0 + 4), Math.round(Math.max(sp.x0 + 4, sp.x1 - W - 4)));
-    const paint = makePatch(x, sp.y, W, H, pickKind({ ribbon: 0.6, shard: 1, curtain: 0.5, steps: 0.8, barcode: 0.6, moss: 1, bars: 0.6, streaks: 0.5 }), scene(), paletteOf(pick(srcs))), b = paint.bounds;
+    const st = stage();
+    const kind = st.shapes ? pick(st.shapes) : pickKind({ ribbon: 1, barcode: 0.5, streaks: 0.5 });
+    const paint = makePatch(x, sp.y, W, H, kind, scene(), st.shapes ? null : paletteOf(pick(srcs))), b = paint.bounds;
     const cuts = []; for (let x = b.x; x < b.x + b.w; x += 8) cuts.push(x);
     cuts.sort(() => Math.random() - 0.5);
     const grownAt = duration * 0.45, cutFrom = duration * 0.7;
@@ -614,7 +621,7 @@
      glitch except the title. Smears of the films' own pixels grow across the
      page and stay. Any movement heals it, column by column, never a fade. */
   const QUIET = 8000, FULL = 55000;
-  /* phones and small machines get half the spores and a 1x residue */
+  /* phones and small machines get half the scene work and a 1x residue */
   const LITE = matchMedia("(hover: none)").matches ||
                (navigator.deviceMemory && navigator.deviceMemory <= 4) ||
                (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
@@ -718,45 +725,98 @@
     document.querySelectorAll(MEDIA).forEach((m) => { const s = readable(m); if (s && !m.closest("#reel")) out.push(s); });
     return out;
   }
-  /* a spore: a vertical smear of a film's own pixels, sorted, laid on the page */
-  function spore(e, srcs) {
-    if (!srcs.length) return;
-    const src = pick(srcs);
-    const w = ri(4, 14 + Math.round(e * 70)), h = Math.round(RH * rnd(0.2, 0.4 + e * 0.6));
-    const x = ri(-10, RW), y = ri(-Math.round(h * 0.2), RH - Math.round(h * 0.6));
-    const cols = Math.max(1, Math.ceil(w / PX)), rows = Math.max(2, Math.ceil(h / PX));
-    const c = document.createElement("canvas"); c.width = cols; c.height = rows;
-    const g = c.getContext("2d", { willReadFrequently: true });
-    const sw = src.videoWidth || src.naturalWidth || src.width, sh = src.videoHeight || src.naturalHeight || src.height;
-    const sx = rnd(0, Math.max(0, sw - sw * 0.06)), sWide = Math.max(1, sw * rnd(0.01, 0.06));
-    let im;
-    try { g.drawImage(src, sx, 0, sWide, sh, 0, 0, cols, rows); im = g.getImageData(0, 0, cols, rows); } catch (err) { return; }
-    const d = im.data;
-    for (let cx = 0; cx < cols; cx++) {
-      const run = [];
-      for (let cy = 0; cy < rows; cy++) { const i = (cy * cols + cx) * 4; run.push([d[i], d[i + 1], d[i + 2], lum(d, i)]); }
-      run.sort((p, q) => p[3] - q[3]);
-      const head = Math.random() < 0.5 ? run[0] : run[run.length - 1], cut = ri(Math.floor(rows * 0.2), rows);
-      for (let cy = 0; cy < rows; cy++) {
-        const p = cy < cut ? run[cy] : head, i = (cy * cols + cx) * 4;
-        d[i] = p[0]; d[i + 1] = p[1]; d[i + 2] = p[2]; d[i + 3] = 255;
+  /* the stripe ground: very fine vertical stripes, tonal, like a photograph
+     pixel-sorted into a barcode. Grey or gold, by scene. */
+  const TONES = {
+    grey: [[22, 22, 24], [58, 58, 62], [96, 96, 100], [132, 132, 134], [168, 168, 168], [200, 200, 198], [232, 232, 228], [248, 248, 244]],
+    gold: [[110, 80, 40], [150, 112, 60], [186, 146, 88], [212, 176, 116], [232, 204, 150], [244, 226, 186], [92, 62, 28]],
+  };
+  function groundBatch(kind, n) {
+    const T = TONES[kind];
+    for (let k = 0; k < n; k++) {
+      const x = Math.floor(rnd(0, RW)), w = ri(1, 3);
+      let y = 0;
+      while (y < RH) {                                            // one to three tones down each stripe
+        const h = Math.random() < 0.5 ? RH - y : rnd(RH * 0.2, RH * 0.7), q = pick(T);
+        rg.fillStyle = `rgb(${q[0]},${q[1]},${q[2]})`; rg.fillRect(x, y, w, h); y += h;
       }
     }
-    g.putImageData(im, 0, 0);
-    rg.drawImage(c, x, y, w, h);
-    if (Math.random() < 0.3) {                                  // the 0xR accent, inside the takeover too
+    if (Math.random() < 0.15) {                                   // the 0xR mark in the ground: a hex strip
       rg.font = "9px monospace"; rg.textAlign = "center"; rg.textBaseline = "middle";
-      const ax = x + ri(0, Math.max(0, w - 9)), ah = Math.round(h * rnd(0.3, 0.9));
-      rg.fillStyle = INK; rg.fillRect(ax, y, 9, ah); rg.fillStyle = PAPER;
-      const col = ri(0, 9999);
-      for (let r = 0; r < ah / 9; r++) rg.fillText(hexAt(col, r, 0), ax + 4.5, y + r * 9 + 4.5);
-    }
-    if (Math.random() < e * 0.5) {                              // datamosh the residue itself
-      const bw = ri(60, 340), bh = ri(10, 60), bx = ri(0, RW - bw), by = ri(0, RH - bh), off = ri(-80, 80);
-      const dpr = residue.width / RW;                            // the canvas copies itself: no read back
-      rg.drawImage(residue, bx * dpr, by * dpr, bw * dpr, bh * dpr, bx + off, by, bw, bh);
+      const ax = Math.floor(rnd(0, RW / 9)) * 9, col = ri(0, 9999);
+      rg.fillStyle = INK; rg.fillRect(ax, 0, 9, RH); rg.fillStyle = PAPER;
+      for (let r = 0; r < RH / 9; r++) rg.fillText(hexAt(col, r, 0), ax + 4.5, r * 9 + 4.5);
     }
     dirty = true;
+  }
+
+  /* a brushstroke: a thick smooth band along a flowing path, in layered tones */
+  function strokePath(curl) {
+    const pts = [];
+    let x = rnd(-RW * 0.1, RW * 1.1), y = rnd(-RH * 0.1, RH * 1.1), a = rnd(0, Math.PI * 2);
+    const len = rnd(0.5, 1.4) * Math.max(RW, RH), step = 14, ox = Math.random() * 50;
+    for (let d = 0; d < len; d += step) {
+      a += (soft(x * 0.0025 + ox, y * 0.0025) - 0.5) * curl;
+      x += Math.cos(a) * step; y += Math.sin(a) * step; pts.push([x, y]);
+    }
+    return pts;
+  }
+  /* painted, not drawn: the width swells and thins like a brush, the stripe
+     ground streaks through the paint, and the whole stroke is laid at a third
+     of the resolution so it lands chunky, like the references */
+  const SK = LITE_EARLY ? 4 : 3;
+  function stripePattern(g, tones) {
+    const c = document.createElement("canvas"); c.width = 32; c.height = 1;
+    const cg = c.getContext("2d");
+    for (let x = 0; x < 32;) { const w = ri(1, 3), q = pick(tones); cg.fillStyle = `rgb(${q[0]},${q[1]},${q[2]})`; cg.fillRect(x, 0, w, 1); x += w; }
+    return g.createPattern(c, "repeat");
+  }
+  function makeStroke(path, width, tones) {
+    let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+    for (const [x, y] of path) { x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y); }
+    const pad = width; x0 -= pad; y0 -= pad; x1 += pad; y1 += pad;
+    const c = document.createElement("canvas");
+    c.width = Math.max(1, Math.ceil((x1 - x0) / SK)); c.height = Math.max(1, Math.ceil((y1 - y0) / SK));
+    const g = c.getContext("2d"); g.lineCap = "round"; g.lineJoin = "round";
+    const pat = stripePattern(g, tones), ow = Math.random() * 50;
+    const wAt = (i) => (width / SK) * (0.45 + 0.55 * soft(i * 0.04 + ow, 3.1));
+    return (out, p) => {
+      const upto = Math.max(2, Math.floor(path.length * p));
+      g.clearRect(0, 0, c.width, c.height);
+      const layer = (style, scale, off) => {
+        g.strokeStyle = style;
+        for (let i = 1; i < upto; i++) {
+          const [ax, ay] = path[i - 1], [bx, by] = path[i];
+          g.lineWidth = Math.max(1, wAt(i) * scale);
+          g.beginPath(); g.moveTo((ax - x0) / SK + off, (ay - y0) / SK - off); g.lineTo((bx - x0) / SK + off, (by - y0) / SK - off); g.stroke();
+        }
+      };
+      const q0 = tones[0], q1 = tones[tones.length - 1];
+      layer(`rgb(${q0[0]},${q0[1]},${q0[2]})`, 1, 0);           // the body
+      layer(pat, 0.72, 0);                                      // streaks running through the paint
+      layer(`rgb(${q1[0]},${q1[1]},${q1[2]})`, 0.22, width * 0.06 / SK);   // a thin highlight along one side
+      out.imageSmoothingEnabled = false;
+      out.drawImage(c, x0, y0, c.width * SK, c.height * SK);
+    };
+  }
+  let strokesLive = 0;
+  function brush(e) {
+    const st = stage(); if (!st.strokes) return;
+    const path = strokePath(st.curl), width = st.sparse ? rnd(30, 70) : rnd(70, 150 + e * 140);
+    const tones = [...st.strokes].sort(() => Math.random() - 0.5).slice(0, ri(2, 4));
+    const paint = makeStroke(path, width, tones), dur = rnd(800, 1500);
+    strokesLive++;
+    run(dur, (t) => { if (!healing) { paint(rg, easeOut(t / dur)); dirty = true; } },
+        () => { if (!healing) paint(rg, 1); strokesLive--; });
+  }
+
+  /* the composer: one scene at a time, ground first, then its strokes or shapes */
+  const SCENE_LEN = 11000;
+  let sceneClock = 0, groundLeft = 0;
+  function nextScene() {
+    stageIdx = (stageIdx + ri(1, STAGES.length - 1)) % STAGES.length;
+    sceneClock = 0;
+    groundLeft = stage().ground ? Math.round(RW / 1.6) : 0;        // stripes needed to cover the screen
   }
 
   (function spread() {
@@ -765,10 +825,17 @@
         if (!document.hidden && !healing) {
           const e = entropy();
           if (e > 0.02) {
-            const srcs = sources();                             // read the page once per tick, not per spore
-            const n = Math.round((e * e * 3 + e) * (LITE ? 0.5 : 1));
-            for (let i = 0; i < n; i++) spore(e, srcs);
-            if (blooming < (LITE ? 2 : 4) && Math.random() < 0.15 + e * 0.6) grow(e, srcs);
+            if (!dirty) { sceneClock = 0; groundLeft = stage().ground ? Math.round(RW / 1.6) : 0; }
+            sceneClock += 120 * (0.6 + e);
+            if (sceneClock > SCENE_LEN) nextScene();
+            const st = stage(), lite = LITE ? 0.5 : 1;
+            if (groundLeft > 0) {
+              const n = Math.ceil((RW / 1.6) / (2400 / 120) * (0.6 + e) * lite);
+              groundBatch(st.ground, Math.min(n, groundLeft)); groundLeft -= n;
+            } else if (st.strokes) {
+              const cap = st.sparse ? 1 : (st.dense ? 3 : 2) * lite;
+              if (strokesLive < cap && Math.random() < (st.sparse ? 0.08 : 0.3) + e * 0.4) brush(e);
+            } else if (blooming < 3 * lite && Math.random() < 0.18 + e * 0.5) grow(e, sources());
             spareTitle();
           }
         }
@@ -777,26 +844,15 @@
     }, 120);
   })();
 
-  /* the takeover's blooms: marbled shapes that grow on the residue and stay */
+  /* the scene's shapes, grown on the residue: shards, staircases, moss */
   let blooming = 0;
   function grow(e, srcs) {
-    if (!srcs.length) srcs = [];
-    const kind = pickKind({ ribbon: 1.2, shard: 0.7, curtain: 0.6, steps: 0.9, barcode: 0.7, moss: 0.8, streaks: 1, bars: 0.6 });
-    const big = LITE ? 0.7 : 1;
-    const SIZE = {
-      ribbon:  () => [rnd(0.35, 0.9 + e * 0.5) * RW, rnd(120, 260 + e * 420) * big],
-      streaks: () => [rnd(0.3, 0.6 + e * 0.3) * RW, rnd(0.4, 1) * RH],
-      curtain: () => [rnd(60, 380) * big, rnd(0.35, 1) * RH],
-      barcode: () => [rnd(80, 360) * big, rnd(0.35, 1) * RH],
-      steps:   () => [rnd(200, 500 + e * 300) * big, rnd(120, 300 + e * 200) * big],
-      moss:    () => [rnd(160, 380 + e * 200) * big, rnd(120, 280 + e * 160) * big],
-      shard:   () => { const w = rnd(90, 260 + e * 320) * big; return [w, w * rnd(0.6, 1.4)]; },
-      bars:    () => [rnd(0.3, 1) * RW, rnd(60, 240) * big],
-    };
-    const [W, H] = SIZE[kind]();
-    const x = Math.random() < 0.5 ? at.x - W / 2 + rnd(-RW * 0.3, RW * 0.3) : rnd(-W * 0.2, RW - W * 0.8);
-    const y = /curtain|barcode|streaks/.test(kind) ? rnd(-H * 0.2, RH - H * 0.6) : rnd(-H * 0.3, RH - H * 0.5);
-    const paint = makePatch(x, y, W, H, kind, scene(), paletteOf(pick(srcs))), dur = rnd(900, 1800);
+    const st = stage(); if (!st.shapes) return;
+    const kind = pick(st.shapes), big = LITE ? 0.7 : 1;
+    const W = kind === "moss" ? rnd(180, 420 + e * 240) * big : kind === "steps" ? rnd(220, 520 + e * 260) * big : rnd(120, 300 + e * 300) * big;
+    const H = kind === "moss" ? rnd(140, 320 + e * 160) * big : kind === "steps" ? rnd(140, 320 + e * 200) * big : W * rnd(0.6, 1.3);
+    const x = rnd(-W * 0.2, RW - W * 0.8), y = rnd(-H * 0.3, RH - H * 0.5);
+    const paint = makePatch(x, y, W, H, kind, st.pal, null), dur = rnd(900, 1700);
     blooming++;
     run(dur, (t) => { if (!healing) { paint(rg, easeOut(t / dur)); dirty = true; } },
         () => { if (!healing) paint(rg, 1); blooming--; });
