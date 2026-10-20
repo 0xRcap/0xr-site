@@ -38,6 +38,10 @@
   const easeOut = (t) => 1 - Math.pow(1 - t, 3);
   const lum = (d, i) => 0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2];
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+  /* scrolling: the page stays practical. Anything breaking on a moving picture
+     ends cleanly, and nothing new starts until the page has been still a moment */
+  let lastScrollT = -1e9;
+  const scrolling = () => performance.now() - lastScrollT < 700;
   function hexAt(col, row, t) {
     const n = ((row + Math.floor(t / 90)) % 42 + 42) % 42;
     if (n === 0) return "0";
@@ -111,15 +115,21 @@
      ground, and the next scene paints over it. Everything that glitches on the
      page draws from the current scene, so the page reads as one composition. */
   const STAGES = [
-    { name: "ember",  ground: "grey", strokes: [[244, 146, 64], [214, 108, 42], [250, 192, 124], [236, 126, 54]], curl: 0.3, shapes: null },
-    { name: "garden", ground: null,   strokes: [[92, 188, 86], [216, 136, 206], [134, 206, 110], [242, 178, 228], [70, 160, 72]], curl: 0.38, shapes: null, dense: true },
-    { name: "brass",  ground: "gold", strokes: null, shapes: ["shard", "steps"], pal: [GC.vermilion, GC.magenta, GC.cream] },
-    { name: "moss",   ground: "grey", strokes: null, shapes: ["moss"], pal: [GC.mint, [128, 220, 170], GC.lavender] },
-    { name: "dusk",   ground: "grey", strokes: [[126, 112, 232], [94, 188, 124], [40, 40, 52], [170, 160, 240]], curl: 0.1, shapes: null, sparse: true },
+    { name: "ember",  ground: "grey", curl: 0.3,
+      pal: [[244, 146, 64], [214, 108, 42], [250, 192, 124], [246, 236, 220]], forms: { strokes: 3, steps: 1, bars: 1, shard: 0.7 } },
+    { name: "garden", ground: null, curl: 0.38, dense: true,
+      pal: [[92, 188, 86], [216, 136, 206], [134, 206, 110], [242, 178, 228]], forms: { strokes: 3, moss: 1, ribbon: 1 } },
+    { name: "brass",  ground: "gold", curl: 0.25,
+      pal: [GC.vermilion, GC.magenta, GC.cream, [230, 170, 90]], forms: { shard: 2, steps: 1.5, barcode: 1, strokes: 1 } },
+    { name: "moss",   ground: "grey", curl: 0.3,
+      pal: [GC.mint, [128, 220, 170], GC.lavender, [246, 244, 236]], forms: { moss: 2, barcode: 1, bars: 1, ribbon: 0.8 } },
+    { name: "dusk",   ground: "grey", curl: 0.1, sparse: true,
+      pal: [[126, 112, 232], [94, 188, 124], [40, 40, 52], [170, 160, 240]], forms: { strokes: 1.5, shard: 0.8, bars: 1 } },
   ];
+
   let stageIdx = ri(0, STAGES.length - 1);
   const stage = () => STAGES[stageIdx];
-  const scene = () => { const st = stage(); return st.pal || st.strokes.slice(0, 3); };
+  const scene = () => stage().pal;
 
   /* a polygon test at cell resolution: shards come out stair-stepped, like the reference */
   function inPoly(x, y, P) {
@@ -277,8 +287,8 @@
       (function tick(now) {
         if (++skip & 1) return requestAnimationFrame(tick);   // stepped, 30fps
         const t = now - t0;
-        if (t >= duration || document.hidden) { done(); resolve(); return; }
-        frame(t); requestAnimationFrame(tick);
+        if (t >= duration || document.hidden || frame(t) === false) { done(); resolve(); return; }
+        requestAnimationFrame(tick);
       })(t0);
     });
   }
@@ -418,7 +428,7 @@
       cv.width = W * dpr; cv.height = H * dpr;
       a.appendChild(cv);
       const g = cv.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0);
-      await run(duration, (t) => { g.clearRect(0, 0, W, H); draw(g, 0, 0, t); }, () => cv.remove());
+      await run(duration, (t) => { if (scrolling()) return false; g.clearRect(0, 0, W, H); draw(g, 0, 0, t); }, () => cv.remove());
       return;
     }
 
@@ -430,12 +440,18 @@
     if (!draw) return;
     layerUsers++;
     if (kind === "figure") el.style.visibility = "hidden";   // the figure melts, not a copy beside it
+    let was = null;
+    const wipe = () => { if (was) lg.clearRect(was.left - 2, was.top - 2, was.width + 4, was.height + 4); };
     const paint = (t) => {
+      wipe();                                                   // where it was a frame ago: no copies left behind
+      if (scrolling()) return false;                            // the page is moving: end clean
       const q = el.getBoundingClientRect();
       lg.clearRect(q.left - 2, q.top - 2, q.width + 4, q.height + 4);
       draw(lg, q.left, q.top, t);
+      was = { left: q.left, top: q.top, width: q.width, height: q.height };
     };
     await run(duration, paint, () => {
+      wipe();
       const q = el.getBoundingClientRect();
       lg.clearRect(q.left - 2, q.top - 2, q.width + 4, q.height + 4);
       if (kind === "figure") el.style.visibility = "";
@@ -474,15 +490,15 @@
     for (let i = 0; i < d.length; i += 4) out.push(`rgb(${d[i]},${d[i + 1]},${d[i + 2]})`);
     return out;
   }
-  async function tear(nearY, duration, nearX = LW / 2) {
-    const h = ri(30, 96), spots = freeSpots(h, 160);
+  async function tear(nearY, duration, nearX = LW / 2, fromScroll = false) {
+    const h = fromScroll ? ri(14, 30) : ri(30, 96), spots = freeSpots(h, 160);
     if (!spots.length) return false;
     spots.sort((a, b) => Math.hypot((a.x0 + a.x1) / 2 - nearX, a.y - nearY) - Math.hypot((b.x0 + b.x1) / 2 - nearX, b.y - nearY));
     const sp = spots[ri(0, Math.min(3, spots.length - 1))];
     const y = sp.y, c0 = Math.ceil(sp.x0 / 9), c1 = Math.floor(sp.x1 / 9);
     const cols = Math.max(1, c1 - c0), rows = Math.ceil(h / 9);
     // ragged, not barred: thin columns, each dripping from its own height
-    const hot = clusters(cols, rnd(0.14, 0.32), 1, 4).map((x) => x + c0);
+    const hot = clusters(cols, fromScroll ? rnd(0.04, 0.09) : rnd(0.14, 0.32), 1, fromScroll ? 2 : 4).map((x) => x + c0);
     const drip = new Map(hot.map((x) => { const top = ri(0, Math.max(0, rows - 2)); return [x, [top, ri(top + 1, rows)]]; }));
     const colours0 = Math.random() < 0.7 ? scene().map((q) => `rgb(${q[0]},${q[1]},${q[2]})`) : filmColours();
     const tint = new Map(colours0.length ? hot.filter(() => Math.random() < 0.45).map((x) => [x, pick(colours0)]) : []);
@@ -494,6 +510,7 @@
     const resolve = new Map(hot.map((x) => [x, rnd(0.55, 0.98) * duration]));
     const paint = (t) => {
       lg.clearRect(sp.x0, y - 1, spanW, h + 2);
+      if (!fromScroll && scrolling()) return false;
       lg.font = "9px monospace"; lg.textAlign = "center"; lg.textBaseline = "middle";
       for (const x of hot) {
         if (t >= resolve.get(x)) continue;
@@ -528,14 +545,16 @@
     const W = Math.min(sp.x1 - sp.x0 - 8, R * rnd(2.2, 4.2)), H = R * 2;
     const x = ri(Math.round(sp.x0 + 4), Math.round(Math.max(sp.x0 + 4, sp.x1 - W - 4)));
     const st = stage();
-    const kind = st.shapes ? pick(st.shapes) : pickKind({ ribbon: 1, barcode: 0.5, streaks: 0.5 });
-    const paint = makePatch(x, sp.y, W, H, kind, scene(), st.shapes ? null : paletteOf(pick(srcs))), b = paint.bounds;
+    const small = Object.fromEntries(Object.entries(st.forms).filter(([k]) => k !== "strokes"));
+    const kind = Object.keys(small).length ? pickKind(small) : "ribbon";
+    const paint = makePatch(x, sp.y, W, H, kind, scene(), null), b = paint.bounds;
     const cuts = []; for (let x = b.x; x < b.x + b.w; x += 8) cuts.push(x);
     cuts.sort(() => Math.random() - 0.5);
     const grownAt = duration * 0.45, cutFrom = duration * 0.7;
     layerUsers++;
     await run(duration, (t) => {
       lg.clearRect(b.x, b.y, b.w, b.h);
+      if (scrolling()) return false;
       paint(lg, easeOut(Math.min(1, t / grownAt)));
       if (t > cutFrom) {                                         // dissolves in vertical cuts, never a fade
         const k = Math.floor((t - cutFrom) / (duration - cutFrom) * cuts.length);
@@ -595,6 +614,7 @@
     await wait(1800);
     for (;;) {
       if (document.hidden) { await wait(1000); continue; }
+      if (scrolling()) { await wait(250); continue; }
       try { await visit(); } catch (err) { await wait(2000); }   // a failed visit never ends the organism
     }
   }
@@ -801,9 +821,9 @@
   }
   let strokesLive = 0;
   function brush(e) {
-    const st = stage(); if (!st.strokes) return;
+    const st = stage();
     const path = strokePath(st.curl), width = st.sparse ? rnd(30, 70) : rnd(70, 150 + e * 140);
-    const tones = [...st.strokes].sort(() => Math.random() - 0.5).slice(0, ri(2, 4));
+    const tones = [...st.pal].sort(() => Math.random() - 0.5).slice(0, ri(2, 4));
     const paint = makeStroke(path, width, tones), dur = rnd(800, 1500);
     strokesLive++;
     run(dur, (t) => { if (!healing) { paint(rg, easeOut(t / dur)); dirty = true; } },
@@ -832,10 +852,13 @@
             if (groundLeft > 0) {
               const n = Math.ceil((RW / 1.6) / (2400 / 120) * (0.6 + e) * lite);
               groundBatch(st.ground, Math.min(n, groundLeft)); groundLeft -= n;
-            } else if (st.strokes) {
-              const cap = st.sparse ? 1 : (st.dense ? 3 : 2) * lite;
-              if (strokesLive < cap && Math.random() < (st.sparse ? 0.08 : 0.3) + e * 0.4) brush(e);
-            } else if (blooming < 3 * lite && Math.random() < 0.18 + e * 0.5) grow(e, sources());
+            } else {
+              // one palette, many forms: each tick the stage picks which of its forms comes next
+              const form = pickKind(st.forms), rate = (st.sparse ? 0.1 : 0.3) + e * 0.4;
+              if (form === "strokes") {
+                if (strokesLive < (st.sparse ? 1 : (st.dense ? 3 : 2) * lite) && Math.random() < rate) brush(e);
+              } else if (blooming < 3 * lite && Math.random() < rate) grow(e, form);
+            }
             spareTitle();
           }
         }
@@ -846,12 +869,18 @@
 
   /* the scene's shapes, grown on the residue: shards, staircases, moss */
   let blooming = 0;
-  function grow(e, srcs) {
-    const st = stage(); if (!st.shapes) return;
-    const kind = pick(st.shapes), big = LITE ? 0.7 : 1;
-    const W = kind === "moss" ? rnd(180, 420 + e * 240) * big : kind === "steps" ? rnd(220, 520 + e * 260) * big : rnd(120, 300 + e * 300) * big;
-    const H = kind === "moss" ? rnd(140, 320 + e * 160) * big : kind === "steps" ? rnd(140, 320 + e * 200) * big : W * rnd(0.6, 1.3);
-    const x = rnd(-W * 0.2, RW - W * 0.8), y = rnd(-H * 0.3, RH - H * 0.5);
+  function grow(e, kind) {
+    const st = stage(), big = LITE ? 0.7 : 1;
+    const SIZE = {
+      ribbon:  () => [rnd(0.35, 0.8 + e * 0.4) * RW, rnd(120, 240 + e * 320) * big],
+      barcode: () => [rnd(80, 340) * big, rnd(0.35, 1) * RH],
+      steps:   () => [rnd(220, 520 + e * 260) * big, rnd(140, 320 + e * 200) * big],
+      moss:    () => [rnd(180, 420 + e * 240) * big, rnd(140, 320 + e * 160) * big],
+      bars:    () => [rnd(0.3, 0.9) * RW, rnd(60, 200) * big],
+      shard:   () => { const w = rnd(120, 300 + e * 300) * big; return [w, w * rnd(0.6, 1.3)]; },
+    };
+    const [W, H] = (SIZE[kind] || SIZE.shard)();
+    const x = rnd(-W * 0.2, RW - W * 0.8), y = /barcode/.test(kind) ? rnd(-H * 0.2, RH - H * 0.6) : rnd(-H * 0.3, RH - H * 0.5);
     const paint = makePatch(x, y, W, H, kind, st.pal, null), dur = rnd(900, 1700);
     blooming++;
     run(dur, (t) => { if (!healing) { paint(rg, easeOut(t / dur)); dirty = true; } },
@@ -881,7 +910,9 @@
     wake();
     const now = performance.now(), v = Math.abs(scrollY - lastY) / Math.max(1, now - lastT);
     lastY = scrollY; lastT = now;
-    if (v > 2.2 && now - lastTear > 1500) { lastTear = now; tear(innerHeight / 2, rnd(420, 620)); }
+    lastScrollT = now;
+    // only a real flick tears, rarely, thin and small, and only on empty paper
+    if (v > 3.5 && now - lastTear > 3000) { lastTear = now; tear(innerHeight / 2, rnd(260, 380), LW / 2, true); }
   }, { passive: true });
 
   /* poking a film always works, whatever the organism is doing */
@@ -889,7 +920,7 @@
   const cool = new WeakMap();
   const poke = (tile) => {
     const now = performance.now();
-    if (!tile || (cool.get(tile) || 0) > now || tile.querySelector("canvas.glitch")) return;
+    if (!tile || scrolling() || (cool.get(tile) || 0) > now || tile.querySelector("canvas.glitch")) return;
     cool.set(tile, now + 1200);
     breakElement(tile, "film", rnd(700, 900));
   };
@@ -898,7 +929,7 @@
     if (reel && reel.contains(e.target)) return;
     const box = e.target.closest("a, figure, .shot, .cover, .pcard") || e.target;
     const m = box.matches && box.matches("img, video") ? box : box.querySelector && box.querySelector("img, video");
-    if (!m || !m.closest("main") || !isLoose(m) || box.contains(e.relatedTarget)) return;
+    if (!m || scrolling() || !m.closest("main") || !isLoose(m) || box.contains(e.relatedTarget)) return;
     const now = performance.now();
     if ((cool.get(m) || 0) > now) return;
     cool.set(m, now + 1200);
