@@ -54,30 +54,16 @@
     .story { order: 2; }
   }
 
-  /* ── the shelf: one switcher for everything else about him ──
-     State is drawn with fill, never hue: the open tab is filled ink. */
-  .shelf { margin-top: var(--band); padding-top: var(--band); border-top: 1px solid var(--rule); }
-  .tabs { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0 0 2.2rem; }
-  .tabs button {
-    min-height: 44px; padding: 0 1rem; border: 1px solid var(--rule); border-radius: 2px;
-    background: var(--paper); color: var(--tone); cursor: pointer;
-    font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.14em; text-transform: uppercase;
-  }
-  .tabs button:hover { color: var(--ink); border-color: var(--tone); }
-  .tabs button[aria-selected="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
-  .tabs button:focus { outline: none; }
-  .tabs button:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
-  .panel .split { font-family: var(--mono); font-size: var(--t-micro);
-                  letter-spacing: 0.08em; color: var(--tone); margin: 0 0 2rem; }
-  .panel p { max-width: 34rem; color: var(--ink-soft); }
-  .panel a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px;
+  /* ── the record: four short lists under the story, on the same rail ── */
+  .story .lab { font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.18em;
+                text-transform: uppercase; color: var(--tone); margin: 2.4rem 0 1.1rem; }
+  .story a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px;
              text-underline-offset: 2px; text-decoration-color: var(--tone); }
-  .panel a:hover { text-decoration-color: var(--ink); }
-  .panel a.pcard, .panel a.wcard { text-decoration: none; }
-
+  .story a:hover { text-decoration-color: var(--ink); }
   /* the list markers are drawn in pixels, like the figures: a pixel arrow */
   .work { max-width: 34rem; margin: 0; padding-left: 1.6rem; color: var(--ink-soft); list-style: none; }
   .work li { position: relative; margin: 0 0 1rem; }
+  .work li:last-child { margin-bottom: 0; }
   .work li::before {
     content: ""; position: absolute; left: -1.5rem; top: 0.38em;
     width: 15px; height: 15px; background: var(--ink);
@@ -85,59 +71,28 @@
             mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 5 5' shape-rendering='crispEdges'%3E%3Cpath d='M2 0h1v1H2zM3 1h1v1H3zM0 2h5v1H0zM3 3h1v1H3zM2 4h1v1H2z'/%3E%3C/svg%3E") no-repeat 0 0 / 100% 100%;
   }
   .work .co { color: var(--ink); }
+  .work .meta { display: block; margin-top: 0.2rem; font-family: var(--mono); font-size: var(--t-micro);
+                letter-spacing: 0.06em; text-transform: uppercase; color: var(--tone); }
+  .work li[data-poster] { cursor: default; }
 
-  /* ── press and live ── */
-  .press .num {
-    font-family: var(--display); font-weight: normal;
-    font-size: clamp(1.9rem, 5vw, 3.2rem); line-height: 1.12; margin: 0 0 0.4rem;
+  /* ── the peek: hover an item and its picture or clip rides beside the pointer ──
+     One element for the whole page, moved and refilled. It snaps on and off. */
+  .peek {
+    position: fixed; left: 0; top: 0; z-index: 50; pointer-events: none;
+    width: min(22rem, 38vw); aspect-ratio: 16 / 10; overflow: hidden;
+    background: var(--ink); border-radius: 2px; visibility: hidden;
   }
-  .pressgrid {
-    display: grid; gap: var(--gap);
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
-  }
-  .pcard { display: block; color: var(--ink); }
-  .pcard .kind {
-    position: absolute; z-index: 3; left: 0.5rem; top: 0.5rem;
-    font-family: var(--mono); font-size: var(--t-micro); letter-spacing: 0.12em;
-    text-transform: uppercase; background: var(--paper); color: var(--ink);
-    padding: 0.15rem 0.45rem; border-radius: 2px;
-  }
-  .pcard .t { display: block; font-size: var(--t-small); line-height: 1.3; margin: 0.7rem 0 0.2rem; }
-  .pcard:hover .t { text-decoration: underline; }
-  .pcard .v {
-    display: block; font-family: var(--mono); font-size: var(--t-micro);
-    letter-spacing: 0.06em; text-transform: uppercase; color: var(--tone);
-  }
+  .peek.on { visibility: visible; }
+  .peek img, .peek video { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; }
 
-  /* ── writing: long-form. auto-fit so one piece fills its row. ── */
-  .writegrid {
-    display: grid; gap: 1px; background: var(--rule);
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
-    border-block: 1px solid var(--rule);
+  /* on touch there is no hover: each item carries its picture at the end of its row */
+  .work .thumb { display: none; }
+  @media (hover: none) {
+    .work li[data-poster] { display: grid; grid-template-columns: 1fr 5.5rem; gap: 0 1rem; align-items: start; }
+    .work .thumb { display: block; grid-column: 2; grid-row: 1 / span 2; width: 100%; aspect-ratio: 16 / 10;
+                   object-fit: cover; border-radius: 2px; background: var(--ink); }
+    .peek { display: none; }
   }
-  .wcard {
-    display: flex; flex-direction: column; gap: 0.6rem;
-    padding: 1.5rem var(--pad) 1.6rem; background: var(--paper);
-    color: var(--ink); cursor: pointer; transition: background 0.25s ease;
-  }
-  .wcard:hover, .wcard:focus-visible { background: var(--tile-bg); }
-  .wcard .cover {
-    position: relative; display: block; width: 100%; aspect-ratio: 12 / 5;
-    max-height: 300px; overflow: hidden; border-radius: 2px; background: var(--ink);
-  }
-  .wcard .cover img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.35s ease; }
-  .wcard:hover .cover img { transform: scale(1.04); }
-  .wcard .meta, .wcard .go {
-    font-family: var(--mono); font-size: var(--t-micro);
-    letter-spacing: 0.16em; text-transform: uppercase; color: var(--tone);
-  }
-  .wcard .h {
-    font-family: var(--display); font-weight: normal;
-    font-size: clamp(1.2rem, 3.4vw, 1.6rem); line-height: 1.28; text-wrap: balance;
-  }
-  .wcard .go { margin-top: auto; padding-top: 0.7rem; transition: color 0.25s ease; }
-  .wcard:hover .go { color: var(--ink); }
-  @media (prefers-reduced-motion: reduce) { .wcard .cover img { transition: none; } .wcard:hover .cover img { transform: none; } }
 </style>
 </head>
 <body>
@@ -162,6 +117,25 @@
           <p>Multiple-time founder, and raised more than $1M for my previous company,
           Sail. I ran every surface the brand lived in at every one of them, and we
           never paid a PR agency, a design studio or an&nbsp;influencer.</p>
+
+          <p class="lab">open source</p>
+          <ul class="work">
+            <li data-poster="sail/landing.jpg"><span class="co"><a href="https://github.com/sail-money/Sailor" target="_blank" rel="noopener">Sailor</a></span>, the harness that money agents run&nbsp;on.</li>
+            <li data-poster="sail/protocol-launch-380660.jpg" data-clip="sail/protocol-launch-380660.mp4"><span class="co"><a href="https://github.com/sail-money/Protocol" target="_blank" rel="noopener">Sail Protocol</a></span>, the permission layer they transact&nbsp;under.</li>
+          </ul>
+
+          <p class="lab">companies cofounded</p>
+          <ul class="work">
+            <li data-poster="sail/product-110441.jpg" data-clip="sail/product-110441.mp4"><span class="co"><a href="https://sail.money/" target="_blank" rel="noopener">Sail</a></span>, agents that manage your money onchain without ever holding&nbsp;it.</li>
+            <li data-poster="fungi/ui-openbeta.jpg" data-clip="fungi/ui-openbeta.mp4"><span class="co">Fungi</span>, a ChatGPT for onchain&nbsp;finance.</li>
+            <li><span class="co">Boveda</span>, decentralized&nbsp;storage.</li>
+          </ul>
+
+          <p class="lab">writing</p>
+          <ul class="work" id="write-list"></ul>
+
+          <p class="lab">press &amp; live</p>
+          <ul class="work" id="press-list"></ul>
         </div>
         <div class="director">
           <div class="mate" data-crew="rodrigo">
@@ -172,43 +146,7 @@
         </div>
       </div>
 
-      <section class="shelf" aria-label="more about him">
-        <div class="tabs" role="tablist" aria-label="more about him">
-          <button role="tab" id="tab-open-source" aria-controls="open-source" aria-selected="true">open source</button>
-          <button role="tab" id="tab-companies" aria-controls="companies" aria-selected="false" tabindex="-1">companies</button>
-          <button role="tab" id="tab-writing" aria-controls="writing" aria-selected="false" tabindex="-1">writing</button>
-          <button role="tab" id="tab-press" aria-controls="press" aria-selected="false" tabindex="-1">press &amp; live</button>
-        </div>
-
-        <div class="panel" role="tabpanel" id="open-source" aria-labelledby="tab-open-source">
-          <p class="split">open sourced at Sail</p>
-          <ul class="work">
-            <li><span class="co"><a href="https://github.com/sail-money/Sailor" target="_blank" rel="noopener">Sailor</a></span>, the harness that money agents run&nbsp;on.</li>
-            <li><span class="co"><a href="https://github.com/sail-money/Protocol" target="_blank" rel="noopener">Sail Protocol</a></span>, the permission layer they transact&nbsp;under.</li>
-          </ul>
-        </div>
-
-        <div class="panel" role="tabpanel" id="companies" aria-labelledby="tab-companies" hidden>
-          <p class="split">companies cofounded</p>
-          <ul class="work">
-            <li><span class="co"><a href="https://sail.money/" target="_blank" rel="noopener">Sail</a></span>, agents that manage your money onchain without ever holding&nbsp;it.</li>
-            <li><span class="co">Fungi</span>, a ChatGPT for onchain&nbsp;finance.</li>
-            <li><span class="co">Boveda</span>, decentralized&nbsp;storage.</li>
-          </ul>
-        </div>
-
-        <div class="panel" role="tabpanel" id="writing" aria-labelledby="tab-writing" hidden>
-          <p class="split">long-form, published on my own channels</p>
-          <div class="writegrid" id="write-grid"></div>
-          <p class="split" id="write-empty" hidden>Nothing published yet.</p>
-        </div>
-
-        <div class="panel press" role="tabpanel" id="press" aria-labelledby="tab-press" hidden>
-          <p class="num"><span id="press-n">&mdash;</span> impressions</p>
-          <p class="split" id="press-split"></p>
-          <div class="pressgrid" id="press-grid"></div>
-        </div>
-      </section>
+      <div class="peek" id="peek" aria-hidden="true"></div>
 
       <div class="next" data-reveal>
         <p class="label" data-scramble>Start here</p>
@@ -234,7 +172,6 @@
   <script src="scramble.js" defer></script>
   <script src="glitch.js" defer></script>
   <script src="frame.js" defer></script>
-  <script src="player.js"></script>
   <script defer>
   /* ── his figure: half again as tall as the crew on the home stage, and his
      paper trimmed on both sides so the ink, not the canvas, meets the rails ── */
@@ -254,79 +191,63 @@
   });
   </script>
   <script>
-  /* ── the shelf: tabs, with the open one kept in the address so it can be linked ── */
-  (() => {
-    const tabs = [...document.querySelectorAll('.tabs [role="tab"]')];
-    const show = (tab, focus) => {
-      for (const t of tabs) {
-        const on = t === tab;
-        t.setAttribute("aria-selected", String(on));
-        t.tabIndex = on ? 0 : -1;
-        document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
-      }
-      if (focus) tab.focus();
-    };
-    tabs.forEach((t, i) => {
-      t.addEventListener("click", () => {
-        show(t);
-        history.replaceState(null, "", "#" + t.getAttribute("aria-controls"));
-      });
-      t.addEventListener("keydown", (e) => {
-        const step = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
-        if (step) { e.preventDefault(); show(tabs[(i + step + tabs.length) % tabs.length], true); }
-      });
-    });
-    const fromHash = tabs.find((t) => "#" + t.getAttribute("aria-controls") === location.hash);
-    if (fromHash) show(fromHash);
-  })();
-
-  /* ── press, live and writing, from media/press.json (npm run posts) ── */
-  (async () => {
+  /* ── writing, press and live, from media/press.json (npm run posts) ── */
+  const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const ready = (async () => {
     try {
       const pr = await fetch("media/press.json", { cache: "no-store" });
       if (!pr.ok) return;
       const p = await pr.json();
-
-      document.getElementById("press-n").textContent = p.views.toLocaleString();
-      if (p.own != null && p.amplified != null) {
-        document.getElementById("press-split").textContent =
-          p.own.toLocaleString() + " on my own channels / "
-          + p.amplified.toLocaleString() + " on theirs";
-      }
-      document.getElementById("press-grid").innerHTML = p.tiles.map(t => {
-        const shot = t.src
-          ? `<img src="media/${t.poster}" alt="" loading="lazy">`
-            + `<video data-src="media/${t.src}" autoplay muted loop playsinline preload="none"></video>`
-          : `<img src="media/${t.poster}" alt="" loading="lazy">`;
-        return `<a class="pcard" href="${t.href}" target="_blank" rel="noopener">`
-          + `<span class="shot"><span class="kind">${t.src ? "clip" : "live"}</span>${shot}</span>`
-          + `<span class="t">${t.title}</span>`
-          + `<span class="v">${t.views.toLocaleString()} impressions / ${t.client}</span></a>`;
-      }).join("");
-      document.querySelectorAll("#press-grid .pcard").forEach(c => mediaWall.observe(c));
-
-      const writes = p.writings || [];
-      if (writes.length) {
-        document.getElementById("write-grid").innerHTML = writes.map(w => {
-          const when = w.date
-            ? new Date(w.date + "T00:00:00Z").toLocaleDateString("en-GB",
-                { year: "numeric", month: "short", timeZone: "UTC" })
-            : "";
-          const meta = [w.outlet, when].filter(Boolean).join(" / ");
-          const cover = w.cover
-            ? `<span class="cover"><img src="media/${w.cover}" alt="" loading="lazy"></span>`
-            : "";
-          return `<a class="wcard" href="${w.href}" target="_blank" rel="noopener">`
-            + cover
-            + `<span class="meta">${meta}</span>`
-            + `<span class="h">${w.title}</span>`
-            + `<span class="go">read ↗</span></a>`;
-        }).join("");
-      } else {
-        document.getElementById("write-empty").hidden = false;
-      }
-    } catch (e) { /* file://: the panels just stay empty */ }
+      const month = (d) => new Date(d + "T00:00:00Z").toLocaleDateString("en-GB", { year: "numeric", month: "short", timeZone: "UTC" });
+      document.getElementById("write-list").innerHTML = (p.writings || []).map((w) =>
+        `<li${w.cover ? ` data-poster="${esc(w.cover)}"` : ""}><span class="co"><a href="${esc(w.href)}" target="_blank" rel="noopener">${esc(w.title)}</a></span>`
+        + `<span class="meta">${esc([w.outlet, w.date && month(w.date)].filter(Boolean).join(" / "))}</span></li>`).join("");
+      document.getElementById("press-list").innerHTML = p.tiles.map((t) =>
+        `<li data-poster="${esc(t.poster)}"${t.src ? ` data-clip="${esc(t.src)}"` : ""}><span class="co"><a href="${esc(t.href)}" target="_blank" rel="noopener">${esc(t.title.replace(/\s+\u2014\s+/g, ", "))}</a></span>`
+        + `<span class="meta">${t.src ? "clip" : "live"} / ${esc(t.client)} / ${t.views.toLocaleString()} impressions</span></li>`).join("");
+    } catch (e) { /* file://: the lists just stay empty */ }
   })();
+
+  /* ── the peek ── */
+  ready.then(() => {
+    const items = [...document.querySelectorAll(".work li[data-poster]")];
+    for (const li of items) {                                   // touch: a still at the end of the row
+      const img = document.createElement("img");
+      img.className = "thumb"; img.alt = ""; img.loading = "lazy"; img.src = "media/" + li.dataset.poster;
+      li.appendChild(img);
+    }
+    if (!matchMedia("(hover: hover)").matches) return;
+    const peek = document.getElementById("peek");
+    let x = 0, y = 0, on = null;
+    /* it stands in the open column right of the list, never over the words,
+       and follows the pointer up and down */
+    const rail = document.querySelector(".story");
+    const place = () => {
+      const w = peek.offsetWidth, h = peek.offsetHeight, r = rail.getBoundingClientRect();
+      let left = r.left + Math.min(r.width, 34 * 16) + 48, top = y - h / 2;
+      if (left + w > innerWidth - 16) left = Math.max(16, x + 28);
+      if (left + w > innerWidth - 16) left = x - 28 - w;
+      top = Math.max(16, Math.min(top, innerHeight - h - 16));
+      peek.style.transform = `translate(${left}px, ${top}px)`;
+    };
+    const open = (li) => {
+      on = li;
+      const still = `<img src="media/${li.dataset.poster}" alt="">`;
+      peek.innerHTML = li.dataset.clip
+        ? still + `<video src="media/${li.dataset.clip}" poster="media/${li.dataset.poster}" autoplay muted loop playsinline></video>`
+        : still;
+      const v = peek.querySelector("video");
+      if (v) { v.muted = true; v.play().catch(() => {}); }
+      place(); peek.classList.add("on");
+    };
+    const close = () => { on = null; peek.classList.remove("on"); peek.innerHTML = ""; };
+    for (const li of items) {
+      li.addEventListener("pointerenter", (e) => { x = e.clientX; y = e.clientY; open(li); });
+      li.addEventListener("pointerleave", close);
+    }
+    addEventListener("pointermove", (e) => { x = e.clientX; y = e.clientY; if (on) place(); }, { passive: true });
+    addEventListener("scroll", () => { if (on) close(); }, { passive: true });
+  });
   </script>
 
 </body>

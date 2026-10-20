@@ -35,7 +35,7 @@ Clean URLs through `vercel.json` (`cleanUrls`, no trailing slash).
 |---|---|---|
 | `/` | `index.html` | The hero over the crew figures, the AI films wall, the why block. The film card (`promo.js`) is on this page only. The crew lives here and only here |
 | `/work` | `work.html` | Three entries as an accordion: Allé Studios, Sail, Fungi |
-| `/who` | `who.html` | Him alone: the bio beside his figure, then one switcher with four tabs: open source (Sailor, Sail Protocol), companies (Sail, Fungi, Boveda), writing, press and live. The open tab is kept in the address, so `/who#writing` links straight to it |
+| `/who` | `who.html` | Him alone: the bio beside his figure, then four short lists on the same rail: open source (Sailor, Sail Protocol), companies cofounded (Sail, Fungi, Boveda), writing, press and live. Hover an item and its picture or clip appears in the open column to the right; on touch each item carries a still at the end of its row. Writing and press come from `media/press.json` |
 
 Nav order is **work / who**. The crew page and the more page were folded into
 `/who` on 2026-10-20 (his call): the agents left it, and the writing and press
