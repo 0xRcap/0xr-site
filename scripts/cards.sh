@@ -22,7 +22,7 @@ cp "$SITE/fonts/oliveira.otf" "$SITE/media/mark-0xr.svg" "$TMP/"
 # files. An empty slug writes media/card.jpg. Add rows back if a page ever
 # earns its own.
 CARDS=(
-"|Branding + generative media production.|One human, many agents."
+"|Brand strategy + generative media production.|One human, many agents."
 )
 
 for row in "${CARDS[@]}"; do

@@ -1,6 +1,6 @@
 # 0xr-site
 
-The source of **0xr.io**: branding and generative media production, by a crew of
+The source of **0xr.io**: brand strategy and generative media production, by a crew of
 ( one ) human + { many } agents. Site files live at the repo root and Vercel deploys
 this repo directly.
 
