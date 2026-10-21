@@ -427,6 +427,7 @@ canvas.organism.residue { z-index: 60; }
   font-family: var(--mono);
 }
 .ipod.up { transform: none; }
+.ipod[hidden] { display: none; }   /* the author display: flex would otherwise beat the hidden attribute and leave it parked, peeking, below the screen */
 @media (prefers-reduced-motion: reduce) { .ipod { transition: none; } .music-btn .eq i { animation: none; } }
 
 .ipod-screen {

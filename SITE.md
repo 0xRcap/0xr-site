@@ -16,13 +16,13 @@ history was restarted clean after the move. No personal data lives here.
 
 ## What the site says
 
-**Branding and generative media production**, ruled 2026-10-13 and carried in
+**Brand strategy and generative media production**, ruled 2026-10-13 and renamed on 2026-10-21 (his call: wherever the site said branding it says brand strategy; the short tab title keeps "brand + media"), carried in
 `studio/POSITIONING.md` and `studio/clients/0xr/positioning/services.md`.
 
 - Hero: "A crew of ( one ) human + { many } agents."
-- Meta description: "We do branding and generative media production at a fraction
+- Meta description: "We do brand strategy and generative media production at a fraction
   of the time/cost of an agency."
-- Tab title on the home page: `0xR / branding + media`. The others are
+- Tab title on the home page: `0xR / brand + media`. The others are
   `0xR / work` and `0xR / who`.
 
 The word is always *crew*. Sail, Fungi and Boveda are described as onchain finance.
@@ -236,7 +236,7 @@ device.
    scope, which this machine's `gh` login lacks. Either run
    `gh auth refresh -h github.com -s user` or paste them at
    github.com/settings/profile: bio "A crew of ( one ) human + { many } agents.
-   Branding and generative media production.", website `https://0xr.io`.
+   Brand strategy and generative media production.", website `https://0xr.io`.
 3. **The second outperformance article** never arrived. One is linked.
 
 Settled and closed: the Fungi `$9M` market cap stands (2026-09-09). Allé has its
