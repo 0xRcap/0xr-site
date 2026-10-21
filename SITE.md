@@ -16,13 +16,13 @@ history was restarted clean after the move. No personal data lives here.
 
 ## What the site says
 
-**Brand strategy and generative media production**, ruled 2026-10-13 as branding and renamed brand strategy on 2026-10-21 (his call), carried in
+**Brand strategy and generative media production**, ruled 2026-10-13 and renamed on 2026-10-21 (his call: wherever the site said branding it says brand strategy; the short tab title keeps "brand + media"), carried in
 `studio/POSITIONING.md` and `studio/clients/0xr/positioning/services.md`.
 
 - Hero: "A crew of ( one ) human + { many } agents."
 - Meta description: "We do brand strategy and generative media production at a fraction
   of the time/cost of an agency."
-- Tab title on the home page: `0xR / brand strategy + media`. The others are
+- Tab title on the home page: `0xR / brand + media`. The others are
   `0xR / work` and `0xR / who`.
 
 The word is always *crew*. Sail, Fungi and Boveda are described as onchain finance.
