@@ -1,0 +1,10 @@
+# Internal files live in the repo but never on 0xr.io (found public 2026-10-22: SITE.md,
+# JEAN's look notes and the card script all returned 200). Pages load none of these.
+SITE.md
+README.md
+scripts/
+package.json
+package-lock.json
+crew/*.md
+crew/*.py
+crew/gen/*.py

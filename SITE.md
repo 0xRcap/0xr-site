@@ -241,3 +241,7 @@ device.
 
 Settled and closed: the Fungi `$9M` market cap stands (2026-09-09). Allé has its
 entry on `/work`. Total views come back once they pass 1M.
+
+- **MAGI joins the crew** (2026-10-22, Rodrigo): the chief of staff gets a figure and a cell once he creates her. Nothing is drawn until then.
+
+Settled 2026-10-22: **Umia stays** on the work page's ecosystem list. It names the Sail-era co-marketing, not the current relationship.
