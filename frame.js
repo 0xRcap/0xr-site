@@ -1,6 +1,6 @@
 /* ── the frames: hover a figure and a square closes around it, with its tags ──
    On the home stage and the who page. He is the one human and his frame is mint,
-   with his handles; the six are agents and theirs is orange, with what each one
+   with his handles; the seven are agents and theirs is orange, with what each one
    does. The frame snaps (no fade), like the rest of the site's motion. On touch
    the first tap opens it and his handles then work as links; a tap anywhere else
    closes it. */
@@ -10,7 +10,7 @@
     ["@0xRcap", "https://x.com/0xRcap", "Rodrigo on X"],
     ["in/rodrigo-rivas-yassin", "https://www.linkedin.com/in/rodrigo-rivas-yassin/", "Rodrigo on LinkedIn"],
   ];
-  const ROLE = { ye: "brand", quent: "films", jean: "art direction", frank: "words", steve: "design", kim: "go to market" };
+  const ROLE = { magi: "chief of staff", ye: "brand", quent: "films", jean: "art direction", frank: "copywriting", steve: "design", kim: "go to market" };
   const tagsFor = (who) => (who === "rodrigo" ? HUMAN : [["agent"], [ROLE[who]]]);
 
   const figs = document.querySelectorAll('#stage canvas[data-crew], .director [data-crew="rodrigo"] canvas.fig');

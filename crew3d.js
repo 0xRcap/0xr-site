@@ -188,6 +188,14 @@
      counter is how hard the hips oppose the head at the start of a move,
      which is the anticipation. */
   const TEMPER = {
+    /* MAGI, the chief of staff (2026-10-22): calm and exact. She watches the line
+       rather than performing in it, so her acts are mostly glances along the
+       crew and a small nod, and she follows the pointer a little more than the
+       others because watching is the job. Close to FRANK's slow clock, with
+       less overshoot: she arrives and stops. */
+    magi:  { blink: 5.0, act: 9.0,  idle: 0.5,  radius: 220, back: 0.25, ease: 0.08, follow: 0.55, holdx: 1.3,
+             lag: 0.45, bounce: 0.92, tbounce: 0.96, plant: 0.28, counter: 0.6,
+             mix: { glanceL: 3, glanceR: 3, nod: 2, lookUp: 1, turn: 2 } },
     ye:    { blink: 5.0, act: 7.0,  idle: 0.75, radius: 220, back: 0.3, ease: 0.06, follow: 0.4,  holdx: 1.6,
              lag: 0.55, bounce: 0.82, tbounce: 0.90, plant: 0.30, counter: 0.8,
              mix: { glanceL: 2, glanceR: 2, lookUp: 1, nod: 1, weight: 2, turn: 2 } },
