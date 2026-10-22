@@ -243,6 +243,6 @@ device.
 Settled and closed: the Fungi `$9M` market cap stands (2026-09-09). Allé has its
 entry on `/work`. Total views come back once they pass 1M.
 
-- **MAGI joined the crew** (2026-10-22, Rodrigo: "perf"): the chief of staff stands first among the agents, beside him. Her figure, prompt, cost and four hand-edited cells are in `crew/gen/prompts.md`; her model in `crew/mkmodel.py` (regions and rig) and `crew/magi.depth.txt`; her temper in `crew3d.js`. The stage band is the same 28% to 92% with seven at 10.67% (the scale divisor went from /282 to /338).
+- **MAGI joined the crew** (2026-10-22, Rodrigo: "perf"): the chief of staff stands first among the agents, beside him. Her figure, prompt, cost and five hand-edited cells are in `crew/gen/prompts.md`; her model in `crew/mkmodel.py` (regions and rig) and `crew/magi.depth.txt`; her temper in `crew3d.js`. The stage band is the same 28% to 92% with seven at 10.67% (the scale divisor went from /282 to /338).
 
 Settled 2026-10-22: **Umia stays** on the work page's ecosystem list. It names the Sail-era co-marketing, not the current relationship.

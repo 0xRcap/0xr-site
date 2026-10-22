@@ -248,9 +248,10 @@ Higgsfield, `gpt_image_2`, 2:3, high, 1K, 3.5 credits (7.97 to 4.47), job
 The grey coat breaks the BASE's near black clothing on purpose: she is the one light
 figure, the one who watches. It held against the paper.
 
-**Four cells by hand after `proc.py`**, on his note "i dont see her eyes": the fringe
+**Five cells by hand after `proc.py`**, on his note "i dont see her eyes": the fringe
 covered the face, so the eyes did not survive the mode downsample (the STEVE v1 lesson
-again). Fringe lifted one row at (17,7) (18,7) to tone; eyes at (15,7) and (18,7) ink-soft,
-KIM's x o o x; mouth at (16,9) ink-soft with the chin (16,10) kept tone so it never touches
-the collar; the collar cell (16,11) solid ink. The raw take, the untouched post-process and
+again). Measured by JEAN against the untouched post-process (his count; first recorded as
+four): (17,7) ink to tone, the fringe lifted; (15,7) tone to ink-soft and (18,7) ink to
+ink-soft, the eyes, KIM's x o o x; (16,9) tone to ink-soft, the mouth, with the chin (16,10)
+already tone so it never touches the collar; (16,11) ink-soft to ink, the collar made solid. The raw take, the untouched post-process and
 the rejected variants are kept in the fleet repo at `jean/projects/crew-turn/magi/`.
