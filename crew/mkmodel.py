@@ -28,7 +28,7 @@ RAMP = "0123456789AB"
 THIN = "abcdefghijkl"
 BACKMAX = 4
 # rodrigo first: he is the director and stands ahead of them everywhere
-NAMES = ["rodrigo", "ye", "steve", "jean", "frank", "quent", "kim"]
+NAMES = ["rodrigo", "magi", "ye", "steve", "jean", "frank", "quent", "kim"]   # magi beside him: the chief of staff, 2026-10-22
 
 # row range -> (max protrusion at the centre of the run, vertical scale, proud,
 #               profile). `proud` is added to every cell of the region.
@@ -119,6 +119,15 @@ REGIONS = {
     ((25, 44), 8, 1.00, 0),   # the body
     ((45, 51), 3, 1.00, 0, "thin"),  # the legs are two cells wide: a card or nothing
  ],
+ "magi": [
+    ((2, 5),   5, 0.95, 0, "flat"),  # the top of the bob
+    ((6, 10),  6, 1.00, 0, "flat"),  # the face inside the bob, eyes on 7 and mouth on 9. flat, as on
+                                     # KIM: the rolled edge puts the hair curtain BEHIND the face plate
+    ((11, 12), 6, 1.00, 0),          # the turtleneck collar, a narrow column
+    ((13, 15), 7, 1.00, 0),          # the shoulders of the coat
+    ((16, 41), 8, 1.00, 0),          # the open lab coat and the clipboard, the deepest thing in her
+    ((42, 51), 3, 1.00, 0, "thin"),  # the legs: ONE cell of air between them
+ ],
 }
 
 # THE BACK, 2026-09-18. One grid describes a symmetric solid and nothing more.
@@ -178,6 +187,7 @@ RIG = {
  "quent": {"head": (2, 17), "torso": (18, 34), "eyes": [(13, 11), (18, 11)]},
  "kim":   {"head": (2, 15), "torso": (16, 44), "eyes": [(14, 7), (17, 7)]},
  "rodrigo": {"head": (2, 17), "torso": (18, 36), "eyes": [(13, 9), (17, 9)]},
+ "magi":  {"head": (2, 10), "torso": (11, 41), "eyes": [(15, 7), (18, 7)]},
 }
 FACE = "-"
 

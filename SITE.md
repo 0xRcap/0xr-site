@@ -136,9 +136,10 @@ and the perf probes. It is untracked and never deploys.
 
 `frame.js` draws a hover frame on every figure on the home stage and on his figure
 on `/who`. His is mint, with a filled `human` tag and his X and LinkedIn handles as
-links. The six agents' are orange, with a filled `agent` tag and what each one
-does: YE brand, QUENT films, JEAN art direction, FRANK words, STEVE design, KIM go
-to market. Past 60% of the stage the tags hang from the frame's right edge so they
+links. The seven agents' are orange, with a filled `agent` tag and what each one
+does: MAGI chief of staff, YE brand, QUENT films, JEAN art direction, FRANK
+copywriting, STEVE design, KIM go to market (FRANK's tag was "words" until
+2026-10-22, his ruling). Past 60% of the stage the tags hang from the frame's right edge so they
 stay on screen. The hero clips at its foot, where the figures stand on a phone, so
 the square's lower edge comes up to stay whole. Both colours come from the glitch set and appear only on hover.
 
@@ -242,6 +243,6 @@ device.
 Settled and closed: the Fungi `$9M` market cap stands (2026-09-09). Allé has its
 entry on `/work`. Total views come back once they pass 1M.
 
-- **MAGI joins the crew** (2026-10-22, Rodrigo): the chief of staff gets a figure and a cell once he creates her. Nothing is drawn until then.
+- **MAGI joined the crew** (2026-10-22, Rodrigo: "perf"): the chief of staff stands first among the agents, beside him. Her figure, prompt, cost and five hand-edited cells are in `crew/gen/prompts.md`; her model in `crew/mkmodel.py` (regions and rig) and `crew/magi.depth.txt`; her temper in `crew3d.js`. The stage band is the same 28% to 92% with seven at 10.67% (the scale divisor went from /282 to /338).
 
 Settled 2026-10-22: **Umia stays** on the work page's ecosystem list. It names the Sail-era co-marketing, not the current relationship.

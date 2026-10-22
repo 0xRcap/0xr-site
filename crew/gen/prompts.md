@@ -235,3 +235,23 @@ each time; only take 4 survives, quantized, as `gen/rodrigo-turn-v4.png`.
 appended to this file, though the brief asked for it. Only the six original lines and the kim
 v3 and quent v2 revisions are here. The seventh figure's prompt is lost; his source
 description survives in `studio/clients/0xr/briefs/2026-09-09-quent-rodrigo-figure.md`.
+
+## magi, 2026-10-22: the seventh figure, MAGI the chief of staff
+
+*On Rodrigo's "go scientist". The BASE above word for word plus one line. One take,
+Higgsfield, `gpt_image_2`, 2:3, high, 1K, 3.5 credits (7.97 to 4.47), job
+`71f32dc3-6771-4e43-bba7-2ce8a2000eae`. No name in the prompt, per the KIM lesson.*
+
+**magi** (v1, the one shipped)
+> The character is a caricature of a woman scientist: a short, sharp, straight dark bob cut level with the jaw, a long lab coat worn open and reaching below the knee, drawn as one large mid grey #8A8781 mass over a near black turtleneck and dark trousers, plain low shoes, a clipboard held in one hand at her side. The lab coat is the boldest shape and must stay clearly readable at small size.
+
+The grey coat breaks the BASE's near black clothing on purpose: she is the one light
+figure, the one who watches. It held against the paper.
+
+**Five cells by hand after `proc.py`**, on his note "i dont see her eyes": the fringe
+covered the face, so the eyes did not survive the mode downsample (the STEVE v1 lesson
+again). Measured by JEAN against the untouched post-process (his count; first recorded as
+four): (17,7) ink to tone, the fringe lifted; (15,7) tone to ink-soft and (18,7) ink to
+ink-soft, the eyes, KIM's x o o x; (16,9) tone to ink-soft, the mouth, with the chin (16,10)
+already tone so it never touches the collar; (16,11) ink-soft to ink, the collar made solid. The raw take, the untouched post-process and
+the rejected variants are kept in the fleet repo at `jean/projects/crew-turn/magi/`.
