@@ -906,6 +906,21 @@
   },
   "cases": {
     "note": "Case studies per position on the work page, grouped by the kind of work. Assets live in site/media/<client>/.",
+    "noirfonce": [
+      {
+        "cat": "Film",
+        "note": "The short film for the Halloween collection, posted on their account.",
+        "items": [
+          {
+            "poster": "noirfonce/halloween.jpg",
+            "src": "noirfonce/halloween.mp4",
+            "label": "NOIRFOOOOONCE",
+            "href": "https://www.instagram.com/p/DfKAkg4qM6Z/"
+          }
+        ],
+        "links": []
+      }
+    ],
     "alle": [
       {
         "cat": "Film",
