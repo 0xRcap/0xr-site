@@ -2,13 +2,13 @@
   "noirfonce": [
     {
       "cat": "Film",
-      "note": "The short film for the Halloween collection, posted on their account.",
+      "note": "The short film for the Halloween drop, on their account.",
       "items": [
         {
           "poster": "noirfonce/halloween.jpg",
           "src": "noirfonce/halloween.mp4",
           "label": "NOIRFOOOOONCE",
-          "href": "https://www.instagram.com/p/DfKAkg4qM6Z/"
+          "href": "https://www.instagram.com/reel/DfKAkg4qM6Z/"
         }
       ],
       "links": []

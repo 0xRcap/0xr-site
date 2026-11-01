@@ -623,6 +623,16 @@
       "views": 429,
       "note": "HOODIE SEASON IS COMING! Posted 2026-10-12, read at 429 on 2026-10-13 off the reels grid while logged in. H.264 720x1280 with AAC pulled from the reel's video_versions through his Chrome session; hoodie-season.jpg is the QuickLook frame cropped to 16:9 from 40px down, beanie and hood in.",
       "asset": "hoodie-season.mp4"
+    },
+    {
+      "slug": "noirfonce-halloween",
+      "url": "https://www.instagram.com/reel/DfKAkg4qM6Z/",
+      "account": "noir.fonce",
+      "client": "Noirfonce",
+      "campaign": "Halloween",
+      "views": 7029,
+      "asset": "halloween.mp4",
+      "note": "The Whassup homage for the Halloween drop, posted 2026-10-31. 7,029 read off @noir.fonce's reels grid on 2026-11-01 while logged in. Cut E3 of projects/noirfonce-whassup/edit/rough (17.6 s, matching the post's 17.62 s), re-encoded 540x960 without audio; halloween.jpg is the frame at 3.0 s."
     }
   ],
   "verified": "every quote re-checked one by one against its own permalink on 2026-08-18; author and quoted-post confirmed via X syndication",
@@ -909,13 +919,13 @@
     "noirfonce": [
       {
         "cat": "Film",
-        "note": "The short film for the Halloween collection, posted on their account.",
+        "note": "The short film for the Halloween drop, on their account.",
         "items": [
           {
             "poster": "noirfonce/halloween.jpg",
             "src": "noirfonce/halloween.mp4",
             "label": "NOIRFOOOOONCE",
-            "href": "https://www.instagram.com/p/DfKAkg4qM6Z/"
+            "href": "https://www.instagram.com/reel/DfKAkg4qM6Z/"
           }
         ],
         "links": []
